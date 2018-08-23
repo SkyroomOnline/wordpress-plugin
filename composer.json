@@ -1,0 +1,25 @@
+{
+    "name": "skyroom/skyroom",
+    "description": "A plugin to integrate skyroom with wordpress sites",
+    "type": "wordpress-plugin",
+    "keywords": ["wordpress", "skyroom"],
+    "homepage": "https://skyroom.online",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Skyroom",
+            "email": "info@skyroom.online",
+            "homepage": "https://skyroom.online"
+        },
+        {
+            "name": "Hossein Sadeghi",
+            "email": "ho.mysterious@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Skyroom\\": "src/Skyroom"
+        }
+    },
+    "require": {}
+}
