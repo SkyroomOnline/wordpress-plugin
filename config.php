@@ -6,11 +6,14 @@
  */
 
 $services = [
-    'EventEmitter' => new \DownShift\WordPress\EventEmitter(),
+    'DownShift\WordPress\EventEmitter' => \DI\object('DownShift\WordPress\EventEmitter'),
     'Internationalization' => \DI\object('Skyroom\Util\Internationalization')
         ->constructor(\DI\get('name'), \DI\get('plugin.languagePath')),
     'Skyroom\Api\URLManager' => \DI\object('Skyroom\Api\URLManager')
         ->constructor(\DI\get('webservice.site'), \DI\get('webservice.key')),
+
+    // Aliases
+    'Events' => \DI\get('DownShift\WordPress\EventEmitter'),
 ];
 
 $parameters = [

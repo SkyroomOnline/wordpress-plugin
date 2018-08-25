@@ -5,7 +5,6 @@ namespace Skyroom;
 use DI\ContainerBuilder;
 use DownShift\WordPress\EventEmitter;
 use DI\Container;
-use Skyroom\Util\Internationalization;
 
 /**
  * Plugin main class to build container and register wp hooks.
@@ -30,7 +29,7 @@ class Plugin
     {
         $this->container = $this->buildContainer();
         $this->container->get('Internationalization')->loadTextDomain();
-        $this->registerHooks($this->container->get('EventEmitter'));
+        $this->registerHooks($this->container->get('Events'));
     }
 
     /**
