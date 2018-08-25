@@ -52,6 +52,15 @@ class Plugin
      */
     private function registerHooks(EventEmitter $eventEmitter)
     {
-
+        // Register menus
+        $eventEmitter->on('admin_menu', function () {
+            $menu = $this->container->get('Skyroom\Menu\MainMenu');
+            $this->container->call(
+                [$menu, 'register'],
+                [
+                    'icon' => $this->container->get('plugin.url').'admin/images/icon-32x32.png',
+                ]
+            );
+        });
     }
 }
