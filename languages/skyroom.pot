@@ -1,0 +1,29 @@
+# Copyright (C) 2018 Skyroom
+# This file is distributed under the same license as the Skyroom package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Skyroom 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
+"POT-Creation-Date: 2018-08-23 15:47:29+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+# Plugin name
+msgid "Skyroom"
+msgstr ""
+
+# Plugin URI
+msgid "https://skyroom.online/pages/wordpress-integration"
+msgstr ""
+
+# Description of the plugin
+msgid "A plugin to integrate skyroom with your wordpress site"
+msgstr ""
+
+# Author URI of the plugin
+msgid "https://skyroom.online/"
+msgstr ""
