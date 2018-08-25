@@ -2,7 +2,13 @@
 
 namespace Skyroom\Menu;
 
+use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Skyroom\Api\Client;
+use Skyroom\Api\URL;
+use Skyroom\Exception\ConnectionTimeoutException;
+use Skyroom\Exception\InvalidResponseException;
 use Skyroom\Repository\UserRepository;
 
 /**
@@ -13,6 +19,11 @@ use Skyroom\Repository\UserRepository;
 class SettingSubmenu extends AbstractSubmenu
 {
     /**
+     * @var Container $container
+     */
+    private $container;
+
+    /**
      * @var Client $client
      */
     private $client;
@@ -20,10 +31,12 @@ class SettingSubmenu extends AbstractSubmenu
     /**
      * Setting submenu constructor
      *
-     * @param Client $client
+     * @param Container $container
+     * @param Client    $client
      */
-    public function __construct(Client $client)
+    public function __construct(Container $container, Client $client)
     {
+        $this->container = $container;
         $this->client = $client;
 
         // Set setting menu attributes
@@ -40,6 +53,54 @@ class SettingSubmenu extends AbstractSubmenu
      */
     function display()
     {
-        // TODO display setting page
+        // Handle form submit
+        if (isset($_POST['save'])) {
+            $skyroomSiteUrl = $_POST['skyroom_site_url'];
+            $skyroomApiKey = $_POST['skyroom_api_key'];
+
+            // Change Client url object
+            $URL = new URL($skyroomSiteUrl, $skyroomApiKey);
+            $this->client->setURL($URL);
+
+            try {
+                $success = $this->client->request('ping');
+
+                // Update wordpress options
+                update_option('skyroom_site_url', $skyroomSiteUrl);
+                update_option('skyroom_api_key', $skyroomApiKey);
+            } catch (InvalidResponseException $exception) {
+                switch ($exception->getCode()) {
+                    case InvalidResponseException::INVALID_RESPONSE_STATUS:
+                        $error
+                            = __('Webservice ping failed (Invalid response code). Make sure you entered right site url.',
+                            'skyroom');
+                        break;
+
+                    case InvalidResponseException::INVALID_RESPONSE_CONTENT:
+                    case InvalidResponseException::INVALID_RESULT:
+                        $error
+                            = __('Webservice ping failed (Invalid response received). Make sure you entered right site url.',
+                            'skyroom');
+                        break;
+                }
+            } catch (ConnectionTimeoutException $exception) {
+                $error
+                    = __('Webservice ping failed (No response received). Make sure you entered right site url.',
+                    'skyroom');
+            }
+        } else {
+            $skyroomSiteUrl = get_option('skyroom_site_url');
+            $skyroomApiKey = get_option('skyroom_api_key');
+        }
+
+        try {
+            $viewsPath = $this->container->get('plugin.viewsPath');
+            $pluginUrl = $this->container->get('plugin.url');
+
+            include $viewsPath.'settings.php';
+
+        } catch (DependencyException $e) {
+        } catch (NotFoundException $e) {
+        }
     }
 }

@@ -13,18 +13,28 @@ use Skyroom\Exception\InvalidResponseException;
 class Client
 {
     /**
-     * @var URLManager $URLManager
+     * @var URL $URL
      */
-    private $URLManager;
+    private $URL;
 
     /**
      * Client constructor.
      *
-     * @param URLManager $URLManager
+     * @param URL $URL
      */
-    public function __construct(URLManager $URLManager)
+    public function __construct(URL $URL)
     {
-        $this->URLManager = $URLManager;
+        $this->URL = $URL;
+    }
+
+    /**
+     * Set url object
+     *
+     * @param URL $URL
+     */
+    public function setURL(URL $URL)
+    {
+        $this->URL = $URL;
     }
 
     /**
@@ -40,7 +50,7 @@ class Client
      */
     public function request($action, $params = null)
     {
-        $url = $this->URLManager->getURL();
+        $url = $this->URL->toString();
         $body = [];
         $body['action'] = $action;
         if (!empty($params)) {

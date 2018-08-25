@@ -7,12 +7,17 @@ namespace Skyroom\Api;
  *
  * @package Skyroom\Api
  */
-class URLManager
+class URL
 {
     /**
-     * @var string $url Stored webservice url
+     * @var string $siteUrl
      */
-    private $url;
+    private $siteUrl;
+
+    /**
+     * @var string $apiKey
+     */
+    private $apiKey;
 
     /**
      * URLManager constructor.
@@ -22,7 +27,8 @@ class URLManager
      */
     public function __construct($siteUrl, $apiKey)
     {
-        $this->url = rtrim($siteUrl, '/').'/skyroom/api/'.$apiKey;
+        $this->siteUrl = $siteUrl;
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -30,8 +36,8 @@ class URLManager
      *
      * @return string
      */
-    public function getURL()
+    public function toString()
     {
-        return $this->url;
+        return rtrim($this->siteUrl, '/').'/skyroom/api/'.$this->apiKey;
     }
 }
