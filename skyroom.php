@@ -20,3 +20,6 @@ defined('WPINC') || die;
 
 // Load composer autoloader
 require_once __DIR__.'/vendor/autoload.php';
+
+// Boot plugin
+add_action('plugins_loaded', [new Skyroom\Plugin(), 'boot']);

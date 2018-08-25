@@ -21,5 +21,14 @@
             "Skyroom\\": "src/Skyroom"
         }
     },
-    "require": {}
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/downshiftorg/wp-event-emitter"
+        }
+    ],
+    "require": {
+        "downshiftorg/wp-event-emitter": "^6.0",
+        "php-di/php-di": "5.2.2"
+    }
 }
