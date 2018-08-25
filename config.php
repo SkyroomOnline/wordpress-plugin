@@ -9,8 +9,10 @@ $services = [
     'DownShift\WordPress\EventEmitter' => \DI\object('DownShift\WordPress\EventEmitter'),
     'Internationalization' => \DI\object('Skyroom\Util\Internationalization')
         ->constructor(\DI\get('name'), \DI\get('plugin.languagePath')),
-    'Skyroom\Api\URLManager' => \DI\object('Skyroom\Api\URLManager')
+    'Skyroom\Api\URL' => \DI\object('Skyroom\Api\URL')
         ->constructor(\DI\get('webservice.site'), \DI\get('webservice.key')),
+    'Skyroom\Util\AssetManager' => \DI\object('Skyroom\Util\AssetManager')
+        ->constructor(\DI\get('plugin.url'), \DI\get('version')),
 
     // Aliases
     'Events' => \DI\get('DownShift\WordPress\EventEmitter'),

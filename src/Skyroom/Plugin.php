@@ -62,5 +62,10 @@ class Plugin
                 ]
             );
         });
+
+        // Enqueue assets
+        $eventEmitter->on('admin_init', function () {
+            $this->container->get('Skyroom\Util\AssetManager')->adminAssets();
+        });
     }
 }

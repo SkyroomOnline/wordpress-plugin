@@ -1,0 +1,18 @@
+
+#adminmenu #toplevel_page_skyroom-rooms .wp-menu-image img {
+    width: 22px;
+    padding-top: 6px;
+}
+
+.skyroom-logo-card {
+    padding-top: 20px;
+}
+
+.submit-p *, .test_api-note * {
+    vertical-align: middle !important;
+}
+
+.test_api-note {
+    display: inline-block;
+    margin-left: 10px;
+}
