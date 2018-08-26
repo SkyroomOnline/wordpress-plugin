@@ -67,5 +67,11 @@ class Plugin
         $eventEmitter->on('admin_init', function () {
             $this->container->get('Skyroom\Util\AssetManager')->adminAssets();
         });
+
+        // User register hook
+        $eventEmitter->on('user_register', function ($userId) {
+            $user = get_user_by('id', $userId);
+            $this->container->get('Skyroom\Repository\UserRepository')->addUser($user);
+        });
     }
 }

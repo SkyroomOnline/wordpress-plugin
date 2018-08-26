@@ -42,4 +42,27 @@ class UserRepository
 
         return $roomsArray;
     }
+
+    /**
+     * Add registered user to skyroom
+     *
+     * @throws ConnectionTimeoutException
+     * @throws InvalidResponseException
+     *
+     * @param \WP_User $user User data
+     */
+    public function addUser($user)
+    {
+        $params = [
+            'username' => $user->user_login,
+            'password' => uniqid('', true),
+            'email' => $user->user_email,
+            'nickname' => $user->display_name,
+        ];
+
+        $id = $this->client->request('createUser', $params);
+
+        // Link skyroom user to wordpress
+        update_user_meta($user->ID, 'skyroom_id', $id);
+    }
 }
