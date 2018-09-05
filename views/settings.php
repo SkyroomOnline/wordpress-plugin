@@ -37,6 +37,18 @@
                     <p class="description"><?php _e('API key should be provided to you by skyroom support', 'skyroom') ?></p>
                 </td>
             </tr>
+            <tr>
+                <th scope="row">
+                    <label for="skyroom_integrated_plugin"><?php _e('Plugin you want to integrate skyroom with:') ?></label>
+                </th>
+                <td>
+                    <select name="skyroom_integrated_plugin" id="skyroom_integrated_plugin">
+                        <option value="woocommerce"<?php echo $skyroomIntegratedPlugin === 'wocommerce' ? ' selected' : '' ?>>
+                            <?php _e('WooCommerce', 'skyroom') ?>
+                        </option>
+                    </select>
+                </td>
+            </tr>
             </tbody>
         </table>
         <p class="submit">

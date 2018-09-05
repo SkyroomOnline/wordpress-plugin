@@ -15,6 +15,9 @@ $services = [
         ->constructor(\DI\get('plugin.url'), \DI\get('version')),
     'Skyroom\Adapter\PluginAdapterInterface' => function (\DI\Container $container) {
         switch ($container->get('setting.plugin')) {
+            case 'woocommerce':
+                return new Skyroom\Adapter\WooCommerceAdapter($container);
+
             default:
                 return null;
         }
