@@ -10,12 +10,19 @@ $services = [
     'Internationalization' => \DI\object('Skyroom\Util\Internationalization')
         ->constructor(\DI\get('name'), \DI\get('plugin.languagePath')),
     'Skyroom\Api\URL' => \DI\object('Skyroom\Api\URL')
-        ->constructor(\DI\get('webservice.site'), \DI\get('webservice.key')),
+        ->constructor(\DI\get('setting.site'), \DI\get('setting.key')),
     'Skyroom\Util\AssetManager' => \DI\object('Skyroom\Util\AssetManager')
         ->constructor(\DI\get('plugin.url'), \DI\get('version')),
+    'Skyroom\Adapter\PluginAdapterInterface' => function (\DI\Container $container) {
+        switch ($container->get('setting.plugin')) {
+            default:
+                return null;
+        }
+    },
 
     // Aliases
     'Events' => \DI\get('DownShift\WordPress\EventEmitter'),
+    'PluginAdapter' => \DI\get('Skyroom\Adapter\PluginAdapterInterface'),
 ];
 
 $parameters = [
@@ -25,8 +32,9 @@ $parameters = [
     'plugin.url' => plugin_dir_url(__FILE__),
     'plugin.languagePath' => plugin_dir_path(__FILE__).'languages',
     'plugin.viewsPath' => plugin_dir_path(__FILE__).'views/',
-    'webservice.site' => get_option('skyroom_site_url'),
-    'webservice.key' => get_option('skyroom_api_key'),
+    'setting.site' => get_option('skyroom_site_url'),
+    'setting.key' => get_option('skyroom_api_key'),
+    'setting.plugin' => get_option('skyroom_integrated_plugin'),
 ];
 
 return $services + $parameters;

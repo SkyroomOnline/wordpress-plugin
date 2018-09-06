@@ -30,6 +30,10 @@ class Plugin
         $this->container = $this->buildContainer();
         $this->container->get('Internationalization')->loadTextDomain();
         $this->registerHooks($this->container->get('Events'));
+
+        if (!empty($this->container->get('PluginAdapter'))) {
+            $this->container->get('PluginAdapter')->setup();
+        }
     }
 
     /**
