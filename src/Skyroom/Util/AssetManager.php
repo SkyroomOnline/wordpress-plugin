@@ -47,5 +47,6 @@ class AssetManager
     public function adminAssets()
     {
         wp_enqueue_style('skyroom', $this->pluginUrl.'admin/css/style.css', $this->version);
+        wp_enqueue_script('skyroom', $this->pluginUrl.'admin/js/script.js', $this->version);
     }
 }

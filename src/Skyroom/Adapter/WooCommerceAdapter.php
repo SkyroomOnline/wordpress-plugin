@@ -3,6 +3,9 @@
 namespace Skyroom\Adapter;
 
 use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Skyroom\WooCommerce\SkyroomProductRegistrar;
 
 /**
  * WooCommerce adapter
@@ -29,12 +32,16 @@ class WooCommerceAdapter implements PluginAdapterInterface
     /**
      * Setup WooCommerce adapter
      *
+     * @throws DependencyException
+     * @throws NotFoundException
+     *
      * @return mixed
      */
     function setup()
     {
-        // TODO: Implement setup() method.
-
+        // Register custom product type
+        $registrar = new SkyroomProductRegistrar($this->container);
+        $registrar->register();
     }
 
     /**
