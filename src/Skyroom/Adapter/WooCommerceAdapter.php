@@ -56,6 +56,11 @@ class WooCommerceAdapter implements PluginAdapterInterface
         $this->container->get('Events')->on('woocommerce_order_status_completed',
             $this->container->make('Skyroom\Util\DICallable',
                 ['callable' => [$this, 'processOrder']]), 10, 2);
+
+        // Validate add to cart
+        $this->container->get('Events')->filter('woocommerce_add_to_cart_validation',
+            $this->container->make('Skyroom\Util\DICallable',
+                ['callable' => [$this, 'validateAddToCart']]), 10, 2);
     }
 
     /**
@@ -113,5 +118,14 @@ class WooCommerceAdapter implements PluginAdapterInterface
 
         $purchased = $repository->isUserInRoom(get_current_user_id(), $post->id);
         $viewer->view('woocommerce-add-to-cart.php');
+    }
+
+    function validateAddToCart($prev, $productId, $quantity, UserRepository $repository)
+    {
+        if (!$prev) {
+            return $prev;
+        }
+
+        return !$repository->isUserInRoom(get_current_user_id(), get_post_meta($productId, '_skyroom_id'));
     }
 }
