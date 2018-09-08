@@ -64,15 +64,15 @@ class WooCommerceAdapter implements PluginAdapterInterface
     }
 
     /**
-     * Get WooCommerce posts that linked to skyroom rooms
+     * Get WooCommerce products that linked to skyroom rooms
      *
      * @param array $roomIds
      *
      * @return mixed
      */
-    function getPosts($roomIds)
+    function getProducts($roomIds)
     {
-        // TODO: Implement getPosts() method.
+        // TODO: Implement getProducts() method.
     }
 
     /**

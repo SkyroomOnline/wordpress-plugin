@@ -17,13 +17,13 @@ interface PluginAdapterInterface
     function setup();
 
     /**
-     * Get plugin specific posts that linked to skyroom rooms
+     * Get plugin specific products that linked to skyroom rooms
      *
      * @param array $roomIds
      *
      * @return array
      */
-    function getPosts($roomIds);
+    function getProducts($roomIds);
 
     /**
      * Get singular or plural form of specific post type string
