@@ -31,9 +31,10 @@ class Activator
         $sql
             = "CREATE TABLE $tableName (
                    user_id bigint(20) NOT NULL,
+                   room_id bigint(20) NOT NULL,
                    post_id bigint(20) NOT NULL,
-                   enroll_time datetime NOT NULL,
-                   PRIMARY KEY  (user_id, post_id)
+                   enroll_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                   PRIMARY KEY  (user_id, room_id)
                ) $charsetCollate;";
 
         require ABSPATH.'wp-admin/includes/upgrade.php';
