@@ -9,7 +9,7 @@ use Skyroom\Api\Client;
 use Skyroom\Api\URL;
 use Skyroom\Exception\ConnectionTimeoutException;
 use Skyroom\Exception\InvalidResponseException;
-use Skyroom\Repository\UserRepository;
+use Skyroom\Util\Viewer;
 
 /**
  * User submenu
@@ -29,15 +29,21 @@ class SettingSubmenu extends AbstractSubmenu
     private $client;
 
     /**
+     * @var Viewer
+     */
+    private $viewer;
+
+    /**
      * Setting submenu constructor
      *
      * @param Container $container
      * @param Client    $client
      */
-    public function __construct(Container $container, Client $client)
+    public function __construct(Container $container, Client $client, Viewer $viewer)
     {
         $this->container = $container;
         $this->client = $client;
+        $this->viewer = $viewer;
 
         // Set setting menu attributes
         parent::__construct(
@@ -97,10 +103,9 @@ class SettingSubmenu extends AbstractSubmenu
         }
 
         try {
-            $viewsPath = $this->container->get('plugin.viewsPath');
             $pluginUrl = $this->container->get('plugin.url');
 
-            include $viewsPath.'settings.php';
+            $this->viewer->view('settings.php');
 
         } catch (DependencyException $e) {
         } catch (NotFoundException $e) {

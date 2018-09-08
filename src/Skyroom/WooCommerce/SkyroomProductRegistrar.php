@@ -107,8 +107,7 @@ class SkyroomProductRegistrar
         $name = get_post_meta($post->ID, '_skyroom_room_name') ?: '';
         $title = get_post_meta($post->ID, '_skyroom_room_title') ?: '';
 
-        $viewsPath = $this->container->get('plugin.viewsPath');
-        include $viewsPath.'woocommerce-product-tab.php';
+        $this->container->get('Viewer')->view('woocommerce-product-tab.php');
     }
 
     public function hideUnneededTab($tabs)
