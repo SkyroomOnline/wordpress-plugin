@@ -151,10 +151,13 @@ class SkyroomProductRegistrar
             }
 
             $room = $client->request('getRoom', ['room_id' => $id]);
+            $totalSales = get_post_meta($postId, 'total_sales');
+
             update_post_meta($postId, '_skyroom_name', $room['name']);
             update_post_meta($postId, '_skyroom_title', $room['title']);
             update_post_meta($postId, '_skyroom_capacity', $capacity);
-            update_post_meta($postId, '_stock', $capacity - get_post_meta($postId, '_stock'));
+            update_post_meta($postId, '_stock', $capacity - $totalSales);
+            update_post_meta($postId, '_manage_stock', true);
 
         } catch (ConnectionTimeoutException $e) {
             // TODO prevent publishing post

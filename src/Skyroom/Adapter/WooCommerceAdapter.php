@@ -5,6 +5,10 @@ namespace Skyroom\Adapter;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Skyroom\Exception\ConnectionTimeoutException;
+use Skyroom\Exception\InvalidResponseException;
+use Skyroom\Repository\UserRepository;
+use Skyroom\Util\Viewer;
 use Skyroom\WooCommerce\SkyroomProductRegistrar;
 
 /**
@@ -42,6 +46,16 @@ class WooCommerceAdapter implements PluginAdapterInterface
         // Register custom product type
         $registrar = new SkyroomProductRegistrar($this->container);
         $registrar->register();
+
+        // Show add-to-card btn
+        $this->container->get('Events')->on('woocommerce_skyroom_add_to_cart',
+            $this->container->make('Skyroom\Util\DICallable',
+                ['callable' => [$this, 'addToCart']]), 10, 0);
+
+        // Register order completed hook
+        $this->container->get('Events')->on('woocommerce_order_status_completed',
+            $this->container->make('Skyroom\Util\DICallable',
+                ['callable' => [$this, 'processOrder']]), 10, 2);
     }
 
     /**
@@ -66,5 +80,38 @@ class WooCommerceAdapter implements PluginAdapterInterface
     function getPostString($plural = false)
     {
         return $plural ? __('Products', 'skyroom') : __('Product', 'skyroom');
+    }
+
+    /**
+     * @param int            $orderId
+     * @param \WC_Order      $order
+     * @param UserRepository $repository
+     *
+     * @throws ConnectionTimeoutException
+     * @throws InvalidResponseException
+     */
+    function processOrder($orderId, $order, UserRepository $repository)
+    {
+        $items = $order->get_items();
+        foreach ($items as $item) {
+            $product = $item->get_product();
+            if ($product->get_type() === 'skyroom') {
+                $repository->addUserToRoom(wp_get_current_user(), $product->get_skyroom_id(), $orderId);
+            }
+        }
+    }
+
+    /**
+     * Show add to cart button for user
+     *
+     * @param UserRepository $repository
+     * @param Viewer         $viewer
+     */
+    function addToCart(UserRepository $repository, Viewer $viewer)
+    {
+        global $post;
+
+        $purchased = $repository->isUserInRoom(get_current_user_id(), $post->id);
+        $viewer->view('woocommerce-add-to-cart.php');
     }
 }
