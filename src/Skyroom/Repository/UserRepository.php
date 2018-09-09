@@ -3,6 +3,7 @@
 namespace Skyroom\Repository;
 
 use Skyroom\Api\Client;
+use Skyroom\Entity\User;
 use Skyroom\Exception\ConnectionTimeoutException;
 use Skyroom\Exception\InvalidResponseException;
 use Skyroom\WooCommerce\SkyroomProduct;
@@ -35,13 +36,32 @@ class UserRepository
      * @throws ConnectionTimeoutException
      * @throws InvalidResponseException
      *
-     * @return array
+     * @return User[]
      */
     public function getUsers()
     {
-        $roomsArray = $this->client->request('getUsers');
+        $usersArray = $this->client->request('getUsers');
+        $ids = array_map(function ($user) {
+            return $user->id;
+        }, $usersArray);
 
-        return $roomsArray;
+        $wpUsersArray = get_users([
+            'meta_name' => '_skyroom_id',
+            'meta_value' => $ids,
+            'meta_compare' => 'IN',
+        ]);
+
+        $wpUsers = [];
+        foreach ($wpUsersArray as $wpUser) {
+            $wpUsers[get_user_meta($wpUser->ID, '_skyroom_id', true)] = $wpUser;
+        }
+
+        $users = [];
+        foreach ($usersArray as $user) {
+            $users[] = new User($user, isset($wpUsers[$user->id]) ? $wpUsers[$user->id] : null);
+        }
+
+        return $users;
     }
 
     /**

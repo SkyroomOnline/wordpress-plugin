@@ -2,7 +2,11 @@
 
 namespace Skyroom\Menu;
 
+use Skyroom\Exception\ConnectionTimeoutException;
+use Skyroom\Exception\InvalidResponseException;
 use Skyroom\Repository\UserRepository;
+use Skyroom\Tables\UsersTable;
+use Skyroom\Util\Viewer;
 
 /**
  * User submenu
@@ -17,13 +21,20 @@ class UserSubmenu extends AbstractSubmenu
     private $repository;
 
     /**
+     * @var Viewer $viewer
+     */
+    private $viewer;
+
+    /**
      * Room submenu constructor
      *
      * @param UserRepository $repository
+     * @param Viewer         $viewer
      */
-    public function __construct(UserRepository $repository)
+    public function __construct(UserRepository $repository, Viewer $viewer)
     {
         $this->repository = $repository;
+        $this->viewer = $viewer;
 
         // Set user menu attributes
         parent::__construct(
@@ -40,6 +51,18 @@ class UserSubmenu extends AbstractSubmenu
      */
     function display()
     {
-        // TODO display users
+        try {
+            $users = $this->repository->getUsers();
+            $table = new UsersTable($users);
+            $table->prepare_items();
+
+            $context = [
+                'table' => $table,
+            ];
+            $this->viewer->view('users.php', $context);
+
+        } catch (ConnectionTimeoutException $e) {
+        } catch (InvalidResponseException $e) {
+        }
     }
 }
