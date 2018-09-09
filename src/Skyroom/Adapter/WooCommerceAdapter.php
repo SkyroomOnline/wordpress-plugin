@@ -41,8 +41,6 @@ class WooCommerceAdapter implements PluginAdapterInterface
      *
      * @throws DependencyException
      * @throws NotFoundException
-     *
-     * @return mixed
      */
     function setup()
     {
@@ -50,20 +48,20 @@ class WooCommerceAdapter implements PluginAdapterInterface
         $registrar = new SkyroomProductRegistrar($this->container);
         $registrar->register();
 
+        $events = $this->container->get('Events');
+        $DICFactory = $this->container->get('DICallableFactory');
+
         // Show add-to-card btn
-        $this->container->get('Events')->on('woocommerce_skyroom_add_to_cart',
-            $this->container->make('Skyroom\Util\DICallable',
-                ['callable' => [$this, 'addToCart']]), 10, 0);
+        $this->container->get('Events')
+            ->on('woocommerce_skyroom_add_to_cart', $DICFactory->create([$this, 'addToCart']), 10, 0);
 
         // Register order completed hook
-        $this->container->get('Events')->on('woocommerce_order_status_completed',
-            $this->container->make('Skyroom\Util\DICallable',
-                ['callable' => [$this, 'processOrder']]), 10, 2);
+        $this->container->get('Events')
+            ->on('woocommerce_order_status_completed', $DICFactory->create([$this, 'processOrder']), 10, 2);
 
         // Validate add to cart
-        $this->container->get('Events')->filter('woocommerce_add_to_cart_validation',
-            $this->container->make('Skyroom\Util\DICallable',
-                ['callable' => [$this, 'validateAddToCart']]), 10, 2);
+        $this->container->get('Events')
+            ->filter('woocommerce_add_to_cart_validation', $DICFactory->create([$this, 'validateAddToCart']), 10, 2);
     }
 
     /**

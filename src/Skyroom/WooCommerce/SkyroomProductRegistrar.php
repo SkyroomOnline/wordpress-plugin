@@ -42,15 +42,14 @@ class SkyroomProductRegistrar
     public function register()
     {
         $events = $this->container->get('Events');
+        $DICallableFactory = $this->container->get('DICallableFactory');
 
         $events->filter('product_type_selector', [$this, 'registerProductType']);
         $events->filter('woocommerce_product_class', [$this, 'selectProductTypeClass'], 10, 2);
         $events->filter('woocommerce_product_data_tabs', [$this, 'registerSkyroomTab']);
         $events->filter('woocommerce_product_data_panels', [$this, 'showSkyroomTabContent']);
         $events->filter('woocommerce_product_data_tabs', [$this, 'hideUnneededTab']);
-        $events->filter('woocommerce_process_product_meta_skyroom',
-            $this->container->make(
-                'Skyroom\Util\DICallable', ['callable' => [$this, 'processMeta']]));
+        $events->filter('woocommerce_process_product_meta_skyroom', $DICallableFactory->create([$this, 'processMeta']));
     }
 
     /**

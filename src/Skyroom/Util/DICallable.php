@@ -4,6 +4,11 @@ namespace Skyroom\Util;
 
 use DI\Container;
 
+/**
+ * Dependency Injected callable
+ *
+ * @package Skyroom\Util
+ */
 class DICallable
 {
     /**

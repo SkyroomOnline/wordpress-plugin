@@ -15,6 +15,7 @@ $services = [
         ->constructor(\DI\get('plugin.url'), \DI\get('version')),
     'Skyroom\Util\Viewer' => \DI\object('Skyroom\Util\Viewer')
         ->constructor(\DI\get('plugin.path')),
+    'Skyroom\Factory\DICallableFactory' => \DI\object('Skyroom\Factory\DICallableFactory'),
     'Skyroom\Adapter\PluginAdapterInterface' => function (\DI\Container $container) {
         switch ($container->get('setting.plugin')) {
             case 'woocommerce':
@@ -29,6 +30,7 @@ $services = [
     'Events' => \DI\get('DownShift\WordPress\EventEmitter'),
     'Viewer' => \DI\get('Skyroom\Util\Viewer'),
     'PluginAdapter' => \DI\get('Skyroom\Adapter\PluginAdapterInterface'),
+    'DICallableFactory' => \DI\get('Skyroom\Factory\DICallableFactory'),
 ];
 
 $parameters = [
