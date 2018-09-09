@@ -78,10 +78,13 @@ class Client
         $result = json_decode($body);
 
         if ($result === null && json_last_error() !== JSON_ERROR_NONE
-            || !property_exists($result, 'result')
             || !property_exists($result, 'ok')
         ) {
             throw new InvalidResponseException(InvalidResponseException::INVALID_RESPONSE_CONTENT);
+        }
+
+        if ($result->ok === false) {
+            throw new InvalidResponseException($result->error_code, $result->error_message);
         }
 
         if ($result->ok) {
