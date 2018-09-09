@@ -69,6 +69,9 @@ class SettingSubmenu extends AbstractSubmenu
             $URL = new URL($skyroomSiteUrl, $skyroomApiKey);
             $this->client->setURL($URL);
 
+            // Initialize error
+            $error = '';
+
             try {
                 $success = $this->client->request('ping');
 
@@ -96,6 +99,7 @@ class SettingSubmenu extends AbstractSubmenu
                     = __('Webservice ping failed (No response received). Make sure you entered right site url.',
                     'skyroom');
             }
+
         } else {
             $skyroomSiteUrl = get_option('skyroom_site_url');
             $skyroomApiKey = get_option('skyroom_api_key');
@@ -104,10 +108,11 @@ class SettingSubmenu extends AbstractSubmenu
 
         try {
             $context = [
+                'error' => $error,
                 'pluginUrl' => $this->container->get('plugin.url'),
                 'skyroomSiteUrl' => $skyroomSiteUrl,
                 'skyroomApiKey' => $skyroomApiKey,
-                'skyroomIntegratedPlugin' => $skyroomIntegratedPlugin
+                'skyroomIntegratedPlugin' => $skyroomIntegratedPlugin,
             ];
             $this->viewer->view('settings.php', $context);
 
