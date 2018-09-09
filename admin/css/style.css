@@ -1,5 +1,6 @@
 
-#adminmenu #toplevel_page_skyroom-rooms .wp-menu-image img {
+#adminmenu #toplevel_page_skyroom-rooms .wp-menu-image img,
+#adminmenu #toplevel_page_skyroom-settings .wp-menu-image img {
     width: 22px;
     padding-top: 6px;
 }

@@ -9,19 +9,15 @@ namespace Skyroom\Menu;
  */
 class MainMenu
 {
+
     /**
      * Register main menu and submenus
      *
-     * @param string         $icon
-     * @param RoomSubmenu    $roomMenu
-     * @param UserSubmenu    $userMenu
-     * @param SettingSubmenu $settingMenu
+     * @param string          $icon
+     * @param AbstractSubmenu ...$submenus
      */
-    public function register($icon, RoomSubmenu $roomMenu, UserSubmenu $userMenu, SettingSubmenu $settingMenu)
+    public function register($icon, AbstractSubmenu ...$submenus)
     {
-        $submenus = func_get_args();
-        array_shift($submenus);
-
         // Set slug same as first submenu slug
         $slug = $submenus[0]->menuSlug;
 
