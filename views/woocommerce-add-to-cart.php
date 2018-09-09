@@ -2,13 +2,9 @@
 
 defined('WPINC') || die;
 
-global $product;
-
 if (!$product->is_purchasable()) {
     return;
 }
-
-var_dump($product->get_stock_quantity());
 
 if ($product->is_in_stock() && !$purchased) : ?>
 

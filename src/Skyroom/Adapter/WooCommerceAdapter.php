@@ -114,10 +114,13 @@ class WooCommerceAdapter implements PluginAdapterInterface
      */
     function addToCart(UserRepository $repository, Viewer $viewer)
     {
-        global $post;
+        global $product;
 
-        $purchased = $repository->isUserInRoom(get_current_user_id(), $post->id);
-        $viewer->view('woocommerce-add-to-cart.php');
+        $context = [
+            'product' => $product,
+            'purchased' => $repository->isUserInRoom(get_current_user_id(), $product->id),
+        ];
+        $viewer->view('woocommerce-add-to-cart.php', $context);
     }
 
     function validateAddToCart($prev, $productId, $quantity, UserRepository $repository)

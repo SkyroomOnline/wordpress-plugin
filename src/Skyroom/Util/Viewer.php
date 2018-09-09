@@ -28,9 +28,11 @@ class Viewer
      * Include view file
      *
      * @param string $fileName View file
+     * @param array  $context
      */
-    public function view($fileName)
+    public function view($fileName, $context = [])
     {
+        extract($context);
         include $this->pluginPath.'views/'.$fileName;
     }
 }

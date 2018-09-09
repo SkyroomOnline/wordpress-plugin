@@ -103,9 +103,13 @@ class SettingSubmenu extends AbstractSubmenu
         }
 
         try {
-            $pluginUrl = $this->container->get('plugin.url');
-
-            $this->viewer->view('settings.php');
+            $context = [
+                'pluginUrl' => $this->container->get('plugin.url'),
+                'skyroomSiteUrl' => $skyroomSiteUrl,
+                'skyroomApiKey' => $skyroomApiKey,
+                'skyroomIntegratedPlugin' => $skyroomIntegratedPlugin
+            ];
+            $this->viewer->view('settings.php', $context);
 
         } catch (DependencyException $e) {
         } catch (NotFoundException $e) {

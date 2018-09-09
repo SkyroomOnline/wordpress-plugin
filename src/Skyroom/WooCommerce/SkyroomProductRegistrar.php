@@ -104,10 +104,12 @@ class SkyroomProductRegistrar
     public function showSkyroomTabContent()
     {
         global $post;
-        $name = get_post_meta($post->ID, '_skyroom_room_name') ?: '';
-        $title = get_post_meta($post->ID, '_skyroom_room_title') ?: '';
 
-        $this->container->get('Viewer')->view('woocommerce-product-tab.php');
+        $context = [
+            'name' => get_post_meta($post->ID, '_skyroom_room_name') ?: '',
+            'title' => get_post_meta($post->ID, '_skyroom_room_title') ?: '',
+        ];
+        $this->container->get('Viewer')->view('woocommerce-product-tab.php', $context);
     }
 
     public function hideUnneededTab($tabs)
