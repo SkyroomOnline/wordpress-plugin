@@ -5,10 +5,13 @@ namespace Skyroom\Adapter;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Skyroom\Entity\ProductWrapperInterface;
+use Skyroom\Entity\WooCommerceProductWrapper;
 use Skyroom\Exception\ConnectionTimeoutException;
 use Skyroom\Exception\InvalidResponseException;
 use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Viewer;
+use Skyroom\WooCommerce\SkyroomProduct;
 use Skyroom\WooCommerce\SkyroomProductRegistrar;
 
 /**
@@ -68,11 +71,44 @@ class WooCommerceAdapter implements PluginAdapterInterface
      *
      * @param array $roomIds
      *
-     * @return mixed
+     * @return WooCommerceProductWrapper[]
      */
     function getProducts($roomIds)
     {
-        // TODO: Implement getProducts() method.
+        $query = new \WP_Query([
+            'post_type' => 'product',
+            'tax_query' => [
+                [
+                    'taxonomy' => 'product_type',
+                    'field' => 'slug',
+                    'terms' => 'skyroom',
+                ],
+            ],
+            'meta_query' => [
+                [
+                    'key' => '_skyroom_id',
+                    'value' => $roomIds,
+                    'compare' => 'IN',
+                ],
+            ],
+        ]);
+
+        $wcProducts = array_map('wc_get_product', $query->get_posts());
+        $products = array_map([$this, 'wrapProduct'], $wcProducts);
+
+        return $products;
+    }
+
+    /**
+     * Wraps WooCommerce product in ProductWrapperInterface instance
+     *
+     * @param SkyroomProduct $product
+     *
+     * @return ProductWrapperInterface
+     */
+    function wrapProduct($product)
+    {
+        return new WooCommerceProductWrapper($product);
     }
 
     /**

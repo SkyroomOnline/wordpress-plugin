@@ -2,7 +2,11 @@
 
 namespace Skyroom\Menu;
 
+use Skyroom\Exception\ConnectionTimeoutException;
+use Skyroom\Exception\InvalidResponseException;
 use Skyroom\Repository\RoomRepository;
+use Skyroom\Tables\RoomsTable;
+use Skyroom\Util\Viewer;
 
 /**
  * Room submenu
@@ -17,13 +21,20 @@ class RoomSubmenu extends AbstractSubmenu
     private $repository;
 
     /**
+     * @var Viewer $viewer
+     */
+    private $viewer;
+
+    /**
      * Room submenu constructor
      *
      * @param RoomRepository $repository
+     * @param Viewer         $viewer
      */
-    public function __construct(RoomRepository $repository)
+    public function __construct(RoomRepository $repository, Viewer $viewer)
     {
         $this->repository = $repository;
+        $this->viewer = $viewer;
 
         // Set room menu attributes
         parent::__construct(
@@ -39,6 +50,18 @@ class RoomSubmenu extends AbstractSubmenu
      */
     function display()
     {
-        // TODO display rooms
+        try {
+            $rooms = $this->repository->getRooms();
+            $table = new RoomsTable($rooms, $this->repository->getPostString());
+            $table->prepare_items();
+
+            $context = [
+                'table' => $table,
+            ];
+            $this->viewer->view('rooms.php', $context);
+
+        } catch (ConnectionTimeoutException $e) {
+        } catch (InvalidResponseException $e) {
+        }
     }
 }

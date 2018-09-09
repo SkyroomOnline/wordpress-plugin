@@ -17,6 +17,13 @@ interface ProductWrapperInterface
     public function getId();
 
     /**
+     * Get related skyroom id
+     *
+     * @return mixed
+     */
+    public function getSkyroomId();
+
+    /**
      * Get product title
      *
      * @return string

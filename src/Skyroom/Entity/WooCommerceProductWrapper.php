@@ -37,6 +37,14 @@ class WooCommerceProductWrapper implements ProductWrapperInterface
     /**
      * @inheritdoc
      */
+    public function getSkyroomId()
+    {
+        return $this->product->get_skyroom_id();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getTitle()
     {
         return $this->product->get_title();

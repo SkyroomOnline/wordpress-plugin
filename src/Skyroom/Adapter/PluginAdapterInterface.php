@@ -2,6 +2,8 @@
 
 namespace Skyroom\Adapter;
 
+use Skyroom\Entity\ProductWrapperInterface;
+
 /**
  * Plugin adapter interface
  *
@@ -21,7 +23,7 @@ interface PluginAdapterInterface
      *
      * @param array $roomIds
      *
-     * @return array
+     * @return ProductWrapperInterface[]
      */
     function getProducts($roomIds);
 
