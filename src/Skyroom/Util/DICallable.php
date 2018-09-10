@@ -48,7 +48,8 @@ class DICallable
                 $parameters[$name] = $args[$i];
             }
 
-            $this->container->call($this->callable, $parameters);
+            return $this->container->call($this->callable, $parameters);
+
         } catch (\ReflectionException $e) {
         }
     }

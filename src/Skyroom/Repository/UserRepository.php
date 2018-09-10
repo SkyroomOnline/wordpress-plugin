@@ -138,7 +138,7 @@ class UserRepository
     {
         global $wpdb;
 
-        $wpdb->prepare('SELECT FROM {$wpdb->prefix}skyroom_user WHERE user_id=%d AND room_id=%d', [$userId, $roomId]);
+        $wpdb->prepare('SELECT FROM {$wpdb->prefix}skyroom_user WHERE user_id=%d AND room_id=%d', $userId, $roomId);
 
         return !empty($wpdb->get_results());
     }

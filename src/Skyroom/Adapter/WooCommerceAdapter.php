@@ -157,12 +157,17 @@ class WooCommerceAdapter implements PluginAdapterInterface
         $viewer->view('woocommerce-add-to-cart.php', $context);
     }
 
-    function validateAddToCart($prev, $productId, $quantity, UserRepository $repository)
+    function validateAddToCart($prev, $productId, UserRepository $repository)
     {
-        if (!$prev) {
+        if (empty($prev)) {
             return $prev;
         }
 
-        return !$repository->isUserInRoom(get_current_user_id(), get_post_meta($productId, '_skyroom_id'));
+        $product = wc_get_product($productId);
+        if ($product->get_type() !== 'skyroom') {
+            return $prev;
+        }
+
+        return !$repository->isUserInRoom(get_current_user_id(), get_post_meta($productId, '_skyroom_id', true));
     }
 }
