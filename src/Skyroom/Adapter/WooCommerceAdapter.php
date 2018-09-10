@@ -62,6 +62,10 @@ class WooCommerceAdapter implements PluginAdapterInterface
         // Validate add to cart
         $this->container->get('Events')
             ->filter('woocommerce_add_to_cart_validation', $DICFactory->create([$this, 'validateAddToCart']), 10, 2);
+
+        // Show skyroom items on order success
+        $this->container->get('Events')
+            ->filter('woocommerce_thankyou', $DICFactory->create([$this, 'showSkyroomItems']), 9, 1);
     }
 
     /**
@@ -169,5 +173,40 @@ class WooCommerceAdapter implements PluginAdapterInterface
         }
 
         return !$repository->isUserInRoom(get_current_user_id(), get_post_meta($productId, '_skyroom_id', true));
+    }
+
+    /**
+     * @param $orderId
+     *
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    function showSkyroomItems($orderId)
+    {
+        $order = wc_get_order($orderId);
+        $items = $order->get_items();
+        $skyroomProducts = [];
+        foreach ($items as $item) {
+            $product = $item->get_product();
+            if ($product && $product->get_type() === 'skyroom') {
+                $skyroomProducts[] = $product;
+            }
+        }
+
+        if (!empty($skyroomProducts)) {
+            $this->container->get('Viewer')
+                ->view(
+                    'woocommerce-skyroom-order.php',
+                    ['products' => $skyroomProducts, 'columns' => $this->getOrderColumns()]
+                );
+        }
+    }
+
+    public function getOrderColumns()
+    {
+        return [
+            'title' => __('Room title', 'skyroom'),
+            'enter' => __('Enter room', 'skyroom'),
+        ];
     }
 }
