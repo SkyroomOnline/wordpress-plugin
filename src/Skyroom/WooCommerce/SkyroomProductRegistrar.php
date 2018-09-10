@@ -49,7 +49,8 @@ class SkyroomProductRegistrar
         $events->filter('woocommerce_product_data_tabs', [$this, 'registerSkyroomTab']);
         $events->filter('woocommerce_product_data_panels', [$this, 'showSkyroomTabContent']);
         $events->filter('woocommerce_product_data_tabs', [$this, 'hideUnneededTab']);
-        $events->filter('woocommerce_process_product_meta_skyroom', $DICallableFactory->create([$this, 'processMeta']));
+        $events->filter('woocommerce_process_product_meta_skyroom',
+            $DICallableFactory->create([$this, 'processMeta']), 10, 1);
     }
 
     /**
@@ -128,8 +129,11 @@ class SkyroomProductRegistrar
         $title = $_POST['_skyroom_title'] ?: $_POST['post_title'];
         $capacity = $_POST['_skyroom_capacity'] ?: null;
 
+        $product = wc_get_product($postId);
+        $skyroomId = $product->get_skyroom_id();
+
         try {
-            if (!empty($_POST['publish'])) {
+            if (empty($skyroomId)) {
                 $id = $client->request(
                     'createRoom',
                     [
@@ -140,11 +144,10 @@ class SkyroomProductRegistrar
 
                 update_post_meta($postId, '_skyroom_id', $id);
             } else {
-                $id = get_post_meta($postId, '_skyroom_id');
                 $client->request(
                     'updateRoom',
                     [
-                        'room_id' => $id,
+                        'room_id' => $skyroomId,
                         'name' => $name,
                         'title' => $title,
                     ]
@@ -161,9 +164,51 @@ class SkyroomProductRegistrar
             update_post_meta($postId, '_manage_stock', true);
 
         } catch (ConnectionTimeoutException $e) {
-            // TODO prevent publishing post
+            if (empty($skyroomId)) {
+                $this->revertPostPublish($postId);
+            }
+
+            $this->warnPostPublishFail($e);
         } catch (InvalidResponseException $e) {
-            // TODO prevent publishing post
+            if (empty($skyroomId)) {
+                $this->revertPostPublish($postId);
+            }
+
+            $this->warnSavePostFail($e);
+        }
+    }
+
+    /**
+     * Revert post status if create/update room failed
+     *
+     * @param int $postId
+     */
+    public function revertPostPublish($postId)
+    {
+        global $wpdb;
+
+        $post = get_post($postId);
+        if ($post->post_status === 'publish') {
+            $wpdb->update($wpdb->posts, ['post_status' => 'draft'], ['post_id' => $post->ID]);
+        }
+    }
+
+    /**
+     * @param \Exception $exception
+     */
+    public function warnPostPublishFail(\Exception $exception)
+    {
+        try {
+            $this->container->get('EventEmitter')
+                ->on('admin_notices', function () use ($exception) {
+                    echo '<div id="skyroom_errors" class="error notice is-dismissible">';
+                    echo '<h3>'.__('Error', 'skyroom').'</h3>';
+                    echo '<p>'.$exception->getMessage().'</p>';
+                    echo '</div>';
+                });
+
+        } catch (DependencyException $e) {
+        } catch (NotFoundException $e) {
         }
     }
 }

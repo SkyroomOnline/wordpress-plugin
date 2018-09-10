@@ -48,6 +48,6 @@ class SkyroomProduct extends \WC_Product
      */
     public function get_skyroom_id()
     {
-        return get_post_meta($this->get_id(), '_skyroom_id');
+        return get_post_meta($this->get_id(), '_skyroom_id', true);
     }
 }
