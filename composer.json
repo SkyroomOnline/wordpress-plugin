@@ -30,6 +30,6 @@
     "require": {
         "php": ">=5.5",
         "downshiftorg/wp-event-emitter": "^6.0",
-        "php-di/php-di": "5.2.2"
+        "php-di/php-di": "^5.4.6"
     }
 }
