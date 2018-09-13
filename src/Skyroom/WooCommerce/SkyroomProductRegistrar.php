@@ -111,8 +111,8 @@ class SkyroomProductRegistrar
         global $post;
 
         $context = [
-            'name' => get_post_meta($post->ID, '_skyroom_room_name') ?: '',
-            'title' => get_post_meta($post->ID, '_skyroom_room_title') ?: '',
+            'name' => get_post_meta($post->ID, '_skyroom_name', true) ?: '',
+            'title' => get_post_meta($post->ID, '_skyroom_title', true) ?: '',
         ];
         $this->viewer->view('woocommerce-product-tab.php', $context);
     }
@@ -137,9 +137,11 @@ class SkyroomProductRegistrar
         $product = wc_get_product($postId);
         $skyroomId = $product->get_skyroom_id();
 
+        $update = !empty($skyroomId);
+
         try {
-            if (empty($skyroomId)) {
-                $id = $client->request(
+            if (!$update) {
+                $skyroomId = $client->request(
                     'createRoom',
                     [
                         'name' => $name,
@@ -147,7 +149,7 @@ class SkyroomProductRegistrar
                     ]
                 );
 
-                update_post_meta($postId, '_skyroom_id', $id);
+                update_post_meta($postId, '_skyroom_id', $skyroomId);
             } else {
                 $client->request(
                     'updateRoom',
@@ -159,14 +161,14 @@ class SkyroomProductRegistrar
                 );
             }
 
-            $room = $client->request('getRoom', ['room_id' => $id]);
-            $totalSales = get_post_meta($postId, 'total_sales');
+            $room = $client->request('getRoom', ['room_id' => $skyroomId]);
+            $totalSales = get_post_meta($postId, 'total_sales', true);
 
             update_post_meta($postId, '_skyroom_name', $room->name);
             update_post_meta($postId, '_skyroom_title', $room->title);
             update_post_meta($postId, '_skyroom_capacity', $capacity);
             update_post_meta($postId, '_stock', $capacity - $totalSales);
-            update_post_meta($postId, '_manage_stock', true);
+            update_post_meta($postId, '_manage_stock', 'yes');
 
         } catch (\Exception $e) {
             if (empty($skyroomId)) {
