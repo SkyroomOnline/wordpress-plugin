@@ -15,13 +15,20 @@ class Viewer
     private $pluginPath;
 
     /**
+     * @var string
+     */
+    private $pluginUrl;
+
+    /**
      * Viewer constructor.
      *
      * @param string $pluginPath
+     * @param string $pluginUrl
      */
-    public function __construct($pluginPath)
+    public function __construct($pluginPath, $pluginUrl)
     {
         $this->pluginPath = $pluginPath;
+        $this->pluginUrl = $pluginUrl;
     }
 
     /**

@@ -14,10 +14,13 @@ class MainMenu
      * Register main menu and submenus
      *
      * @param string          $icon
-     * @param AbstractSubmenu ...$submenus
      */
-    public function register($icon, AbstractSubmenu ...$submenus)
+    public function register($icon)
     {
+        // Get submenu args
+        $submenus = func_get_args();
+        array_shift($submenus);
+
         // Set slug same as first submenu slug
         $slug = $submenus[0]->menuSlug;
 

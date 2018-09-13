@@ -2,13 +2,10 @@
 
 namespace Skyroom\Adapter;
 
-use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
+use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Entity\ProductWrapperInterface;
 use Skyroom\Entity\WooCommerceProductWrapper;
-use Skyroom\Exception\ConnectionTimeoutException;
-use Skyroom\Exception\InvalidResponseException;
+use Skyroom\Factory\DICallableFactory;
 use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Viewer;
 use Skyroom\WooCommerce\SkyroomProduct;
@@ -22,50 +19,60 @@ use Skyroom\WooCommerce\SkyroomProductRegistrar;
 class WooCommerceAdapter implements PluginAdapterInterface
 {
     /**
-     * @var Container $container
+     * @var EventEmitterInterface
      */
-    private $container;
+    private $eventEmitter;
 
     /**
-     * WooCommerce Adapter constructor
-     *
-     * @param Container $container
+     * @var DICallableFactory
      */
-    function __construct(Container $container)
-    {
-        $this->container = $container;
+    private $callableFactory;
+
+    /**
+     * @var SkyroomProductRegistrar $productRegistrar
+     */
+    private $productRegistrar;
+
+    /**
+     * @var Viewer
+     */
+    private $viewer;
+
+    public function __construct(
+        EventEmitterInterface $eventEmitter,
+        DICallableFactory $callableFactory,
+        SkyroomProductRegistrar $productRegistrar,
+        Viewer $viewer
+    ) {
+        $this->eventEmitter = $eventEmitter;
+        $this->callableFactory = $callableFactory;
+        $this->productRegistrar = $productRegistrar;
+        $this->viewer = $viewer;
     }
 
     /**
      * Setup WooCommerce adapter
-     *
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     function setup()
     {
         // Register custom product type
-        $registrar = new SkyroomProductRegistrar($this->container);
-        $registrar->register();
-
-        $events = $this->container->get('Events');
-        $DICFactory = $this->container->get('DICallableFactory');
+        $this->productRegistrar->register();
 
         // Show add-to-card btn
-        $this->container->get('Events')
-            ->on('woocommerce_skyroom_add_to_cart', $DICFactory->create([$this, 'addToCart']), 10, 0);
+        $this->eventEmitter->on('woocommerce_skyroom_add_to_cart',
+            $this->callableFactory->create([$this, 'addToCart']), 10, 0);
 
         // Register order completed hook
-        $this->container->get('Events')
-            ->on('woocommerce_order_status_completed', $DICFactory->create([$this, 'processOrder']), 10, 2);
+        $this->eventEmitter->on('woocommerce_order_status_completed',
+            $this->callableFactory->create([$this, 'processOrder']), 10, 2);
 
         // Validate add to cart
-        $this->container->get('Events')
-            ->filter('woocommerce_add_to_cart_validation', $DICFactory->create([$this, 'validateAddToCart']), 10, 2);
+        $this->eventEmitter->filter('woocommerce_add_to_cart_validation',
+            $this->callableFactory->create([$this, 'validateAddToCart']), 10, 2);
 
         // Show skyroom items on order success
-        $this->container->get('Events')
-            ->filter('woocommerce_thankyou', $DICFactory->create([$this, 'showSkyroomItems']), 9, 1);
+        $this->eventEmitter->filter('woocommerce_thankyou',
+            $this->callableFactory->create([$this, 'showSkyroomItems']), 9, 1);
     }
 
     /**
@@ -129,9 +136,6 @@ class WooCommerceAdapter implements PluginAdapterInterface
      * @param int            $orderId
      * @param \WC_Order      $order
      * @param UserRepository $repository
-     *
-     * @throws ConnectionTimeoutException
-     * @throws InvalidResponseException
      */
     function processOrder($orderId, $order, UserRepository $repository)
     {
@@ -139,7 +143,11 @@ class WooCommerceAdapter implements PluginAdapterInterface
         foreach ($items as $item) {
             $product = $item->get_product();
             if ($product->get_type() === 'skyroom') {
-                $repository->addUserToRoom(wp_get_current_user(), $product->get_skyroom_id(), $orderId);
+                try {
+                    $repository->addUserToRoom(wp_get_current_user(), $product->get_skyroom_id(), $orderId);
+                } catch (\Exception $exception) {
+
+                }
             }
         }
     }
@@ -177,9 +185,6 @@ class WooCommerceAdapter implements PluginAdapterInterface
 
     /**
      * @param $orderId
-     *
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     function showSkyroomItems($orderId)
     {
@@ -194,11 +199,10 @@ class WooCommerceAdapter implements PluginAdapterInterface
         }
 
         if (!empty($skyroomProducts)) {
-            $this->container->get('Viewer')
-                ->view(
-                    'woocommerce-skyroom-order.php',
-                    ['products' => $skyroomProducts, 'columns' => $this->getOrderColumns()]
-                );
+            $this->viewer->view(
+                'woocommerce-skyroom-order.php',
+                ['products' => $skyroomProducts, 'columns' => $this->getOrderColumns()]
+            );
         }
     }
 

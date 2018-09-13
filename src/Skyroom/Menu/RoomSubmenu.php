@@ -2,8 +2,6 @@
 
 namespace Skyroom\Menu;
 
-use Skyroom\Exception\ConnectionTimeoutException;
-use Skyroom\Exception\InvalidResponseException;
 use Skyroom\Repository\RoomRepository;
 use Skyroom\Tables\RoomsTable;
 use Skyroom\Util\Viewer;
@@ -60,8 +58,7 @@ class RoomSubmenu extends AbstractSubmenu
             ];
             $this->viewer->view('rooms.php', $context);
 
-        } catch (ConnectionTimeoutException $e) {
-        } catch (InvalidResponseException $e) {
+        } catch (\Exception $e) {
         }
     }
 }

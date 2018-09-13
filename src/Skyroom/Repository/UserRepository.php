@@ -4,9 +4,8 @@ namespace Skyroom\Repository;
 
 use Skyroom\Api\Client;
 use Skyroom\Entity\User;
-use Skyroom\Exception\ConnectionTimeoutException;
-use Skyroom\Exception\InvalidResponseException;
-use Skyroom\WooCommerce\SkyroomProduct;
+use Skyroom\Exception\ConnectionNotEstablishedException;
+use Skyroom\Exception\InvalidResponseStatusException;
 
 /**
  * User Repository
@@ -33,8 +32,9 @@ class UserRepository
     /**
      * Get users
      *
-     * @throws ConnectionTimeoutException
-     * @throws InvalidResponseException
+     * @throws ConnectionNotEstablishedException
+     * @throws InvalidResponseStatusException
+     * @throws \Skyroom\Exception\RequestFailedException
      *
      * @return User[]
      */
@@ -67,8 +67,9 @@ class UserRepository
     /**
      * Add registered user to skyroom
      *
-     * @throws ConnectionTimeoutException
-     * @throws InvalidResponseException
+     * @throws ConnectionNotEstablishedException
+     * @throws InvalidResponseStatusException
+     * @throws \Skyroom\Exception\RequestFailedException
      *
      * @param \WP_User $user User data
      */
@@ -90,8 +91,9 @@ class UserRepository
     /**
      * Add user to skyroom
      *
-     * @throws ConnectionTimeoutException
-     * @throws InvalidResponseException
+     * @throws ConnectionNotEstablishedException
+     * @throws InvalidResponseStatusException
+     * @throws \Skyroom\Exception\RequestFailedException
      *
      * @param \WP_User $user
      * @param integer  $roomId Room ID

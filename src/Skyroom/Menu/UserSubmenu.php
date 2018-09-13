@@ -2,8 +2,6 @@
 
 namespace Skyroom\Menu;
 
-use Skyroom\Exception\ConnectionTimeoutException;
-use Skyroom\Exception\InvalidResponseException;
 use Skyroom\Repository\UserRepository;
 use Skyroom\Tables\UsersTable;
 use Skyroom\Util\Viewer;
@@ -61,8 +59,7 @@ class UserSubmenu extends AbstractSubmenu
             ];
             $this->viewer->view('users.php', $context);
 
-        } catch (ConnectionTimeoutException $e) {
-        } catch (InvalidResponseException $e) {
+        } catch (\Exception $e) {
         }
     }
 }

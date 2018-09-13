@@ -2,13 +2,8 @@
 
 namespace Skyroom\Menu;
 
-use DI\Container;
-use DI\DependencyException;
-use DI\NotFoundException;
 use Skyroom\Api\Client;
 use Skyroom\Api\URL;
-use Skyroom\Exception\ConnectionTimeoutException;
-use Skyroom\Exception\InvalidResponseException;
 use Skyroom\Util\Viewer;
 
 /**
@@ -18,11 +13,6 @@ use Skyroom\Util\Viewer;
  */
 class SettingSubmenu extends AbstractSubmenu
 {
-    /**
-     * @var Container $container
-     */
-    private $container;
-
     /**
      * @var Client $client
      */
@@ -36,12 +26,11 @@ class SettingSubmenu extends AbstractSubmenu
     /**
      * Setting submenu constructor
      *
-     * @param Container $container
-     * @param Client    $client
+     * @param Client $client
+     * @param Viewer $viewer
      */
-    public function __construct(Container $container, Client $client, Viewer $viewer)
+    public function __construct(Client $client, Viewer $viewer)
     {
-        $this->container = $container;
         $this->client = $client;
         $this->viewer = $viewer;
 
@@ -59,6 +48,10 @@ class SettingSubmenu extends AbstractSubmenu
      */
     function display()
     {
+        // initialize vars
+        $error = '';
+        $success = false;
+
         // Handle form submit
         if (isset($_POST['save'])) {
             $skyroomSiteUrl = $_POST['skyroom_site_url'];
@@ -69,35 +62,15 @@ class SettingSubmenu extends AbstractSubmenu
             $URL = new URL($skyroomSiteUrl, $skyroomApiKey);
             $this->client->setURL($URL);
 
-            // Initialize error
-            $error = '';
-
             try {
-                $success = $this->client->request('ping');
+                $this->client->request('ping');
 
                 // Update wordpress options
                 update_option('skyroom_site_url', $skyroomSiteUrl);
                 update_option('skyroom_api_key', $skyroomApiKey);
                 update_option('skyroom_integrated_plugin', $skyroomIntegratedPlugin);
-            } catch (InvalidResponseException $exception) {
-                switch ($exception->getCode()) {
-                    case InvalidResponseException::INVALID_RESPONSE_STATUS:
-                        $error
-                            = __('Webservice ping failed (Invalid response code). Make sure you entered right site url.',
-                            'skyroom');
-                        break;
-
-                    case InvalidResponseException::INVALID_RESPONSE_CONTENT:
-                    case InvalidResponseException::INVALID_RESULT:
-                        $error
-                            = __('Webservice ping failed (Invalid response received). Make sure you entered right site url.',
-                            'skyroom');
-                        break;
-                }
-            } catch (ConnectionTimeoutException $exception) {
-                $error
-                    = __('Webservice ping failed (No response received). Make sure you entered right site url.',
-                    'skyroom');
+            } catch (\Exception $exception) {
+                $error = $exception->getMessage();
             }
 
         } else {
@@ -106,18 +79,13 @@ class SettingSubmenu extends AbstractSubmenu
             $skyroomIntegratedPlugin = get_option('skyroom_integrated_plugin');
         }
 
-        try {
-            $context = [
-                'error' => $error,
-                'pluginUrl' => $this->container->get('plugin.url'),
-                'skyroomSiteUrl' => $skyroomSiteUrl,
-                'skyroomApiKey' => $skyroomApiKey,
-                'skyroomIntegratedPlugin' => $skyroomIntegratedPlugin,
-            ];
-            $this->viewer->view('settings.php', $context);
-
-        } catch (DependencyException $e) {
-        } catch (NotFoundException $e) {
-        }
+        $context = [
+            'error' => $error,
+            'success' => $success,
+            'skyroomSiteUrl' => $skyroomSiteUrl,
+            'skyroomApiKey' => $skyroomApiKey,
+            'skyroomIntegratedPlugin' => $skyroomIntegratedPlugin,
+        ];
+        $this->viewer->view('settings.php', $context);
     }
 }

@@ -2,9 +2,17 @@
 
 namespace Skyroom;
 
-use DI\ContainerBuilder;
-use DownShift\WordPress\EventEmitter;
 use DI\Container;
+use DI\ContainerBuilder;
+use DownShift\WordPress\EventEmitterInterface;
+use Skyroom\Adapter\PluginAdapterInterface;
+use Skyroom\Menu\MainMenu;
+use Skyroom\Menu\RoomSubmenu;
+use Skyroom\Menu\SettingSubmenu;
+use Skyroom\Menu\UserSubmenu;
+use Skyroom\Repository\UserRepository;
+use Skyroom\Util\AssetManager;
+use Skyroom\Util\Internationalization;
 
 /**
  * Plugin main class to build container and register wp hooks.
@@ -28,19 +36,16 @@ class Plugin
     public function boot()
     {
         $this->container = $this->buildContainer();
-        $this->container->get('Internationalization')->loadTextDomain();
+        $this->container->get(Internationalization::class)->loadTextDomain();
 
-        if (empty($this->container->get('setting.site'))) {
-            $this->tearDown($this->container->get('Events'));
+        if (!$this->isConfigured()) {
+            $this->tearDown($this->container->get(EventEmitterInterface::class));
 
             return;
         }
 
-        $this->registerHooks($this->container->get('Events'));
-
-        if (!empty($this->container->get('PluginAdapter'))) {
-            $this->container->get('PluginAdapter')->setup();
-        }
+        $this->registerHooks($this->container->get(EventEmitterInterface::class));
+        $this->container->get(PluginAdapterInterface::class)->setup();
     }
 
     /**
@@ -59,30 +64,30 @@ class Plugin
     /**
      * Register plugin hooks
      *
-     * @param EventEmitter $eventEmitter
+     * @param EventEmitterInterface $eventEmitter
      */
-    private function registerHooks(EventEmitter $eventEmitter)
+    private function registerHooks(EventEmitterInterface $eventEmitter)
     {
         // Register menus
         $eventEmitter->on('admin_menu', function () {
-            $menu = $this->container->get('Skyroom\Menu\MainMenu');
+            $menu = $this->container->get(MainMenu::class);
             $menu->register(
                 $this->container->get('plugin.url').'admin/images/icon-32x32.png',
-                $this->container->get('Skyroom\Menu\RoomSubmenu'),
-                $this->container->get('Skyroom\Menu\UserSubmenu'),
-                $this->container->get('Skyroom\Menu\SettingSubmenu')
+                $this->container->get(RoomSubmenu::class),
+                $this->container->get(UserSubmenu::class),
+                $this->container->get(SettingSubmenu::class)
             );
         });
 
         // Enqueue assets
         $eventEmitter->on('admin_init', function () {
-            $this->container->get('Skyroom\Util\AssetManager')->adminAssets();
+            $this->container->get(AssetManager::class)->adminAssets();
         });
 
         // User register hook
         $eventEmitter->on('user_register', function ($userId) {
             $user = get_user_by('id', $userId);
-            $this->container->get('Skyroom\Repository\UserRepository')->addUser($user);
+            $this->container->get(UserRepository::class)->addUser($user);
         });
     }
 
@@ -90,16 +95,16 @@ class Plugin
      * Called when plugin is not configured yet. Sets up necessary thing to allow
      * configuration and shows notice to user
      *
-     * @param EventEmitter $eventEmitter
+     * @param EventEmitterInterface $eventEmitter
      */
-    public function tearDown(EventEmitter $eventEmitter)
+    public function tearDown(EventEmitterInterface $eventEmitter)
     {
         // Load main menu with only settings submenu
         $eventEmitter->on('admin_menu', function () {
-            $menu = $this->container->get('Skyroom\Menu\MainMenu');
+            $menu = $this->container->get(MainMenu::class);
             $menu->register(
                 $this->container->get('plugin.url').'admin/images/icon-32x32.png',
-                $this->container->get('Skyroom\Menu\SettingSubmenu')
+                $this->container->get(SettingSubmenu::class)
             );
         });
 
@@ -118,8 +123,22 @@ class Plugin
 
         // Enqueue assets
         $eventEmitter->on('admin_init', function () {
-            $this->container->get('Skyroom\Util\AssetManager')->adminAssets();
+            $this->container->get(AssetManager::class)->adminAssets();
         });
 
+    }
+
+    /**
+     * Check plugin is configured or not
+     *
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     *
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        return !(empty($this->container->get('setting.site')) || empty($this->container->get('setting.key'))
+            || empty($this->container->get('setting.plugin')));
     }
 }

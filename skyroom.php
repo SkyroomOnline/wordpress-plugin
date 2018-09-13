@@ -22,7 +22,7 @@ defined('WPINC') || die;
 require_once __DIR__.'/vendor/autoload.php';
 
 // Register activation hook
-register_activation_hook(__FILE__, 'Skyroom\Util\Activator::activate');
+register_activation_hook(__FILE__, [Skyroom\Util\Activator::class, 'activate']);
 
 // Boot plugin
 add_action('plugins_loaded', [new Skyroom\Plugin(), 'boot']);

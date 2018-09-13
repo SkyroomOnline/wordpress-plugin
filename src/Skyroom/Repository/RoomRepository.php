@@ -5,8 +5,8 @@ namespace Skyroom\Repository;
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Api\Client;
 use Skyroom\Entity\Room;
-use Skyroom\Exception\ConnectionTimeoutException;
-use Skyroom\Exception\InvalidResponseException;
+use Skyroom\Exception\ConnectionNotEstablishedException;
+use Skyroom\Exception\InvalidResponseStatusException;
 
 /**
  * Room Repository
@@ -40,8 +40,9 @@ class RoomRepository
     /**
      * Get rooms
      *
-     * @throws ConnectionTimeoutException
-     * @throws InvalidResponseException
+     * @throws ConnectionNotEstablishedException
+     * @throws InvalidResponseStatusException
+     * @throws \Skyroom\Exception\RequestFailedException
      *
      * @return Room[]
      */

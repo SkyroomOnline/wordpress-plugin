@@ -2,14 +2,11 @@
 
 namespace Skyroom\WooCommerce;
 
-use DI\Container;
-use DI\Definition\Exception\DefinitionException;
-use DI\DependencyException;
-use DI\NotFoundException;
 use DownShift\WordPress\EventEmitter;
+use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Api\Client;
-use Skyroom\Exception\ConnectionTimeoutException;
-use Skyroom\Exception\InvalidResponseException;
+use Skyroom\Factory\DICallableFactory;
+use Skyroom\Util\Viewer;
 
 /**
  * Class SkyroomProductRegistrar
@@ -19,38 +16,50 @@ use Skyroom\Exception\InvalidResponseException;
 class SkyroomProductRegistrar
 {
     /**
-     * @var Container $container
+     * @var EventEmitterInterface
      */
-    private $container;
+    private $eventEmitter;
 
     /**
-     * SkyroomProductHooks constructor
-     *
-     * @param Container $container
+     * @var DICallableFactory
      */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    private $callableFactory;
+
+    /**
+     * @var Viewer
+     */
+    private $viewer;
+
+    /**
+     * @var \WP_Error
+     */
+    private $error;
+
+    public function __construct(
+        EventEmitterInterface $eventEmitter,
+        DICallableFactory $callableFactory,
+        Viewer $viewer
+    ) {
+        $this->eventEmitter = $eventEmitter;
+        $this->callableFactory = $callableFactory;
+        $this->viewer = $viewer;
+        $this->error = $this->getErrorTransient();
     }
 
     /**
      * Register hooks
-     *
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function register()
     {
-        $events = $this->container->get('Events');
-        $DICallableFactory = $this->container->get('DICallableFactory');
-
-        $events->filter('product_type_selector', [$this, 'registerProductType']);
-        $events->filter('woocommerce_product_class', [$this, 'selectProductTypeClass'], 10, 2);
-        $events->filter('woocommerce_product_data_tabs', [$this, 'registerSkyroomTab']);
-        $events->filter('woocommerce_product_data_panels', [$this, 'showSkyroomTabContent']);
-        $events->filter('woocommerce_product_data_tabs', [$this, 'hideUnneededTab']);
-        $events->filter('woocommerce_process_product_meta_skyroom',
-            $DICallableFactory->create([$this, 'processMeta']), 10, 1);
+        $this->eventEmitter->filter('product_type_selector', [$this, 'registerProductType']);
+        $this->eventEmitter->filter('woocommerce_product_class', [$this, 'selectProductTypeClass'], 10, 2);
+        $this->eventEmitter->filter('woocommerce_product_data_tabs', [$this, 'registerSkyroomTab']);
+        $this->eventEmitter->filter('woocommerce_product_data_panels', [$this, 'showSkyroomTabContent']);
+        $this->eventEmitter->filter('woocommerce_product_data_tabs', [$this, 'hideUnneededTab']);
+        $this->eventEmitter->filter('woocommerce_process_product_meta_skyroom',
+            $this->callableFactory->create([$this, 'processMeta']), 10, 1);
+        $this->eventEmitter->on('admin_notices', [$this, 'warnSavePostFail'], 20);
+        $this->eventEmitter->on('post_updated_messages', [$this, 'removePublishMessage'], 11);
     }
 
     /**
@@ -74,7 +83,7 @@ class SkyroomProductRegistrar
     public function selectProductTypeClass($className, $productType)
     {
         if ($productType === 'skyroom') {
-            return 'Skyroom\WooCommerce\SkyroomProduct';
+            return SkyroomProduct::class;
         }
 
         return $className;
@@ -97,10 +106,6 @@ class SkyroomProductRegistrar
         return $tabs;
     }
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
     public function showSkyroomTabContent()
     {
         global $post;
@@ -109,7 +114,7 @@ class SkyroomProductRegistrar
             'name' => get_post_meta($post->ID, '_skyroom_room_name') ?: '',
             'title' => get_post_meta($post->ID, '_skyroom_room_title') ?: '',
         ];
-        $this->container->get('Viewer')->view('woocommerce-product-tab.php', $context);
+        $this->viewer->view('woocommerce-product-tab.php', $context);
     }
 
     public function hideUnneededTab($tabs)
@@ -123,7 +128,7 @@ class SkyroomProductRegistrar
      * @param integer $postId
      * @param Client  $client
      */
-    public function processMeta($postId, Client $client)
+    public function processMeta($postId, Client $client, EventEmitter $eventEmitter)
     {
         $name = $_POST['_skyroom_name'] ?: $_POST['post_name'];
         $title = $_POST['_skyroom_title'] ?: $_POST['post_title'];
@@ -157,24 +162,20 @@ class SkyroomProductRegistrar
             $room = $client->request('getRoom', ['room_id' => $id]);
             $totalSales = get_post_meta($postId, 'total_sales');
 
-            update_post_meta($postId, '_skyroom_name', $room['name']);
-            update_post_meta($postId, '_skyroom_title', $room['title']);
+            update_post_meta($postId, '_skyroom_name', $room->name);
+            update_post_meta($postId, '_skyroom_title', $room->title);
             update_post_meta($postId, '_skyroom_capacity', $capacity);
             update_post_meta($postId, '_stock', $capacity - $totalSales);
             update_post_meta($postId, '_manage_stock', true);
 
-        } catch (ConnectionTimeoutException $e) {
+        } catch (\Exception $e) {
             if (empty($skyroomId)) {
                 $this->revertPostPublish($postId);
             }
 
-            $this->warnPostPublishFail($e);
-        } catch (InvalidResponseException $e) {
-            if (empty($skyroomId)) {
-                $this->revertPostPublish($postId);
-            }
-
-            $this->warnSavePostFail($e);
+            $error = new \WP_Error($e->getCode(), $e->getMessage());
+            $userId = get_current_user_id();
+            set_transient("skyroom_save_product_error_{$postId}_{$userId}", $error, 45);
         }
     }
 
@@ -189,26 +190,44 @@ class SkyroomProductRegistrar
 
         $post = get_post($postId);
         if ($post->post_status === 'publish') {
-            $wpdb->update($wpdb->posts, ['post_status' => 'draft'], ['post_id' => $post->ID]);
+            $wpdb->update($wpdb->posts, ['post_status' => 'draft'], ['ID' => $post->ID]);
         }
     }
 
-    /**
-     * @param \Exception $exception
-     */
-    public function warnPostPublishFail(\Exception $exception)
+    public function warnSavePostFail()
     {
-        try {
-            $this->container->get('EventEmitter')
-                ->on('admin_notices', function () use ($exception) {
-                    echo '<div id="skyroom_errors" class="error notice is-dismissible">';
-                    echo '<h3>'.__('Error', 'skyroom').'</h3>';
-                    echo '<p>'.$exception->getMessage().'</p>';
-                    echo '</div>';
-                });
-
-        } catch (DependencyException $e) {
-        } catch (NotFoundException $e) {
+        if ($this->error) {
+            echo '<div id="skyroom_errors" class="error notice is-dismissible">';
+            echo '<h3>'.__('Error', 'skyroom').'</h3>';
+            echo '<p>'.$this->error->get_error_message().'</p>';
+            echo '</div>';
         }
+    }
+
+    public function removePublishMessage($messages)
+    {
+        if ($this->error) {
+            $messages['product'] = [];
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @return \WP_Error
+     */
+    public function getErrorTransient()
+    {
+        if ($GLOBALS['pagenow'] !== 'post.php' || empty($_GET['post'])) {
+            return null;
+        }
+
+        $postId = $_GET['post'];
+        $userId = get_current_user_id();
+        if ($error = get_transient("skyroom_save_product_error_{$postId}_{$userId}")) {
+            return $error;
+        }
+
+        return null;
     }
 }

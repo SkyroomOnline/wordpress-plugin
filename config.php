@@ -5,32 +5,34 @@
  * returns associative array of values
  */
 
+use DownShift\WordPress\EventEmitter;
+use DownShift\WordPress\EventEmitterInterface;
+use Skyroom\Adapter\PluginAdapterInterface;
+use Skyroom\Adapter\WooCommerceAdapter;
+use Skyroom\Api\URL;
+use Skyroom\Util\AssetManager;
+use Skyroom\Util\Internationalization;
+use Skyroom\Util\Viewer;
+
 $services = [
-    'DownShift\WordPress\EventEmitter' => \DI\object('DownShift\WordPress\EventEmitter'),
-    'Internationalization' => \DI\object('Skyroom\Util\Internationalization')
-        ->constructor(\DI\get('name'), \DI\get('plugin.languagePath')),
-    'Skyroom\Api\URL' => \DI\object('Skyroom\Api\URL')
-        ->constructor(\DI\get('setting.site'), \DI\get('setting.key')),
-    'Skyroom\Util\AssetManager' => \DI\object('Skyroom\Util\AssetManager')
-        ->constructor(\DI\get('plugin.url'), \DI\get('version')),
-    'Skyroom\Util\Viewer' => \DI\object('Skyroom\Util\Viewer')
-        ->constructor(\DI\get('plugin.path')),
-    'Skyroom\Factory\DICallableFactory' => \DI\object('Skyroom\Factory\DICallableFactory'),
-    'Skyroom\Adapter\PluginAdapterInterface' => function (\DI\Container $container) {
+    EventEmitterInterface::class => DI\object(EventEmitter::class),
+    Internationalization::class => DI\object()
+        ->constructor(DI\get('name'), DI\get('plugin.languagePath')),
+    URL::class => DI\object()
+        ->constructor(DI\get('setting.site'), DI\get('setting.key')),
+    AssetManager::class => DI\object()
+        ->constructor(DI\get('plugin.url'), DI\get('version')),
+    Viewer::class => DI\object()
+        ->constructor(DI\get('plugin.path'), DI\get('plugin.url')),
+    PluginAdapterInterface::class => function (DI\Container $container) {
         switch ($container->get('setting.plugin')) {
             case 'woocommerce':
-                return new Skyroom\Adapter\WooCommerceAdapter($container);
+                return $container->get(WooCommerceAdapter::class);
 
             default:
                 return null;
         }
     },
-
-    // Aliases
-    'Events' => \DI\get('DownShift\WordPress\EventEmitter'),
-    'Viewer' => \DI\get('Skyroom\Util\Viewer'),
-    'PluginAdapter' => \DI\get('Skyroom\Adapter\PluginAdapterInterface'),
-    'DICallableFactory' => \DI\get('Skyroom\Factory\DICallableFactory'),
 ];
 
 $parameters = [

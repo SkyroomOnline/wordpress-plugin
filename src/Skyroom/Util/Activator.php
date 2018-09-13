@@ -2,8 +2,6 @@
 
 namespace Skyroom\Util;
 
-use DI\Container;
-
 /**
  * Plugin Activator
  *

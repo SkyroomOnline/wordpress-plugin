@@ -2,8 +2,9 @@
 
 namespace Skyroom\Api;
 
-use Skyroom\Exception\ConnectionTimeoutException;
-use Skyroom\Exception\InvalidResponseException;
+use Skyroom\Exception\ConnectionNotEstablishedException;
+use Skyroom\Exception\InvalidResponseStatusException;
+use Skyroom\Exception\RequestFailedException;
 
 /**
  * Skyroom API client.
@@ -43,8 +44,9 @@ class Client
      * @param string $action Requested action
      * @param array  $params Request parameters
      *
-     * @throws ConnectionTimeoutException
-     * @throws InvalidResponseException
+     * @throws ConnectionNotEstablishedException
+     * @throws InvalidResponseStatusException
+     * @throws RequestFailedException
      *
      * @return mixed Webservice result
      */
@@ -67,11 +69,11 @@ class Client
         $response = wp_remote_post($url, $args);
         $status = wp_remote_retrieve_response_code($response);
         if (empty($status)) {
-            throw new ConnectionTimeoutException();
+            throw new ConnectionNotEstablishedException();
         }
 
         if ($status !== 200) {
-            throw new InvalidResponseException(InvalidResponseException::INVALID_RESPONSE_STATUS);
+            throw new InvalidResponseStatusException();
         }
 
         $body = wp_remote_retrieve_body($response);
@@ -80,17 +82,13 @@ class Client
         if ($result === null && json_last_error() !== JSON_ERROR_NONE
             || !property_exists($result, 'ok')
         ) {
-            throw new InvalidResponseException(InvalidResponseException::INVALID_RESPONSE_CONTENT);
+            throw new InvalidResponseStatusException();
         }
 
         if ($result->ok === false) {
-            throw new InvalidResponseException($result->error_code, $result->error_message);
+            throw new RequestFailedException($result->error_code, $result->error_message);
         }
 
-        if ($result->ok) {
-            return $result->result;
-        }
-
-        throw new InvalidResponseException(InvalidResponseException::INVALID_RESULT);
+        return $result->result;
     }
 }
