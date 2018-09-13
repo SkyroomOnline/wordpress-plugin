@@ -24,15 +24,25 @@ class Activator
     {
         global $wpdb;
 
-        $tableName = $wpdb->prefix.'skyroom_enrolls';
+        $enrollsTable = $wpdb->prefix.'skyroom_enrolls';
+        $eventsTable = $wpdb->prefix.'skyroom_events';
         $charsetCollate = $wpdb->get_charset_collate();
         $sql
-            = "CREATE TABLE $tableName (
+            = "CREATE TABLE $enrollsTable (
                    user_id bigint(20) NOT NULL,
                    room_id bigint(20) NOT NULL,
                    post_id bigint(20) NOT NULL,
-                   enroll_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                   enroll_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                    PRIMARY KEY  (user_id, room_id)
+               ) $charsetCollate;
+               
+               CREATE TABLE $eventsTable (
+                   id bigint(20) NOT NULL AUTO_INCREMENT,
+                   title varchar(250) NOT NULL,
+                   type smallint NOT NULL,
+                   info text,
+                   created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                   PRIMARY KEY  (id)                   
                ) $charsetCollate;";
 
         require ABSPATH.'wp-admin/includes/upgrade.php';

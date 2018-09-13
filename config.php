@@ -15,6 +15,7 @@ use Skyroom\Util\Internationalization;
 use Skyroom\Util\Viewer;
 
 $services = [
+    wpdb::class => $GLOBALS['wpdb'],
     EventEmitterInterface::class => DI\object(EventEmitter::class),
     Internationalization::class => DI\object()
         ->constructor(DI\get('name'), DI\get('plugin.languagePath')),
