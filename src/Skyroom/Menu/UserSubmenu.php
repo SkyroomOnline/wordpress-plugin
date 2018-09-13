@@ -60,6 +60,10 @@ class UserSubmenu extends AbstractSubmenu
             $this->viewer->view('users.php', $context);
 
         } catch (\Exception $e) {
+            $context = [
+                'error' => $e->getMessage(),
+            ];
+            $this->viewer->view('error.php', $context);
         }
     }
 }

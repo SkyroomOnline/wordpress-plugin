@@ -17,3 +17,26 @@
     display: inline-block;
     margin-left: 10px;
 }
+
+.skyroom-error-wrapper {
+}
+
+.skyroom-error-img {
+    width: 200px;
+    margin: 0 auto;
+    padding: 5em 20px 0;
+}
+
+.skyroom-error-img img {
+    width: 100%;
+    opacity: 0.2;
+}
+
+.skyroom-error-message {
+    max-width: 450px;
+    margin: 0 auto;
+    font-size: .95rem;
+    font-weight: bold;
+    color: #505050;
+    text-align: center;
+}

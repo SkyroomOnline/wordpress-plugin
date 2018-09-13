@@ -59,6 +59,10 @@ class RoomSubmenu extends AbstractSubmenu
             $this->viewer->view('rooms.php', $context);
 
         } catch (\Exception $e) {
+            $context = [
+                'error' => $e->getMessage(),
+            ];
+            $this->viewer->view('error.php', $context);
         }
     }
 }
