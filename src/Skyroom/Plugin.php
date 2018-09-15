@@ -6,10 +6,12 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Adapter\PluginAdapterInterface;
+use Skyroom\Entity\Event;
 use Skyroom\Menu\MainMenu;
 use Skyroom\Menu\RoomSubmenu;
 use Skyroom\Menu\SettingSubmenu;
 use Skyroom\Menu\UserSubmenu;
+use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
 use Skyroom\Util\AssetManager;
 use Skyroom\Util\Internationalization;
@@ -87,7 +89,33 @@ class Plugin
         // User register hook
         $eventEmitter->on('user_register', function ($userId) {
             $user = get_user_by('id', $userId);
-            $this->container->get(UserRepository::class)->addUser($user);
+
+            try {
+                $this->container->get(UserRepository::class)->addUser($user);
+
+                $info = [
+                    'user_id' => $userId,
+                ];
+                $event = new Event(
+                    sprintf(__("Registered '%s' in skyroom service", 'skyroom'), $user->user_login),
+                    Event::SUCCESSFUL,
+                    $info
+                );
+                $this->container->get(EventRepository::class)->save($event);
+
+            } catch (\Exception $exception) {
+                $info = [
+                    'error_code' => $exception->getCode(),
+                    'error_message' => $exception->getMessage(),
+                    'user_id' => $userId,
+                ];
+                $event = new Event(
+                    sprintf(__("Failed to register '%s' to skyroom service", 'skyroom'), $user->user_login),
+                    Event::FAILED,
+                    $info
+                );
+                $this->container->get(EventRepository::class)->save($event);
+            }
         });
     }
 

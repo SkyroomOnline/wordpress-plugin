@@ -35,7 +35,7 @@ class EventRepository
             [
                 'title' => $event->getTitle(),
                 'type' => $event->getType(),
-                'error_info' => serialize($event->getErrorInfo()),
+                'info' => serialize($event->getErrorInfo()),
             ]
         );
     }
@@ -104,7 +104,7 @@ class EventRepository
     private function create($props)
     {
         try {
-            $event = new Event($props->title, $props->type, unserialize($props->error_info));
+            $event = new Event($props->title, $props->type, unserialize($props->info));
             $reflectionEvent = new \ReflectionClass($event);
             $reflectionProperty = $reflectionEvent->getProperty('id');
             $reflectionProperty->setAccessible(true);

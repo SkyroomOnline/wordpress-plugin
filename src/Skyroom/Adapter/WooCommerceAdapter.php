@@ -3,9 +3,11 @@
 namespace Skyroom\Adapter;
 
 use DownShift\WordPress\EventEmitterInterface;
+use Skyroom\Entity\Event;
 use Skyroom\Entity\ProductWrapperInterface;
 use Skyroom\Entity\WooCommerceProductWrapper;
 use Skyroom\Factory\DICallableFactory;
+use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Viewer;
 use Skyroom\WooCommerce\SkyroomProduct;
@@ -133,20 +135,48 @@ class WooCommerceAdapter implements PluginAdapterInterface
     }
 
     /**
-     * @param int            $orderId
-     * @param \WC_Order      $order
-     * @param UserRepository $repository
+     * @param int             $orderId
+     * @param \WC_Order       $order
+     * @param UserRepository  $userRepository
+     * @param EventRepository $eventRepository
      */
-    function processOrder($orderId, $order, UserRepository $repository)
+    function processOrder($orderId, $order, UserRepository $userRepository, EventRepository $eventRepository)
     {
         $items = $order->get_items();
         foreach ($items as $item) {
             $product = $item->get_product();
             if ($product->get_type() === 'skyroom') {
                 try {
-                    $repository->addUserToRoom(wp_get_current_user(), $product->get_skyroom_id(), $orderId);
-                } catch (\Exception $exception) {
+                    $userRepository->addUserToRoom(wp_get_current_user(), $product->get_skyroom_id(), $orderId);
 
+                    $info = [
+                        'order_id' => $orderId,
+                        'item_id' => $product->ID,
+                        'user_id' => get_current_user_id(),
+                        'room_id' => $product->get_skyroom_id(),
+                    ];
+                    $event = new Event(
+                        sprintf(__("Room access given to %s", 'skyroom'), wp_get_current_user()->user_login),
+                        Event::SUCCESSFUL,
+                        $info
+                    );
+                    $eventRepository->save($event);
+
+                } catch (\Exception $exception) {
+                    $info = [
+                        'error_code' => $exception->getCode(),
+                        'error_message' => $exception->getMessage(),
+                        'order_id' => $orderId,
+                        'item_id' => $product->ID,
+                        'user_id' => get_current_user_id(),
+                        'room_id' => $product->get_skyroom_id(),
+                    ];
+                    $event = new Event(
+                        sprintf(__("Failed to give room access to '%s'", 'skyroom'), wp_get_current_user()->user_login),
+                        Event::FAILED,
+                        $info
+                    );
+                    $eventRepository->save($event);
                 }
             }
         }
