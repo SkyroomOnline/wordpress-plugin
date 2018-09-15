@@ -7,12 +7,14 @@ use DI\ContainerBuilder;
 use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Entity\Event;
+use Skyroom\Menu\EventSubmenu;
 use Skyroom\Menu\MainMenu;
 use Skyroom\Menu\RoomSubmenu;
 use Skyroom\Menu\SettingSubmenu;
 use Skyroom\Menu\UserSubmenu;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
+use Skyroom\Tables\EventsTable;
 use Skyroom\Util\AssetManager;
 use Skyroom\Util\Internationalization;
 
@@ -77,6 +79,7 @@ class Plugin
                 $this->container->get('plugin.url').'admin/images/icon-32x32.png',
                 $this->container->get(RoomSubmenu::class),
                 $this->container->get(UserSubmenu::class),
+                $this->container->get(EventSubmenu::class),
                 $this->container->get(SettingSubmenu::class)
             );
         });
