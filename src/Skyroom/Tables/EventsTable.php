@@ -71,15 +71,13 @@ class EventsTable extends WPListTable
                 return '<strong>'.$event->getTitle().'</strong>';
 
             case 'details':
-                if ($event->getType() === Event::SUCCESSFUL) {
-                    return '&mdash;';
-                } else {
-                    return '<a href="#" class="show-details" data-details="'
-                        .esc_attr(json_encode($event->getErrorInfo())).'">'.__('Show details', 'skyroom').'</a>';
-                }
+                return '<a href="#" class="show-details" data-details="'
+                    .esc_attr(json_encode($event->getErrorInfo())).'">'.__('Show details', 'skyroom').'</a>';
 
             case 'type':
-                return $event->getType() === Event::SUCCESSFUL ? __('Successful', 'skyroom') : __('Failed', 'skyroom');
+                return $event->getType() === Event::SUCCESSFUL
+                    ? '<span class="skyroom-event-type skyroom-event-type-successful">'.__('Successful', 'skyroom').'</span>'
+                    : '<span class="skyroom-event-type skyroom-event-type-failed">'.__('Failed', 'skyroom').'</span>';
 
             case 'created_at':
                 return date_i18n(__('j F Y, H:i:s', 'skyroom'), $event->getCreatedAt());

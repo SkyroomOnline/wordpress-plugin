@@ -85,7 +85,7 @@ class UserRepository
         $id = $this->client->request('createUser', $params);
 
         // Link skyroom user to wordpress
-        update_user_meta($user->ID, 'skyroom_id', $id);
+        update_user_meta($user->ID, '_skyroom_id', $id);
     }
 
     /**
@@ -111,7 +111,7 @@ class UserRepository
         $this->client->request(
             'addRoomUsers',
             [
-                'room_id' => $postId,
+                'room_id' => $roomId,
                 'users' => [
                     ['user_id' => $user->id],
                 ],
@@ -139,9 +139,8 @@ class UserRepository
     public function isUserInRoom($userId, $roomId)
     {
         global $wpdb;
+        $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}skyroom_enrolls WHERE user_id=%d AND room_id=%d", $userId, $roomId);
 
-        $wpdb->prepare('SELECT FROM {$wpdb->prefix}skyroom_user WHERE user_id=%d AND room_id=%d', $userId, $roomId);
-
-        return !empty($wpdb->get_results());
+        return !empty($wpdb->get_results($query));
     }
 }

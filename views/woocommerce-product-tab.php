@@ -7,7 +7,7 @@
             'label' => __('Room Name', 'skyroom'),
             'value' => $name,
             'desc_tip' => true,
-            'description' => __('Contains of only latin letters and -_ characters'),
+            'description' => __('Contains of only latin letters and -_ characters', 'skyroom'),
         ]);
 
         woocommerce_wp_text_input([
@@ -15,7 +15,7 @@
             'label' => __('Room Title', 'skyroom'),
             'value' => $title,
             'desc_tip' => true,
-            'description' => __('Title of counterpart room on skyroom'),
+            'description' => __('Title of counterpart room on skyroom', 'skyroom'),
         ]);
 
         woocommerce_wp_text_input([

@@ -50,7 +50,7 @@ class SettingSubmenu extends AbstractSubmenu
     {
         // initialize vars
         $error = '';
-        $success = false;
+        $success = null;
 
         // Handle form submit
         if (isset($_POST['save'])) {
@@ -63,7 +63,7 @@ class SettingSubmenu extends AbstractSubmenu
             $this->client->setURL($URL);
 
             try {
-                $this->client->request('ping');
+                $success = $this->client->request('ping');
 
                 // Update wordpress options
                 update_option('skyroom_site_url', $skyroomSiteUrl);

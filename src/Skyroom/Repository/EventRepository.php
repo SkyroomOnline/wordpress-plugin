@@ -66,11 +66,12 @@ class EventRepository
     public function getAll($limit = 0, $offset = 0)
     {
         if (!empty($limit) && !empty($offset)) {
-            $query = $this->db->prepare("SELECT * FROM {$this->db->prefix}skyroom_events LIMIT %d,%d", $offset, $limit);
+            $query = $this->db->prepare("SELECT * FROM {$this->db->prefix}skyroom_events ORDER BY created_at DESC LIMIT %d,%d", $offset,
+                $limit);
         } elseif (!empty($limit)) {
-            $query = $this->db->prepare("SELECT * FROM {$this->db->prefix}skyroom_events LIMIT %d", $limit);
+            $query = $this->db->prepare("SELECT * FROM {$this->db->prefix}skyroom_events ORDER BY created_at DESC LIMIT %d", $limit);
         } else {
-            $query = "SELECT * FROM {$this->db->prefix}skyroom_events";
+            $query = "SELECT * FROM {$this->db->prefix}skyroom_events ORDER BY created_at DESC";
         }
 
         $propsArr = $this->db->get_results($query);
@@ -104,14 +105,14 @@ class EventRepository
     private function create($props)
     {
         try {
-            $event = new Event($props->title, $props->type, unserialize($props->info));
+            $event = new Event($props->title, intval($props->type), unserialize($props->info));
             $reflectionEvent = new \ReflectionClass($event);
             $reflectionProperty = $reflectionEvent->getProperty('id');
             $reflectionProperty->setAccessible(true);
             $reflectionProperty->setValue($event, $props->id);
             $reflectionProperty = $reflectionEvent->getProperty('createdAt');
             $reflectionProperty->setAccessible(true);
-            $reflectionProperty->setValue($event, $props->created_at);
+            $reflectionProperty->setValue($event, strtotime($props->created_at.' +0000'));
 
             return $event;
 

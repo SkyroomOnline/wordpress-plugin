@@ -53,3 +53,21 @@
 .skyroom_page_skyroom-events .ajs-body th, .skyroom_page_skyroom-events .ajs-body td {
     border: 1px solid #d9d9d9;
 }
+
+.skyroom-event-type {
+    display: inline-block;
+    padding: 0 12px;
+    color: #fff;
+    line-height: 23px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.skyroom-event-type-successful {
+    background: #5abd4e;
+}
+
+.skyroom-event-type-failed {
+    background: #dc5757;
+}

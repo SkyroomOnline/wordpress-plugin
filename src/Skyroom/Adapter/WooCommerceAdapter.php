@@ -68,6 +68,9 @@ class WooCommerceAdapter implements PluginAdapterInterface
         $this->eventEmitter->on('woocommerce_order_status_completed',
             $this->callableFactory->create([$this, 'processOrder']), 10, 2);
 
+        // Skyroom products don't need processing status
+        $this->eventEmitter->on('woocommerce_order_item_needs_processing', [$this, 'needsProcessing'], 10, 3);
+
         // Validate add to cart
         $this->eventEmitter->filter('woocommerce_add_to_cart_validation',
             $this->callableFactory->create([$this, 'validateAddToCart']), 10, 2);
@@ -143,20 +146,21 @@ class WooCommerceAdapter implements PluginAdapterInterface
     function processOrder($orderId, $order, UserRepository $userRepository, EventRepository $eventRepository)
     {
         $items = $order->get_items();
+        $user = $order->get_user();
         foreach ($items as $item) {
             $product = $item->get_product();
             if ($product->get_type() === 'skyroom') {
                 try {
-                    $userRepository->addUserToRoom(wp_get_current_user(), $product->get_skyroom_id(), $orderId);
+                    $userRepository->addUserToRoom($user, $product->get_skyroom_id(), $orderId);
 
                     $info = [
                         'order_id' => $orderId,
-                        'item_id' => $product->ID,
-                        'user_id' => get_current_user_id(),
+                        'item_id' => $product->get_id(),
+                        'user_id' => $user->ID,
                         'room_id' => $product->get_skyroom_id(),
                     ];
                     $event = new Event(
-                        sprintf(__("Room access given to %s", 'skyroom'), wp_get_current_user()->user_login),
+                        sprintf(__("Room access given to %s", 'skyroom'), $user->user_login),
                         Event::SUCCESSFUL,
                         $info
                     );
@@ -167,12 +171,12 @@ class WooCommerceAdapter implements PluginAdapterInterface
                         'error_code' => $exception->getCode(),
                         'error_message' => $exception->getMessage(),
                         'order_id' => $orderId,
-                        'item_id' => $product->ID,
-                        'user_id' => get_current_user_id(),
+                        'item_id' => $product->get_id(),
+                        'user_id' => $user->ID,
                         'room_id' => $product->get_skyroom_id(),
                     ];
                     $event = new Event(
-                        sprintf(__("Failed to give room access to '%s'", 'skyroom'), wp_get_current_user()->user_login),
+                        sprintf(__("Failed to give room access to '%s'", 'skyroom'), $user->user_login),
                         Event::FAILED,
                         $info
                     );
@@ -180,6 +184,20 @@ class WooCommerceAdapter implements PluginAdapterInterface
                 }
             }
         }
+    }
+
+    /**
+     * Filter order needs processing
+     *
+     * @param bool        $needs
+     * @param \WC_Product $product
+     * @param int         $orderId
+     *
+     * @return bool
+     */
+    function needsProcessing($needs, $product, $orderId)
+    {
+        return $product->get_type() === 'skyroom' ? false : $needs;
     }
 
     /**
@@ -194,7 +212,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
 
         $context = [
             'product' => $product,
-            'purchased' => $repository->isUserInRoom(get_current_user_id(), $product->id),
+            'purchased' => $repository->isUserInRoom(get_current_user_id(), $product->get_skyroom_id()),
         ];
         $viewer->view('woocommerce-add-to-cart.php', $context);
     }

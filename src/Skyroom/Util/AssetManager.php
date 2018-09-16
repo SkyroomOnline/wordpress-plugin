@@ -64,8 +64,10 @@ class AssetManager
                 'event_details' => __('Event details', 'skyroom'),
                 'error_code' => __('Error code', 'skyroom'),
                 'error_message' => __('Error message', 'skyroom'),
+                'order_id' => __('Order ID', 'skyroom'),
+                'item_id' => __('Item ID', 'skyroom'),
                 'user_id' => __('User ID', 'skyroom'),
-                'room id' => __('Room ID', 'skyroom'),
+                'room_id' => __('Room ID', 'skyroom'),
             ]
         );
     }

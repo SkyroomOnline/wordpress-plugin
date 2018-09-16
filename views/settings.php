@@ -39,7 +39,7 @@
             </tr>
             <tr>
                 <th scope="row">
-                    <label for="skyroom_integrated_plugin"><?php _e('Plugin you want to integrate skyroom with:') ?></label>
+                    <label for="skyroom_integrated_plugin"><?php _e('Plugin you want to integrate skyroom with:', 'skyroom') ?></label>
                 </th>
                 <td>
                     <select name="skyroom_integrated_plugin" id="skyroom_integrated_plugin">
