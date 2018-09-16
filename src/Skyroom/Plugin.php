@@ -4,8 +4,11 @@ namespace Skyroom;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Adapter\PluginAdapterInterface;
+use Skyroom\Controller\SkyroomController;
 use Skyroom\Entity\Event;
 use Skyroom\Menu\EventSubmenu;
 use Skyroom\Menu\MainMenu;
@@ -68,6 +71,9 @@ class Plugin
      * Register plugin hooks
      *
      * @param EventEmitterInterface $eventEmitter
+     *
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     private function registerHooks(EventEmitterInterface $eventEmitter)
     {
@@ -119,6 +125,9 @@ class Plugin
                 $this->container->get(EventRepository::class)->save($event);
             }
         });
+
+        // Register room redirection hook
+        $eventEmitter->on('do_parse_request', [$this->container->get(SkyroomController::class), 'parseRequest'], 10, 2);
     }
 
     /**
