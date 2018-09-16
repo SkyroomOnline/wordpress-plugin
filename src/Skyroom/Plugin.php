@@ -14,7 +14,6 @@ use Skyroom\Menu\SettingSubmenu;
 use Skyroom\Menu\UserSubmenu;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
-use Skyroom\Tables\EventsTable;
 use Skyroom\Util\AssetManager;
 use Skyroom\Util\Internationalization;
 

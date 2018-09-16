@@ -40,3 +40,16 @@
     color: #505050;
     text-align: center;
 }
+
+.skyroom_page_skyroom-events .ajs-body {
+    margin-right: -24px;
+    margin-left: -24px;
+}
+
+.skyroom_page_skyroom-events .ajs-body table {
+    border-collapse: collapse;
+}
+
+.skyroom_page_skyroom-events .ajs-body th, .skyroom_page_skyroom-events .ajs-body td {
+    border: 1px solid #d9d9d9;
+}

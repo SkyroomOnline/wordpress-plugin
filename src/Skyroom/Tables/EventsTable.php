@@ -74,7 +74,8 @@ class EventsTable extends WPListTable
                 if ($event->getType() === Event::SUCCESSFUL) {
                     return '&mdash;';
                 } else {
-                    return '<a href="javascript:console.log(this)">'.__('Show details', 'skyroom').'</a>';
+                    return '<a href="#" class="show-details" data-details="'
+                        .esc_attr(json_encode($event->getErrorInfo())).'">'.__('Show details', 'skyroom').'</a>';
                 }
 
             case 'type':

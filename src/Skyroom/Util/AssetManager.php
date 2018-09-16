@@ -48,5 +48,25 @@ class AssetManager
     {
         wp_enqueue_style('skyroom', $this->pluginUrl.'admin/css/style.css', $this->version);
         wp_enqueue_script('skyroom', $this->pluginUrl.'admin/js/script.js', $this->version);
+
+        wp_enqueue_script('skyroom-alertifyjs', $this->pluginUrl.'admin/js/alertify.min.js', $this->version);
+        if (!is_rtl()) {
+            wp_enqueue_style('skyroom-alertifyjs', $this->pluginUrl.'admin/css/alertify.min.css', $this->version);
+        } else {
+            wp_enqueue_style('skyroom-alertifyjs', $this->pluginUrl.'admin/css/alertify.rtl.min.css', $this->version);
+        }
+
+        wp_localize_script(
+            'skyroom',
+            'skyroom_l10n',
+            [
+                'ok' => __('OK', 'skyroom'),
+                'event_details' => __('Event details', 'skyroom'),
+                'error_code' => __('Error code', 'skyroom'),
+                'error_message' => __('Error message', 'skyroom'),
+                'user_id' => __('User ID', 'skyroom'),
+                'room id' => __('Room ID', 'skyroom'),
+            ]
+        );
     }
 }

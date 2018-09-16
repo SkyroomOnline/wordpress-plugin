@@ -37,9 +37,8 @@ class UserSubmenu extends AbstractSubmenu
         // Set user menu attributes
         parent::__construct(
             'skyroom-users',
-            __('Skyroom Users',
-                'skyroom'),
-            __('Users'),
+            __('Skyroom Users', 'skyroom'),
+            __('Users', 'skyroom'),
             'manage_options'
         );
     }
