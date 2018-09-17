@@ -77,7 +77,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
 
         // Show skyroom items on order success
         $this->eventEmitter->filter('woocommerce_thankyou',
-            $this->callableFactory->create([$this, 'showSkyroomItems']), 9, 1);
+            $this->callableFactory->create([$this, 'skyroomThankyou']), 9, 1);
     }
 
     /**
@@ -160,7 +160,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
                         'room_id' => $product->get_skyroom_id(),
                     ];
                     $event = new Event(
-                        sprintf(__("Room access given to %s", 'skyroom'), $user->user_login),
+                        sprintf(__("Room access given to '%s'", 'skyroom'), $user->user_login),
                         Event::SUCCESSFUL,
                         $info
                     );
@@ -234,23 +234,21 @@ class WooCommerceAdapter implements PluginAdapterInterface
     /**
      * @param $orderId
      */
-    function showSkyroomItems($orderId)
+    function skyroomThankyou($orderId)
     {
         $order = wc_get_order($orderId);
         $items = $order->get_items();
-        $skyroomProducts = [];
+        $hasSkyroomProduct = false;
         foreach ($items as $item) {
             $product = $item->get_product();
             if ($product && $product->get_type() === 'skyroom') {
-                $skyroomProducts[] = $product;
+                $hasSkyroomProduct = true;
+                break;
             }
         }
 
-        if (!empty($skyroomProducts)) {
-            $this->viewer->view(
-                'woocommerce-skyroom-order.php',
-                ['products' => $skyroomProducts, 'columns' => $this->getOrderColumns()]
-            );
+        if ($hasSkyroomProduct) {
+            $this->viewer->view('woocommerce-skyroom-order.php');
         }
     }
 
