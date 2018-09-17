@@ -113,6 +113,7 @@ class SkyroomProductRegistrar
         $context = [
             'name' => get_post_meta($post->ID, '_skyroom_name', true) ?: '',
             'title' => get_post_meta($post->ID, '_skyroom_title', true) ?: '',
+            'capacity' => get_post_meta($post->ID, '_skyroom_capacity', true) ?: '',
         ];
         $this->viewer->view('woocommerce-product-tab.php', $context);
     }

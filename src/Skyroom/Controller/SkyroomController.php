@@ -3,6 +3,8 @@
 namespace Skyroom\Controller;
 
 use Skyroom\Api\Client;
+use Skyroom\Entity\Event;
+use Skyroom\Repository\EventRepository;
 
 /**
  * Class Skyroom
@@ -18,9 +20,15 @@ class SkyroomController
      */
     private $client;
 
-    public function __construct(Client $client)
+    /**
+     * @var EventRepository
+     */
+    private $eventRepository;
+
+    public function __construct(Client $client, EventRepository $eventRepository)
     {
         $this->client = $client;
+        $this->eventRepository = $eventRepository;
     }
 
     /**
@@ -40,26 +48,39 @@ class SkyroomController
             $enrollment = $wpdb->get_row($query);
 
             if (empty($enrollment)) {
-                $wp->handle_404();
-
-                return false;
+                return true;
             }
 
             try {
                 $url = $this->client->request('getLoginUrl', [
-                    'room_id' => $enrollment['room_id'],
-                    'user_id' => $enrollment['user_id'],
+                    'room_id' => $enrollment->room_id,
+                    'user_id' => get_user_meta($enrollment->user_id, '_skyroom_id', true),
                     'ttl' => 60,
                 ]);
 
                 wp_redirect($url);
 
             } catch (\Exception $exception) {
-                echo '<h1>'.__('Error').'</h1>';
-                echo '<p>'.__('A fatal error occurred. Please contact site support to fix problem.').'</p>';
+                // Save error event
+                $info = [
+                    'error_code' => $exception->getCode(),
+                    'error_message' => $exception->getMessage(),
+                    'user_id' => $enrollment->user_id,
+                    'room_id' => $enrollment->room_id,
+                ];
+                $event = new Event(
+                    sprintf(__("Redirecting '%s' to classroom failed", 'skyroom'), wp_get_current_user()->user_login),
+                    Event::FAILED,
+                    $info
+                );
+                $this->eventRepository->save($event);
+
+                $title = __('Error entering class', 'skyroom');
+                $message = __('There was an error communicating with class holder. Please contact site support to fix problem.', 'skyroom');
+                wp_die('<h1>'.$title.'</h1>'.'<p>'.$message.'</p>', $title);
             }
 
-            return false;
+            return true;
         }
 
         return $do;

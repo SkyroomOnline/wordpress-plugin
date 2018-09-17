@@ -24,7 +24,11 @@ if ($product->is_in_stock() && !$purchased) : ?>
     <?php do_action('woocommerce_after_add_to_cart_form'); ?>
 
 <?php elseif ($purchased) : ?>
-    <!-- TODO show redirect to room button -->
+    <?php do_action('skyroom_before_enter_room_button') ?>
+    <a href="<?php echo home_url('redirect-to-room/'.$product->get_skyroom_id()) ?>" class="button alt">
+        <?php _e('Enter room', 'skyroom') ?>
+    </a>
+    <?php do_action('skyroom_after_enter_room_button') ?>
 <?php else : ?>
     <?php do_action('skyroom_before_capacity_full') ?>
 
