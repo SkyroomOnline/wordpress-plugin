@@ -1,0 +1,447 @@
+# Copyright (C) 2018 Skyroom
+# This file is distributed under the same license as the Skyroom package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Skyroom 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
+"POT-Creation-Date: 2018-09-17 17:54:59+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-09-18 08:36+0430\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: fa_IR\n"
+
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:137
+msgid "Products"
+msgstr "محصولات"
+
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:137
+msgid "Product"
+msgstr "محصول"
+
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:163
+msgid "Room access given to '%s'"
+msgstr "دسترسی اتاق به '%s' اعطا شد"
+
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:179
+msgid "Failed to give room access to '%s'"
+msgstr "اعطای دسترسی اتاق به '%s' با خطا مواجه شد"
+
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:258
+msgid "Room title"
+msgstr "عنوان اتاق"
+
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:259
+#: views/woocommerce-add-to-cart.php:29
+msgid "Enter room"
+msgstr "ورود به اتاق"
+
+#: src/Skyroom/Controller/SkyroomController.php:73
+msgid "Redirecting '%s' to classroom failed"
+msgstr "انتقال '%s' به کلاس با خطا مواجه شد"
+
+#: src/Skyroom/Controller/SkyroomController.php:79
+msgid "Error entering class"
+msgstr "خطا در هنگام ورود به کلاس"
+
+#: src/Skyroom/Controller/SkyroomController.php:80
+msgid ""
+"There was an error communicating with class holder. Please contact site "
+"support to fix problem."
+msgstr ""
+"برقراری ارتباط با برگزار کننده کلاس با خطا روبرو شد. لطفا برای حل این مشکل "
+"با پشتیبانی سایت تماس بگیرید."
+
+#: src/Skyroom/Entity/Room.php:88 src/Skyroom/Entity/User.php:91
+msgid "Active"
+msgstr "فعال"
+
+#: src/Skyroom/Entity/Room.php:91 src/Skyroom/Entity/User.php:94
+msgid "Inactive"
+msgstr "غیرفعال"
+
+#: src/Skyroom/Exception/ConnectionNotEstablishedException.php:18
+msgid "Connection to skyroom server could not be established"
+msgstr "ارتباط با سرویس‌دهنده اسکای‌روم برقرار نشد"
+
+#: src/Skyroom/Exception/InvalidResponseException.php:18
+msgid "Skyroom server response has invalid format"
+msgstr "فرمت جواب سرویس‌دهنده اسکای‌روم درست نمی‌باشد"
+
+#: src/Skyroom/Exception/InvalidResponseStatusException.php:18
+msgid "Skyroom server response status is not valid"
+msgstr "وضعیت جواب سرویس‌دهنده اسکای‌روم درست نمی‌باشد"
+
+#: src/Skyroom/Menu/EventSubmenu.php:39
+msgid "Skyroom Events"
+msgstr "رخدادهای اسکای‌روم"
+
+#: src/Skyroom/Menu/EventSubmenu.php:40 src/Skyroom/Tables/EventsTable.php:29
+#: views/events.php:2
+msgid "Events"
+msgstr "رخدادها"
+
+#: src/Skyroom/Menu/MainMenu.php:28
+msgid "Skyroom Integration"
+msgstr "یکپارچه‌سازی اسکای‌روم"
+
+#. Plugin Name of the plugin/theme
+#. Author of the plugin/theme
+#: src/Skyroom/Menu/MainMenu.php:29
+#: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:72
+#: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:100
+msgid "Skyroom"
+msgstr "اسکای‌روم"
+
+#: src/Skyroom/Menu/RoomSubmenu.php:40
+msgid "Skyroom Rooms"
+msgstr "اتاق‌های اسکای‌روم"
+
+#: src/Skyroom/Menu/RoomSubmenu.php:41 src/Skyroom/Tables/RoomsTable.php:34
+#: views/rooms.php:2
+msgid "Rooms"
+msgstr "اتاق‌ها"
+
+#: src/Skyroom/Menu/SettingSubmenu.php:40 views/settings.php:2
+msgid "Skyroom Settings"
+msgstr "تنظیمات اسکای‌روم"
+
+#: src/Skyroom/Menu/SettingSubmenu.php:41
+msgid "Settings"
+msgstr "تنظیمات"
+
+#: src/Skyroom/Menu/UserSubmenu.php:40
+msgid "Skyroom Users"
+msgstr "کاربران اسکای‌روم"
+
+#: src/Skyroom/Menu/UserSubmenu.php:41 src/Skyroom/Tables/UsersTable.php:28
+#: views/users.php:2
+msgid "Users"
+msgstr "کاربران"
+
+#: src/Skyroom/Plugin.php:108
+msgid "Registered '%s' in skyroom service"
+msgstr "'%s' در سرویس اسکای‌روم ثبت‌نام گردید"
+
+#: src/Skyroom/Plugin.php:121
+msgid "Failed to register '%s' to skyroom service"
+msgstr "ثبت‌نام '%s' در سرویس اسکای‌روم با خطا مواجه شد"
+
+#: src/Skyroom/Plugin.php:154
+msgid ""
+"<strong>Skyroom</strong> plugin activated successfully but it's not "
+"configured yet. Please go to <a href=\"%s\">skyroom settings</a> page and "
+"configure it to start working."
+msgstr ""
+"پلاگین <strong>اسکای‌روم</strong> با موفقیت فعال شد اما هنوز پیکربندی "
+"نشده‌است. لطفا به صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی "
+"را انجام دهید تا شروع به کار کند."
+
+#: src/Skyroom/Repository/UserRepository.php:110
+msgid "User is not registered to skyroom"
+msgstr "کاربر در اسکای‌روم ثبت‌نام نشده‌است"
+
+#: src/Skyroom/Tables/EventsTable.php:28
+msgid "Event"
+msgstr "رخداد"
+
+#: src/Skyroom/Tables/EventsTable.php:75
+msgid "Show details"
+msgstr "نمایش جزئیات"
+
+#: src/Skyroom/Tables/EventsTable.php:79
+msgid "Successful"
+msgstr "موفق"
+
+#: src/Skyroom/Tables/EventsTable.php:80
+msgid "Failed"
+msgstr "ناموفق"
+
+#: src/Skyroom/Tables/EventsTable.php:83
+msgid "j F Y, H:i:s"
+msgstr "j F Y، H:i:s"
+
+#: src/Skyroom/Tables/EventsTable.php:99 src/Skyroom/Tables/RoomsTable.php:140
+msgid "Title"
+msgstr "عنوان"
+
+#: src/Skyroom/Tables/EventsTable.php:100
+msgid "Details"
+msgstr "جزئیات"
+
+#: src/Skyroom/Tables/EventsTable.php:101
+msgid "Type"
+msgstr "نوع"
+
+#: src/Skyroom/Tables/EventsTable.php:102
+msgid "Created at"
+msgstr "ایجاد شده در"
+
+#: src/Skyroom/Tables/RoomsTable.php:33
+msgid "Room"
+msgstr "اتاق"
+
+#: src/Skyroom/Tables/RoomsTable.php:95
+msgid "Show room"
+msgstr "نمایش اتاق"
+
+#: src/Skyroom/Tables/RoomsTable.php:142
+msgid "Name"
+msgstr "نام"
+
+#: src/Skyroom/Tables/RoomsTable.php:143 src/Skyroom/Tables/UsersTable.php:163
+msgid "Status"
+msgstr "وضعیت"
+
+#: src/Skyroom/Tables/UsersTable.php:27
+msgid "User"
+msgstr "کاربر"
+
+#: src/Skyroom/Tables/UsersTable.php:90
+msgid "Remove from skyroom"
+msgstr "حذف از اسکای‌روم"
+
+#: src/Skyroom/Tables/UsersTable.php:95
+msgid "Edit user"
+msgstr "ویرایش کاربر"
+
+#: src/Skyroom/Tables/UsersTable.php:159
+msgid "Nickname"
+msgstr "نام نمایشی"
+
+#: src/Skyroom/Tables/UsersTable.php:160
+msgid "Username"
+msgstr "نام کاربری"
+
+#: src/Skyroom/Tables/UsersTable.php:161
+msgid "Wordpress name"
+msgstr "نام وردپرسی"
+
+#: src/Skyroom/Tables/UsersTable.php:162
+msgid "Wordpress username"
+msgstr "نام کاربری وردپرسی"
+
+#: src/Skyroom/Tables/WPListTable.php:170
+msgid "List View"
+msgstr "نمایش لیست"
+
+#: src/Skyroom/Tables/WPListTable.php:171
+msgid "Excerpt View"
+msgstr "نمایش خلاصه"
+
+#: src/Skyroom/Tables/WPListTable.php:352
+msgid "No items found."
+msgstr "هیچ آیتمی پیدا نشد."
+
+#: src/Skyroom/Tables/WPListTable.php:488
+msgid "Select bulk action"
+msgstr "انتخاب عمل جمعی"
+
+#: src/Skyroom/Tables/WPListTable.php:490
+msgid "Bulk Actions"
+msgstr "انتخاب عمل جمعی"
+
+#: src/Skyroom/Tables/WPListTable.php:500
+msgid "Apply"
+msgstr "اعمال"
+
+#: src/Skyroom/Tables/WPListTable.php:555
+#: src/Skyroom/Tables/WPListTable.php:1391
+msgid "Show more details"
+msgstr "نمایش جزئیات بیشتر"
+
+#: src/Skyroom/Tables/WPListTable.php:620
+msgid "Filter by date"
+msgstr "فیلتر توسط تاریخ"
+
+#: src/Skyroom/Tables/WPListTable.php:622
+msgid "All dates"
+msgstr "همه تاریخ‌ها"
+
+#. translators: 1: month name, 2: 4-digit year
+#: src/Skyroom/Tables/WPListTable.php:636
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#: src/Skyroom/Tables/WPListTable.php:689
+msgid "%s comment"
+msgid_plural "%s comments"
+msgstr[0] "%s دیدگاه"
+
+#: src/Skyroom/Tables/WPListTable.php:690
+msgid "%s approved comment"
+msgid_plural "%s approved comments"
+msgstr[0] "%s دیدگاه تایید شده"
+
+#: src/Skyroom/Tables/WPListTable.php:692
+msgid "%s pending comment"
+msgid_plural "%s pending comments"
+msgstr[0] "%s دیدگاه منتظر تایید"
+
+#: src/Skyroom/Tables/WPListTable.php:698
+#: src/Skyroom/Tables/WPListTable.php:711
+#: src/Skyroom/Tables/WPListTable.php:725
+msgid "No comments"
+msgstr "بدون دیدگاه"
+
+#: src/Skyroom/Tables/WPListTable.php:711
+msgid "No approved comments"
+msgstr "بدون دیدگاه تایید شده"
+
+#: src/Skyroom/Tables/WPListTable.php:725
+msgid "No pending comments"
+msgstr "بدون دیدگاه منتظر تایید"
+
+#: src/Skyroom/Tables/WPListTable.php:805
+#: src/Skyroom/Tables/WPListTable.php:1416
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] "%s مورد"
+
+#: src/Skyroom/Tables/WPListTable.php:843
+msgid "First page"
+msgstr "صفحه اول"
+
+#: src/Skyroom/Tables/WPListTable.php:854
+msgid "Previous page"
+msgstr "صفحه قبلی"
+
+#: src/Skyroom/Tables/WPListTable.php:861
+#: src/Skyroom/Tables/WPListTable.php:866
+msgid "Current Page"
+msgstr "صفحه کنونی"
+
+#: src/Skyroom/Tables/WPListTable.php:872
+msgctxt "paging"
+msgid "%1$s of %2$s"
+msgstr "%1$s از %2$s"
+
+#: src/Skyroom/Tables/WPListTable.php:881
+msgid "Next page"
+msgstr "صفحه بعد"
+
+#: src/Skyroom/Tables/WPListTable.php:892
+msgid "Last page"
+msgstr "صفحه آخر"
+
+#: src/Skyroom/Tables/WPListTable.php:1123
+msgid "Select All"
+msgstr "همه تاریخ‌ها"
+
+#: src/Skyroom/Util/AssetManager.php:63
+msgid "OK"
+msgstr "باشه"
+
+#: src/Skyroom/Util/AssetManager.php:64
+msgid "Event details"
+msgstr "جزئیات رخداد"
+
+#: src/Skyroom/Util/AssetManager.php:65
+msgid "Error code"
+msgstr "کد خطا"
+
+#: src/Skyroom/Util/AssetManager.php:66
+msgid "Error message"
+msgstr "پیام خطا"
+
+#: src/Skyroom/Util/AssetManager.php:67
+msgid "Order ID"
+msgstr "شناسه سفارش"
+
+#: src/Skyroom/Util/AssetManager.php:68
+msgid "Item ID"
+msgstr "شناسه آیتم"
+
+#: src/Skyroom/Util/AssetManager.php:69
+msgid "User ID"
+msgstr "شناسه کاربر"
+
+#: src/Skyroom/Util/AssetManager.php:70
+msgid "Room ID"
+msgstr "شناسه اتاق"
+
+#: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:204
+msgid "Error"
+msgstr "خطا"
+
+#: views/settings.php:5
+msgid "Your changes saved successfully"
+msgstr "تغییرات شما با موفقیت ذخیره شدند"
+
+#: views/settings.php:21
+msgid "Skyroom service url:"
+msgstr "آدرس سرویس اسکای‌روم:"
+
+#: views/settings.php:32
+msgid "Your API key:"
+msgstr "کلید API شما:"
+
+#: views/settings.php:37
+msgid "API key should be provided to you by skyroom support"
+msgstr "کلید API باید توسط پشتیبانی اسکای‌روم در اختیار شما قرار داده شود"
+
+#: views/settings.php:42
+msgid "Plugin you want to integrate skyroom with:"
+msgstr "پلاگینی که میخواهید با اسکای‌روم یکپارچه‌سازی شود:"
+
+#: views/settings.php:47
+msgid "WooCommerce"
+msgstr "ووکامرس"
+
+#: views/settings.php:56
+msgid "Save Changes"
+msgstr "ذخیره تغییرات"
+
+#: views/woocommerce-add-to-cart.php:36
+msgid "Capacity is full"
+msgstr "ظرفیت پر است"
+
+#: views/woocommerce-product-tab.php:7
+msgid "Room Name"
+msgstr "نام اتاق"
+
+#: views/woocommerce-product-tab.php:10
+msgid "Contains of only latin letters and -_ characters"
+msgstr "تشکیل شده از حروف الفبا و کاراکترهای - و _"
+
+#: views/woocommerce-product-tab.php:15
+msgid "Room Title"
+msgstr "عنوان اتاق"
+
+#: views/woocommerce-product-tab.php:18
+msgid "Title of counterpart room on skyroom"
+msgstr "عنوان اتاق تشکیل‌شده در اسکای‌روم"
+
+#: views/woocommerce-product-tab.php:23
+msgid "Room Capacity"
+msgstr "ظرفیت اتاق"
+
+#: views/woocommerce-skyroom-order.php:2
+msgid "Courses"
+msgstr "دوره‌ها"
+
+#: views/woocommerce-skyroom-order.php:3
+msgid ""
+"You successfully enrolled in purchased courses. To attend classes, on "
+"announced schedules navigate to course page and click on 'Enter room' "
+"button. (Remember you should be logged in to site)"
+msgstr ""
+"ثبت‌نام شما در دوره‌های خریداری شده با موفقیت انجام شد. برای شرکت در کلاس‌ها در "
+"زمان‌های اعلام شده وارد صفحه دوره شده و روی دکمه 'ورود به کلاس' کلیک نمایید. "
+"(لطفا توجه کنید که باید وارد سایت شده باشید)"
+
+#. Plugin URI of the plugin/theme
+msgid "https://skyroom.online/pages/wordpress-integration"
+msgstr "https://skyroom.online/pages/wordpress-integration"
+
+#. Description of the plugin/theme
+msgid "A plugin to integrate skyroom with your wordpress site"
+msgstr "پلاگینی برای یکپارچه‌سازی اسکای‌روم با سایت وردپرسی"
+
+#. Author URI of the plugin/theme
+msgid "https://skyroom.online/"
+msgstr "https://skyroom.online/"
