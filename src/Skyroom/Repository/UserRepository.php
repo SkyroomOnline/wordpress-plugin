@@ -14,6 +14,8 @@ use Skyroom\Exception\InvalidResponseStatusException;
  */
 class UserRepository
 {
+    const SKYROOM_ID_META_KEY = '_skyroom_id';
+
     /**
      * @var Client API client
      */
@@ -46,14 +48,14 @@ class UserRepository
         }, $usersArray);
 
         $wpUsersArray = get_users([
-            'meta_name' => '_skyroom_id',
+            'meta_name' => self::SKYROOM_ID_META_KEY,
             'meta_value' => $ids,
             'meta_compare' => 'IN',
         ]);
 
         $wpUsers = [];
         foreach ($wpUsersArray as $wpUser) {
-            $wpUsers[get_user_meta($wpUser->ID, '_skyroom_id', true)] = $wpUser;
+            $wpUsers[$this->getSkyroomId($wpUser->ID)] = $wpUser;
         }
 
         $users = [];
@@ -85,7 +87,7 @@ class UserRepository
         $id = $this->client->request('createUser', $params);
 
         // Link skyroom user to wordpress
-        update_user_meta($user->ID, '_skyroom_id', $id);
+        $this->updateSkyroomId($user->ID, $id);
     }
 
     /**
@@ -103,27 +105,28 @@ class UserRepository
     {
         global $wpdb;
 
-        $skyroomUserId = get_user_meta($user->id, '_skyroom_id');
+        $skyroomUserId = $this->getSkyroomId($user->ID);
         if (empty($skyroomUserId)) {
             throw new \InvalidArgumentException(__('User is not registered to skyroom', 'skyroom'));
         }
+
+        $wpdb->insert(
+            $wpdb->prefix.'skyroom_enrolls',
+            [
+                'skyroom_user_id' => $skyroomUserId,
+                'room_id' => $roomId,
+                'user_id' => $user->ID,
+                'post_id' => $postId,
+            ]
+        );
 
         $this->client->request(
             'addRoomUsers',
             [
                 'room_id' => $roomId,
                 'users' => [
-                    ['user_id' => $user->id],
+                    ['user_id' => $skyroomUserId],
                 ],
-            ]
-        );
-
-        $wpdb->insert(
-            $wpdb->prefix.'skyroom_enrolls',
-            [
-                'user_id' => $user->id,
-                'room_id' => $roomId,
-                'post_id' => $postId,
             ]
         );
     }
@@ -142,5 +145,30 @@ class UserRepository
         $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}skyroom_enrolls WHERE user_id=%d AND room_id=%d", $userId, $roomId);
 
         return !empty($wpdb->get_results($query));
+    }
+
+    /**
+     * Get user skyroom id meta value
+     *
+     * @param $userId
+     *
+     * @return int
+     */
+    public function getSkyroomId($userId)
+    {
+        return get_user_meta($userId, self::SKYROOM_ID_META_KEY, true);
+    }
+
+    /**
+     * Update skyroom id meta of user
+     *
+     * @param $userId
+     * @param $skyroomUserId
+     *
+     * @return bool
+     */
+    public function updateSkyroomId($userId, $skyroomUserId)
+    {
+        return update_user_meta($userId, self::SKYROOM_ID_META_KEY, $skyroomUserId);
     }
 }

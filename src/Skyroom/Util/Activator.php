@@ -29,11 +29,12 @@ class Activator
         $charsetCollate = $wpdb->get_charset_collate();
         $sql
             = "CREATE TABLE $enrollsTable (
-                   user_id bigint(20) NOT NULL,
+                   skyroom_user_id bigint(20) NOT NULL,
                    room_id bigint(20) NOT NULL,
+                   user_id bigint(20) NOT NULL,
                    post_id bigint(20) NOT NULL,
                    enroll_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                   PRIMARY KEY  (user_id, room_id)
+                   PRIMARY KEY  (skyroom_user_id, room_id)
                ) $charsetCollate;
                
                CREATE TABLE $eventsTable (

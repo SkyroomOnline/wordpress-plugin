@@ -54,11 +54,12 @@ class SkyroomController
             try {
                 $url = $this->client->request('getLoginUrl', [
                     'room_id' => $enrollment->room_id,
-                    'user_id' => get_user_meta($enrollment->user_id, '_skyroom_id', true),
+                    'user_id' => $enrollment->skyroom_user_id,
                     'ttl' => 60,
                 ]);
 
                 wp_redirect($url);
+                exit;
 
             } catch (\Exception $exception) {
                 // Save error event
