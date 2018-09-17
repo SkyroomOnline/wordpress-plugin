@@ -18,7 +18,7 @@ $services = [
     wpdb::class => $GLOBALS['wpdb'],
     EventEmitterInterface::class => DI\object(EventEmitter::class),
     Internationalization::class => DI\object()
-        ->constructor(DI\get('name'), DI\get('plugin.languagePath')),
+        ->constructor(DI\get('name'), DI\get('plugin.path.languages')),
     URL::class => DI\object()
         ->constructor(DI\get('setting.site'), DI\get('setting.key')),
     AssetManager::class => DI\object()
@@ -41,7 +41,7 @@ $parameters = [
     'version' => '1.0.0',
     'plugin.path' => plugin_dir_path(__FILE__),
     'plugin.url' => plugin_dir_url(__FILE__),
-    'plugin.languagePath' => plugin_dir_path(__FILE__).'languages',
+    'plugin.path.languages' => 'skyroom/languages',
     'setting.site' => get_option('skyroom_site_url'),
     'setting.key' => get_option('skyroom_api_key'),
     'setting.plugin' => get_option('skyroom_integrated_plugin'),
