@@ -70,7 +70,7 @@ class SkyroomController
                     'room_id' => $enrollment->room_id,
                 ];
                 $event = new Event(
-                    sprintf(__("Redirecting '%s' to classroom failed", 'skyroom'), wp_get_current_user()->user_login),
+                    sprintf(__('Redirecting "%s" to classroom failed', 'skyroom'), wp_get_current_user()->user_login),
                     Event::FAILED,
                     $info
                 );

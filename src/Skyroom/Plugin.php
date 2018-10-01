@@ -105,7 +105,7 @@ class Plugin
                     'user_id' => $userId,
                 ];
                 $event = new Event(
-                    sprintf(__("Registered '%s' in skyroom service", 'skyroom'), $user->user_login),
+                    sprintf(__('"%s" registered in skyroom service', 'skyroom'), $user->user_login),
                     Event::SUCCESSFUL,
                     $info
                 );
@@ -118,7 +118,7 @@ class Plugin
                     'user_id' => $userId,
                 ];
                 $event = new Event(
-                    sprintf(__("Failed to register '%s' to skyroom service", 'skyroom'), $user->user_login),
+                    sprintf(__('Failed to register "%s" to skyroom service', 'skyroom'), $user->user_login),
                     Event::FAILED,
                     $info
                 );

@@ -160,7 +160,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
                         'room_id' => $product->get_skyroom_id(),
                     ];
                     $event = new Event(
-                        sprintf(__("Room access given to '%s'", 'skyroom'), $user->user_login),
+                        sprintf(__('"%s" access given to "%s"', 'skyroom'), $product->get_room_title(), $user->user_login),
                         Event::SUCCESSFUL,
                         $info
                     );
@@ -176,7 +176,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
                         'room_id' => $product->get_skyroom_id(),
                     ];
                     $event = new Event(
-                        sprintf(__("Failed to give room access to '%s'", 'skyroom'), $user->user_login),
+                        sprintf(__('Failed to give "%s" access to "%s"', 'skyroom'), $product->get_room_title(), $user->user_login),
                         Event::FAILED,
                         $info
                     );
