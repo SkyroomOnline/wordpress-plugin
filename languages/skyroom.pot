@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2018-09-17 17:54:59+00:00\n"
+"POT-Creation-Date: 2018-10-01 15:41:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,11 +21,11 @@ msgid "Product"
 msgstr ""
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:163
-msgid "Room access given to '%s'"
+msgid "\"%s\" access given to \"%s\""
 msgstr ""
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:179
-msgid "Failed to give room access to '%s'"
+msgid "Failed to give \"%s\" access to \"%s\""
 msgstr ""
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:258
@@ -38,7 +38,7 @@ msgid "Enter room"
 msgstr ""
 
 #: src/Skyroom/Controller/SkyroomController.php:73
-msgid "Redirecting '%s' to classroom failed"
+msgid "Redirecting \"%s\" to classroom failed"
 msgstr ""
 
 #: src/Skyroom/Controller/SkyroomController.php:79
@@ -121,11 +121,11 @@ msgid "Users"
 msgstr ""
 
 #: src/Skyroom/Plugin.php:108
-msgid "Registered '%s' in skyroom service"
+msgid "\"%s\" registered in skyroom service"
 msgstr ""
 
 #: src/Skyroom/Plugin.php:121
-msgid "Failed to register '%s' to skyroom service"
+msgid "Failed to register \"%s\" to skyroom service"
 msgstr ""
 
 #: src/Skyroom/Plugin.php:154

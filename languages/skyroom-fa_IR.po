@@ -4,16 +4,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2018-09-17 17:54:59+00:00\n"
+"POT-Creation-Date: 2018-10-01 15:41:10+00:00\n"
+"PO-Revision-Date: 2018-10-01 19:22+0330\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-09-18 08:36+0430\n"
-"Language-Team: \n"
 "X-Generator: Poedit 2.0.6\n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: fa_IR\n"
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:137
 msgid "Products"
@@ -24,12 +24,12 @@ msgid "Product"
 msgstr "محصول"
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:163
-msgid "Room access given to '%s'"
-msgstr "دسترسی اتاق به '%s' اعطا شد"
+msgid "\"%s\" access given to \"%s\""
+msgstr "دسترسی \"%s\" به \"%s\" اعطا شد"
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:179
-msgid "Failed to give room access to '%s'"
-msgstr "اعطای دسترسی اتاق به '%s' با خطا مواجه شد"
+msgid "Failed to give \"%s\" access to \"%s\""
+msgstr "اعطای دسترسی \"%s\" به \"%s\" با خطا مواجه شد"
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:258
 msgid "Room title"
@@ -41,8 +41,8 @@ msgid "Enter room"
 msgstr "ورود به اتاق"
 
 #: src/Skyroom/Controller/SkyroomController.php:73
-msgid "Redirecting '%s' to classroom failed"
-msgstr "انتقال '%s' به کلاس با خطا مواجه شد"
+msgid "Redirecting \"%s\" to classroom failed"
+msgstr "انتقال \"%s\" به کلاس با خطا مواجه شد"
 
 #: src/Skyroom/Controller/SkyroomController.php:79
 msgid "Error entering class"
@@ -50,11 +50,11 @@ msgstr "خطا در هنگام ورود به کلاس"
 
 #: src/Skyroom/Controller/SkyroomController.php:80
 msgid ""
-"There was an error communicating with class holder. Please contact site "
-"support to fix problem."
+"There was an error communicating with class holder. Please contact site support "
+"to fix problem."
 msgstr ""
-"برقراری ارتباط با برگزار کننده کلاس با خطا روبرو شد. لطفا برای حل این مشکل "
-"با پشتیبانی سایت تماس بگیرید."
+"برقراری ارتباط با برگزار کننده کلاس با خطا روبرو شد. لطفا برای حل این مشکل با "
+"پشتیبانی سایت تماس بگیرید."
 
 #: src/Skyroom/Entity/Room.php:88 src/Skyroom/Entity/User.php:91
 msgid "Active"
@@ -124,22 +124,22 @@ msgid "Users"
 msgstr "کاربران"
 
 #: src/Skyroom/Plugin.php:108
-msgid "Registered '%s' in skyroom service"
-msgstr "'%s' در سرویس اسکای‌روم ثبت‌نام گردید"
+msgid "\"%s\" registered in skyroom service"
+msgstr "\"%s\" در سرویس اسکای‌روم ثبت‌نام گردید"
 
 #: src/Skyroom/Plugin.php:121
-msgid "Failed to register '%s' to skyroom service"
-msgstr "ثبت‌نام '%s' در سرویس اسکای‌روم با خطا مواجه شد"
+msgid "Failed to register \"%s\" to skyroom service"
+msgstr "ثبت‌نام \"%s\" در سرویس اسکای‌روم با خطا مواجه شد"
 
 #: src/Skyroom/Plugin.php:154
 msgid ""
-"<strong>Skyroom</strong> plugin activated successfully but it's not "
-"configured yet. Please go to <a href=\"%s\">skyroom settings</a> page and "
-"configure it to start working."
+"<strong>Skyroom</strong> plugin activated successfully but it's not configured "
+"yet. Please go to <a href=\"%s\">skyroom settings</a> page and configure it to "
+"start working."
 msgstr ""
-"پلاگین <strong>اسکای‌روم</strong> با موفقیت فعال شد اما هنوز پیکربندی "
-"نشده‌است. لطفا به صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی "
-"را انجام دهید تا شروع به کار کند."
+"پلاگین <strong>اسکای‌روم</strong> با موفقیت فعال شد اما هنوز پیکربندی نشده‌است. "
+"لطفا به صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی را انجام دهید "
+"تا شروع به کار کند."
 
 #: src/Skyroom/Repository/UserRepository.php:110
 msgid "User is not registered to skyroom"
@@ -249,8 +249,7 @@ msgstr "انتخاب عمل جمعی"
 msgid "Apply"
 msgstr "اعمال"
 
-#: src/Skyroom/Tables/WPListTable.php:555
-#: src/Skyroom/Tables/WPListTable.php:1391
+#: src/Skyroom/Tables/WPListTable.php:555 src/Skyroom/Tables/WPListTable.php:1391
 msgid "Show more details"
 msgstr "نمایش جزئیات بیشتر"
 
@@ -282,8 +281,7 @@ msgid "%s pending comment"
 msgid_plural "%s pending comments"
 msgstr[0] "%s دیدگاه منتظر تایید"
 
-#: src/Skyroom/Tables/WPListTable.php:698
-#: src/Skyroom/Tables/WPListTable.php:711
+#: src/Skyroom/Tables/WPListTable.php:698 src/Skyroom/Tables/WPListTable.php:711
 #: src/Skyroom/Tables/WPListTable.php:725
 msgid "No comments"
 msgstr "بدون دیدگاه"
@@ -296,8 +294,7 @@ msgstr "بدون دیدگاه تایید شده"
 msgid "No pending comments"
 msgstr "بدون دیدگاه منتظر تایید"
 
-#: src/Skyroom/Tables/WPListTable.php:805
-#: src/Skyroom/Tables/WPListTable.php:1416
+#: src/Skyroom/Tables/WPListTable.php:805 src/Skyroom/Tables/WPListTable.php:1416
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] "%s مورد"
@@ -310,8 +307,7 @@ msgstr "صفحه اول"
 msgid "Previous page"
 msgstr "صفحه قبلی"
 
-#: src/Skyroom/Tables/WPListTable.php:861
-#: src/Skyroom/Tables/WPListTable.php:866
+#: src/Skyroom/Tables/WPListTable.php:861 src/Skyroom/Tables/WPListTable.php:866
 msgid "Current Page"
 msgstr "صفحه کنونی"
 
@@ -406,7 +402,7 @@ msgstr "نام اتاق"
 
 #: views/woocommerce-product-tab.php:10
 msgid "Contains of only latin letters and -_ characters"
-msgstr "تشکیل شده از حروف الفبا و کاراکترهای - و _"
+msgstr "تشکیل شده از حروف الفبای لاتین و کاراکترهای - و _"
 
 #: views/woocommerce-product-tab.php:15
 msgid "Room Title"
@@ -426,9 +422,9 @@ msgstr "دوره‌ها"
 
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
-"You successfully enrolled in purchased courses. To attend classes, on "
-"announced schedules navigate to course page and click on 'Enter room' "
-"button. (Remember you should be logged in to site)"
+"You successfully enrolled in purchased courses. To attend classes, on announced "
+"schedules navigate to course page and click on 'Enter room' button. (Remember "
+"you should be logged in to site)"
 msgstr ""
 "ثبت‌نام شما در دوره‌های خریداری شده با موفقیت انجام شد. برای شرکت در کلاس‌ها در "
 "زمان‌های اعلام شده وارد صفحه دوره شده و روی دکمه 'ورود به کلاس' کلیک نمایید. "
