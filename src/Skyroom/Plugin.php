@@ -81,7 +81,6 @@ class Plugin
         $eventEmitter->on('admin_menu', function () {
             $menu = $this->container->get(MainMenu::class);
             $menu->register(
-                $this->container->get('plugin.url').'admin/images/icon-32x32.png',
                 $this->container->get(RoomSubmenu::class),
                 $this->container->get(UserSubmenu::class),
                 $this->container->get(EventSubmenu::class),
@@ -142,7 +141,6 @@ class Plugin
         $eventEmitter->on('admin_menu', function () {
             $menu = $this->container->get(MainMenu::class);
             $menu->register(
-                $this->container->get('plugin.url').'admin/images/icon-32x32.png',
                 $this->container->get(SettingSubmenu::class)
             );
         });

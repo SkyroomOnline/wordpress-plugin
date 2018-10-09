@@ -19,7 +19,6 @@ class MainMenu
     {
         // Get submenu args
         $submenus = func_get_args();
-        array_shift($submenus);
 
         // Set slug same as first submenu slug
         $slug = $submenus[0]->menuSlug;
@@ -30,7 +29,7 @@ class MainMenu
             'manage_options',
             $slug,
             '',
-            $icon,
+            '',
             48
         );
 

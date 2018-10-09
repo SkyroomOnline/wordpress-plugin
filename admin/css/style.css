@@ -1,8 +1,19 @@
 
-#adminmenu #toplevel_page_skyroom-rooms .wp-menu-image img,
-#adminmenu #toplevel_page_skyroom-settings .wp-menu-image img {
-    width: 22px;
-    padding-top: 6px;
+#toplevel_page_skyroom-rooms .wp-menu-image:before {
+    content: '' !important;
+    background: url(../images/icon.png) center center no-repeat;
+    -webkit-background-size: 20px 20px;
+    background-size: 20px 20px;
+    opacity: .6;
+}
+
+#toplevel_page_skyroom-rooms.wp-menu-open .wp-menu-image:before {
+    opacity: 1;
+}
+
+#toplevel_page_skyroom-rooms:not(.wp-menu-open):hover .wp-menu-image:before {
+    background-image: url(../images/icon-hover.png);
+    opacity: 1;
 }
 
 .skyroom-logo-card {
