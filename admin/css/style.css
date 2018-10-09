@@ -16,6 +16,18 @@
     opacity: 1;
 }
 
+#events-form .column-details {
+    width: 150px;
+}
+
+#events-form .column-type {
+    width: 130px;
+}
+
+#events-form .column-created_at {
+    width: 200px;
+}
+
 .skyroom-logo-card {
     padding-top: 20px;
 }
