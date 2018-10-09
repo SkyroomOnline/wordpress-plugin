@@ -147,6 +147,7 @@ class SkyroomProductRegistrar
                     [
                         'name' => $name,
                         'title' => $title,
+                        'op_login_first' => true,
                     ]
                 );
 
