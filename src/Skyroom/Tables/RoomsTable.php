@@ -90,12 +90,7 @@ class RoomsTable extends WPListTable
      */
     public function column_title($item)
     {
-        $title = '<strong><a href="#">'.$item->getTitle().'</a></strong>';
-        $actions = array(
-            'show' => sprintf('<a href="#">%s</a>', __('Show room', 'skyroom')),
-        );
-
-        return sprintf('%1$s %2$s', $title, $this->row_actions($actions));
+        return '<strong>'.$item->getTitle().'</strong>';
     }
 
     /**
@@ -116,19 +111,6 @@ class RoomsTable extends WPListTable
     }
 
     /**
-     * Render checkbox column
-     *
-     * @param Room $item Row data
-     *
-     * @return string Rendered item
-     */
-    public function column_cb($item)
-    {
-        return '<input type="checkbox" name="rooms[]" value="'.$item->getId().'">';
-    }
-
-
-    /**
      * Get table columns
      *
      * @return array
@@ -136,7 +118,6 @@ class RoomsTable extends WPListTable
     public function get_columns()
     {
         return array(
-            'cb' => '<input type="checkbox">',
             'title' => __('Title', 'skyroom'),
             'post' => $this->postTypeString,
             'name' => __('Name', 'skyroom'),
