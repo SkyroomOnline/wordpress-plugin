@@ -9,18 +9,20 @@ namespace Skyroom\Util;
  */
 class Activator
 {
+    private static $dbVersion = '1.0.0';
+
     /**
      * Activate plugin
      */
     public static function activate()
     {
-        self::createEnrollTable();
+        self::createTables();
     }
 
     /**
      * Create skyroom_enrolls database table
      */
-    private static function createEnrollTable()
+    private static function createTables()
     {
         global $wpdb;
 
@@ -48,5 +50,7 @@ class Activator
 
         require_once(ABSPATH.'wp-admin/includes/upgrade.php');
         dbDelta($sql);
+
+        add_option('skyroom_db_version', self::$dbVersion);
     }
 }
