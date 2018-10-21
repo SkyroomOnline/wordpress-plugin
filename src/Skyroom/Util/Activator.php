@@ -46,7 +46,7 @@ class Activator
                    PRIMARY KEY  (id)                   
                ) $charsetCollate;";
 
-        require ABSPATH.'wp-admin/includes/upgrade.php';
+        require_once(ABSPATH.'wp-admin/includes/upgrade.php');
         dbDelta($sql);
     }
 }
