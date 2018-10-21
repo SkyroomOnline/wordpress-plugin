@@ -1,0 +1,15 @@
+{
+  "name": "skyroom_wordpress_plugin",
+  "version": "1.0.0",
+  "description": "A plugin to integrate skyroom service with wordpress sites.",
+  "main": "index.js",
+  "repository": "git@github.com:SkyroomOnline/wordpress-plugin.git",
+  "author": "Skyroom",
+  "license": "GPL-2.0-or-later",
+  "private": false,
+  "devDependencies": {
+    "gulp": "4",
+    "gulp-rename": "^1.4.0",
+    "gulp-zip": "^4.2.0"
+  }
+}
