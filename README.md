@@ -5,6 +5,8 @@ A plugin to integrate skyroom service with your wordpress site.
 
 You can manage your sells, customers and other with wordpress and let this plugin manage skyroom related stuff for you. 
 
+**(For now, only WooCommerce is supported. But it's planned to support all major wordpress commerce plugins.)**
+
 ## Working with plugin
 This plugin sits between your wordpress site and your skyroom service and does things automaticlly for you.
 
