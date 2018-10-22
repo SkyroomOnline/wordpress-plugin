@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2018-10-01 15:41:10+00:00\n"
-"PO-Revision-Date: 2018-10-01 19:22+0330\n"
+"POT-Creation-Date: 2018-10-22 11:28:56+00:00\n"
+"PO-Revision-Date: 2018-10-22 15:05+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -85,13 +85,13 @@ msgstr "رخدادهای اسکای‌روم"
 msgid "Events"
 msgstr "رخدادها"
 
-#: src/Skyroom/Menu/MainMenu.php:28
+#: src/Skyroom/Menu/MainMenu.php:27
 msgid "Skyroom Integration"
 msgstr "یکپارچه‌سازی اسکای‌روم"
 
 #. Plugin Name of the plugin/theme
 #. Author of the plugin/theme
-#: src/Skyroom/Menu/MainMenu.php:29
+#: src/Skyroom/Menu/MainMenu.php:28
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:72
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:100
 msgid "Skyroom"
@@ -123,15 +123,15 @@ msgstr "کاربران اسکای‌روم"
 msgid "Users"
 msgstr "کاربران"
 
-#: src/Skyroom/Plugin.php:108
+#: src/Skyroom/Plugin.php:107
 msgid "\"%s\" registered in skyroom service"
 msgstr "\"%s\" در سرویس اسکای‌روم ثبت‌نام گردید"
 
-#: src/Skyroom/Plugin.php:121
+#: src/Skyroom/Plugin.php:120
 msgid "Failed to register \"%s\" to skyroom service"
 msgstr "ثبت‌نام \"%s\" در سرویس اسکای‌روم با خطا مواجه شد"
 
-#: src/Skyroom/Plugin.php:154
+#: src/Skyroom/Plugin.php:152
 msgid ""
 "<strong>Skyroom</strong> plugin activated successfully but it's not configured "
 "yet. Please go to <a href=\"%s\">skyroom settings</a> page and configure it to "
@@ -165,7 +165,7 @@ msgstr "ناموفق"
 msgid "j F Y, H:i:s"
 msgstr "j F Y، H:i:s"
 
-#: src/Skyroom/Tables/EventsTable.php:99 src/Skyroom/Tables/RoomsTable.php:140
+#: src/Skyroom/Tables/EventsTable.php:99 src/Skyroom/Tables/RoomsTable.php:121
 msgid "Title"
 msgstr "عنوان"
 
@@ -185,15 +185,11 @@ msgstr "ایجاد شده در"
 msgid "Room"
 msgstr "اتاق"
 
-#: src/Skyroom/Tables/RoomsTable.php:95
-msgid "Show room"
-msgstr "نمایش اتاق"
-
-#: src/Skyroom/Tables/RoomsTable.php:142
+#: src/Skyroom/Tables/RoomsTable.php:123
 msgid "Name"
 msgstr "نام"
 
-#: src/Skyroom/Tables/RoomsTable.php:143 src/Skyroom/Tables/UsersTable.php:163
+#: src/Skyroom/Tables/RoomsTable.php:124 src/Skyroom/Tables/UsersTable.php:121
 msgid "Status"
 msgstr "وضعیت"
 
@@ -201,27 +197,15 @@ msgstr "وضعیت"
 msgid "User"
 msgstr "کاربر"
 
-#: src/Skyroom/Tables/UsersTable.php:90
-msgid "Remove from skyroom"
-msgstr "حذف از اسکای‌روم"
-
-#: src/Skyroom/Tables/UsersTable.php:95
-msgid "Edit user"
-msgstr "ویرایش کاربر"
-
-#: src/Skyroom/Tables/UsersTable.php:159
+#: src/Skyroom/Tables/UsersTable.php:118
 msgid "Nickname"
 msgstr "نام نمایشی"
 
-#: src/Skyroom/Tables/UsersTable.php:160
+#: src/Skyroom/Tables/UsersTable.php:119
 msgid "Username"
 msgstr "نام کاربری"
 
-#: src/Skyroom/Tables/UsersTable.php:161
-msgid "Wordpress name"
-msgstr "نام وردپرسی"
-
-#: src/Skyroom/Tables/UsersTable.php:162
+#: src/Skyroom/Tables/UsersTable.php:120
 msgid "Wordpress username"
 msgstr "نام کاربری وردپرسی"
 
@@ -360,7 +344,7 @@ msgstr "شناسه کاربر"
 msgid "Room ID"
 msgstr "شناسه اتاق"
 
-#: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:204
+#: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:205
 msgid "Error"
 msgstr "خطا"
 
@@ -371,6 +355,10 @@ msgstr "تغییرات شما با موفقیت ذخیره شدند"
 #: views/settings.php:21
 msgid "Skyroom service url:"
 msgstr "آدرس سرویس اسکای‌روم:"
+
+#: views/settings.php:26
+msgid "e.g: %s"
+msgstr "مثلا: %s"
 
 #: views/settings.php:32
 msgid "Your API key:"
@@ -441,3 +429,15 @@ msgstr "پلاگینی برای یکپارچه‌سازی اسکای‌روم ب
 #. Author URI of the plugin/theme
 msgid "https://skyroom.online/"
 msgstr "https://skyroom.online/"
+
+#~ msgid "Show room"
+#~ msgstr "نمایش اتاق"
+
+#~ msgid "Remove from skyroom"
+#~ msgstr "حذف از اسکای‌روم"
+
+#~ msgid "Edit user"
+#~ msgstr "ویرایش کاربر"
+
+#~ msgid "Wordpress name"
+#~ msgstr "نام وردپرسی"

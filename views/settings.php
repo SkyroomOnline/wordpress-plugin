@@ -21,9 +21,9 @@
                     <label for="skyroom_site_url"><?php _e('Skyroom service url:', 'skyroom') ?></label>
                 </th>
                 <td>
-                    <input type="text" name="skyroom_site_url" id="skyroom_site_url" class="regular-text"
-                           value="<?php echo ($skyroomSiteUrl ? esc_attr($skyroomSiteUrl) : '') ?>"
-                           placeholder="<?php esc_attr(printf('e.g: %s', 'https://skyroom.ir')) ?>">
+                    <input type="text" name="skyroom_site_url" id="skyroom_site_url" class="regular-text ltr"
+                           value="<?php echo ($skyroomSiteUrl ? esc_attr($skyroomSiteUrl) : 'https://skyroom.online') ?>"
+                           placeholder="<?php echo esc_attr(sprintf(__('e.g: %s', 'skyroom'), 'https://skyroom.online')) ?>">
                     <p id="skyroom_site_url_desc">
                 </td>
             </tr>
@@ -32,7 +32,7 @@
                     <label for="skyroom_api_key"><?php _e('Your API key:', 'skyroom') ?></label>
                 </th>
                 <td>
-                    <input type="text" name="skyroom_api_key" id="skyroom_api_key" class="regular-text"
+                    <input type="text" name="skyroom_api_key" id="skyroom_api_key" class="regular-text ltr"
                            value="<?php echo ($skyroomApiKey ? esc_attr($skyroomApiKey) : '') ?>">
                     <p class="description"><?php _e('API key should be provided to you by skyroom support', 'skyroom') ?></p>
                 </td>

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2018-10-01 15:41:10+00:00\n"
+"POT-Creation-Date: 2018-10-22 11:28:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -80,7 +80,7 @@ msgstr ""
 msgid "Events"
 msgstr ""
 
-#: src/Skyroom/Menu/MainMenu.php:28
+#: src/Skyroom/Menu/MainMenu.php:27
 msgid "Skyroom Integration"
 msgstr ""
 
@@ -88,7 +88,7 @@ msgstr ""
 #. Plugin Name of the plugin/theme
 #. #-#-#-#-#  skyroom.pot (Skyroom 1.0.0)  #-#-#-#-#
 #. Author of the plugin/theme
-#: src/Skyroom/Menu/MainMenu.php:29
+#: src/Skyroom/Menu/MainMenu.php:28
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:72
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:100
 msgid "Skyroom"
@@ -120,15 +120,15 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: src/Skyroom/Plugin.php:108
+#: src/Skyroom/Plugin.php:107
 msgid "\"%s\" registered in skyroom service"
 msgstr ""
 
-#: src/Skyroom/Plugin.php:121
+#: src/Skyroom/Plugin.php:120
 msgid "Failed to register \"%s\" to skyroom service"
 msgstr ""
 
-#: src/Skyroom/Plugin.php:154
+#: src/Skyroom/Plugin.php:152
 msgid ""
 "<strong>Skyroom</strong> plugin activated successfully but it's not "
 "configured yet. Please go to <a href=\"%s\">skyroom settings</a> page and "
@@ -159,7 +159,7 @@ msgstr ""
 msgid "j F Y, H:i:s"
 msgstr ""
 
-#: src/Skyroom/Tables/EventsTable.php:99 src/Skyroom/Tables/RoomsTable.php:140
+#: src/Skyroom/Tables/EventsTable.php:99 src/Skyroom/Tables/RoomsTable.php:121
 msgid "Title"
 msgstr ""
 
@@ -179,15 +179,11 @@ msgstr ""
 msgid "Room"
 msgstr ""
 
-#: src/Skyroom/Tables/RoomsTable.php:95
-msgid "Show room"
-msgstr ""
-
-#: src/Skyroom/Tables/RoomsTable.php:142
+#: src/Skyroom/Tables/RoomsTable.php:123
 msgid "Name"
 msgstr ""
 
-#: src/Skyroom/Tables/RoomsTable.php:143 src/Skyroom/Tables/UsersTable.php:163
+#: src/Skyroom/Tables/RoomsTable.php:124 src/Skyroom/Tables/UsersTable.php:121
 msgid "Status"
 msgstr ""
 
@@ -195,27 +191,15 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: src/Skyroom/Tables/UsersTable.php:90
-msgid "Remove from skyroom"
-msgstr ""
-
-#: src/Skyroom/Tables/UsersTable.php:95
-msgid "Edit user"
-msgstr ""
-
-#: src/Skyroom/Tables/UsersTable.php:159
+#: src/Skyroom/Tables/UsersTable.php:118
 msgid "Nickname"
 msgstr ""
 
-#: src/Skyroom/Tables/UsersTable.php:160
+#: src/Skyroom/Tables/UsersTable.php:119
 msgid "Username"
 msgstr ""
 
-#: src/Skyroom/Tables/UsersTable.php:161
-msgid "Wordpress name"
-msgstr ""
-
-#: src/Skyroom/Tables/UsersTable.php:162
+#: src/Skyroom/Tables/UsersTable.php:120
 msgid "Wordpress username"
 msgstr ""
 
@@ -362,7 +346,7 @@ msgstr ""
 msgid "Room ID"
 msgstr ""
 
-#: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:204
+#: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:205
 msgid "Error"
 msgstr ""
 
@@ -372,6 +356,10 @@ msgstr ""
 
 #: views/settings.php:21
 msgid "Skyroom service url:"
+msgstr ""
+
+#: views/settings.php:26
+msgid "e.g: %s"
 msgstr ""
 
 #: views/settings.php:32
