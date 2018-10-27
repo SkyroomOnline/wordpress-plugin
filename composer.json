@@ -18,7 +18,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Skyroom\\": "src/Skyroom"
+            "Skyroom\\": "src/Skyroom",
+            "SkyroomLibs\\": "libs"
         }
     },
     "repositories": [
