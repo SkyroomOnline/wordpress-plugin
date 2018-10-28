@@ -14,6 +14,7 @@ use Skyroom\Menu\EventSubmenu;
 use Skyroom\Menu\MainMenu;
 use Skyroom\Menu\RoomSubmenu;
 use Skyroom\Menu\SettingSubmenu;
+use Skyroom\Menu\SyncSubmenu;
 use Skyroom\Menu\UserSubmenu;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
@@ -87,6 +88,7 @@ class Plugin
                 $this->container->get(RoomSubmenu::class),
                 $this->container->get(UserSubmenu::class),
                 $this->container->get(EventSubmenu::class),
+                $this->container->get(SyncSubmenu::class),
                 $this->container->get(SettingSubmenu::class)
             );
         });
