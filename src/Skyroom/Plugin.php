@@ -17,6 +17,7 @@ use Skyroom\Menu\SettingSubmenu;
 use Skyroom\Menu\UserSubmenu;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
+use Skyroom\Util\Activator;
 use Skyroom\Util\AssetManager;
 use Skyroom\Util\Internationalization;
 
@@ -43,6 +44,8 @@ class Plugin
     {
         $this->container = $this->buildContainer();
         $this->container->get(Internationalization::class)->loadTextDomain();
+
+        $this->checkUpdate();
 
         if (!$this->isConfigured()) {
             $this->tearDown($this->container->get(EventEmitterInterface::class));
@@ -177,5 +180,16 @@ class Plugin
     {
         return !(empty($this->container->get('setting.site')) || empty($this->container->get('setting.key'))
             || empty($this->container->get('setting.plugin')));
+    }
+
+    /**
+     * Check for plugin update and perform update if needed
+     */
+    public function checkUpdate()
+    {
+        $version = get_option('skyroom_db_version');
+        if (version_compare(Activator::dbVersion, $version, '>')) {
+            Activator::activate();
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Skyroom\Util;
  */
 class Activator
 {
-    private static $dbVersion = '1.0.0';
+    const dbVersion = '1.1';
 
     /**
      * Activate plugin
@@ -35,6 +35,7 @@ class Activator
                    room_id bigint(20) NOT NULL,
                    user_id bigint(20) NOT NULL,
                    post_id bigint(20) NOT NULL,
+                   synced boolean NOT NULL DEFAULT FALSE,
                    enroll_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                    PRIMARY KEY  (skyroom_user_id, room_id)
                ) $charsetCollate;
@@ -51,6 +52,6 @@ class Activator
         require_once(ABSPATH.'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 
-        add_option('skyroom_db_version', self::$dbVersion);
+        update_option('skyroom_db_version', self::dbVersion, true);
     }
 }
