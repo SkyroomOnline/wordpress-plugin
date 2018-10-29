@@ -129,7 +129,7 @@ class SkyroomProductRegistrar
      * @param integer $postId
      * @param Client  $client
      */
-    public function processMeta($postId, Client $client, EventEmitter $eventEmitter)
+    public function processMeta($postId, Client $client)
     {
         $name = $_POST['_skyroom_name'] ?: $_POST['post_name'];
         $title = $_POST['_skyroom_title'] ?: $_POST['post_title'];
