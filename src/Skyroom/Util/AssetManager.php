@@ -46,14 +46,14 @@ class AssetManager
      */
     public function adminAssets()
     {
-        wp_enqueue_style('skyroom', $this->pluginUrl.'admin/css/style.css', $this->version);
-        wp_enqueue_script('skyroom', $this->pluginUrl.'admin/js/script.js', $this->version);
+        wp_enqueue_style('skyroom', $this->pluginUrl.'admin/css/style.css', [], $this->version);
+        wp_enqueue_script('skyroom', $this->pluginUrl.'admin/js/script.js', ['jquery', 'skyroom-alertifyjs'], $this->version);
 
-        wp_enqueue_script('skyroom-alertifyjs', $this->pluginUrl.'admin/js/alertify.min.js', $this->version);
+        wp_enqueue_script('skyroom-alertifyjs', $this->pluginUrl.'admin/js/alertify.min.js', [], $this->version);
         if (!is_rtl()) {
-            wp_enqueue_style('skyroom-alertifyjs', $this->pluginUrl.'admin/css/alertify.min.css', $this->version);
+            wp_enqueue_style('skyroom-alertifyjs', $this->pluginUrl.'admin/css/alertify.min.css', [], $this->version);
         } else {
-            wp_enqueue_style('skyroom-alertifyjs', $this->pluginUrl.'admin/css/alertify.rtl.min.css', $this->version);
+            wp_enqueue_style('skyroom-alertifyjs', $this->pluginUrl.'admin/css/alertify.rtl.min.css', [], $this->version);
         }
 
         wp_localize_script(
