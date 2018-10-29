@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2018-10-22 11:28:56+00:00\n"
-"PO-Revision-Date: 2018-10-22 15:05+0330\n"
+"POT-Creation-Date: 2018-10-29 12:58:24+00:00\n"
+"PO-Revision-Date: 2018-10-29 16:53+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -15,27 +15,31 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:137
+#: libs/WPBackgroundProcess.php:446
+msgid "Every %d Minutes"
+msgstr "هر %d دقیقه"
+
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:167
 msgid "Products"
 msgstr "محصولات"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:137
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:167
 msgid "Product"
 msgstr "محصول"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:163
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:193
 msgid "\"%s\" access given to \"%s\""
 msgstr "دسترسی \"%s\" به \"%s\" اعطا شد"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:179
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:209
 msgid "Failed to give \"%s\" access to \"%s\""
 msgstr "اعطای دسترسی \"%s\" به \"%s\" با خطا مواجه شد"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:258
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:288
 msgid "Room title"
 msgstr "عنوان اتاق"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:259
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:289
 #: views/woocommerce-add-to-cart.php:29
 msgid "Enter room"
 msgstr "ورود به اتاق"
@@ -85,13 +89,13 @@ msgstr "رخدادهای اسکای‌روم"
 msgid "Events"
 msgstr "رخدادها"
 
-#: src/Skyroom/Menu/MainMenu.php:27
+#: src/Skyroom/Menu/MainMenu.php:25
 msgid "Skyroom Integration"
 msgstr "یکپارچه‌سازی اسکای‌روم"
 
 #. Plugin Name of the plugin/theme
 #. Author of the plugin/theme
-#: src/Skyroom/Menu/MainMenu.php:28
+#: src/Skyroom/Menu/MainMenu.php:26
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:72
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:100
 msgid "Skyroom"
@@ -114,6 +118,14 @@ msgstr "تنظیمات اسکای‌روم"
 msgid "Settings"
 msgstr "تنظیمات"
 
+#: src/Skyroom/Menu/SyncSubmenu.php:31
+msgid "Skyroom Synchronization"
+msgstr "همگام‌سازی اسکای‌روم"
+
+#: src/Skyroom/Menu/SyncSubmenu.php:32
+msgid "Synchronize"
+msgstr "همگام‌سازی"
+
 #: src/Skyroom/Menu/UserSubmenu.php:40
 msgid "Skyroom Users"
 msgstr "کاربران اسکای‌روم"
@@ -123,15 +135,15 @@ msgstr "کاربران اسکای‌روم"
 msgid "Users"
 msgstr "کاربران"
 
-#: src/Skyroom/Plugin.php:107
+#: src/Skyroom/Plugin.php:116
 msgid "\"%s\" registered in skyroom service"
 msgstr "\"%s\" در سرویس اسکای‌روم ثبت‌نام گردید"
 
-#: src/Skyroom/Plugin.php:120
+#: src/Skyroom/Plugin.php:129
 msgid "Failed to register \"%s\" to skyroom service"
 msgstr "ثبت‌نام \"%s\" در سرویس اسکای‌روم با خطا مواجه شد"
 
-#: src/Skyroom/Plugin.php:152
+#: src/Skyroom/Plugin.php:161
 msgid ""
 "<strong>Skyroom</strong> plugin activated successfully but it's not configured "
 "yet. Please go to <a href=\"%s\">skyroom settings</a> page and configure it to "
@@ -141,7 +153,7 @@ msgstr ""
 "لطفا به صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی را انجام دهید "
 "تا شروع به کار کند."
 
-#: src/Skyroom/Repository/UserRepository.php:110
+#: src/Skyroom/Repository/UserRepository.php:123
 msgid "User is not registered to skyroom"
 msgstr "کاربر در اسکای‌روم ثبت‌نام نشده‌است"
 
@@ -312,6 +324,73 @@ msgstr "صفحه آخر"
 msgid "Select All"
 msgstr "همه تاریخ‌ها"
 
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:73
+msgid "Syncing stopped due to errors"
+msgstr "همگام‌سازی به دلیل خطاها متوقف شد"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:75
+msgid "Syncing completed successfully"
+msgstr "همگام‌سازی با موفقیت انجام شد"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:100
+msgid "Start sync service"
+msgstr "شروع سرویس همگام‌سازی"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:107
+msgid "Syncing users with server..."
+msgstr "در حال همگام‌سازی کاربران با سرور..."
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:113
+msgid "All users are already synced with server"
+msgstr "همه کاربران همگام‌سازی شده‌اند"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:140
+msgid "Error in saving '%s' to server: %s"
+msgstr "خطا در ذخیره '%s' در سرور: %s"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:151
+msgid "%d user synced with server successfully"
+msgid_plural "%d users synced with server successfully"
+msgstr[0] "%d کاربر با موفقیت همگام‌سازی شد"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:185
+msgid "Finding untracked enrollments..."
+msgstr "در حال یافتن ثبت‌نام‌های ذخیره نشده..."
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:201
+msgid "%d enrollment tracked successfully"
+msgid_plural "%d enrollments tracked successfully"
+msgstr[0] "%d ثبت‌نام با موفقیت ذخیره شد"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:213
+msgid "All enrollments are tracked already"
+msgstr "همه ثبت‌نام‌ها ذخیره شده‌اند"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:221
+msgid "Syncing enrollments with server..."
+msgstr "در حال همگام‌سازی ثبت‌نام‌ها با سرور..."
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:249
+msgid "Error in syncing room(%d) users: %s"
+msgstr "خطا در همگام‌سازی کاربران کلاس(%d): %s"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:265
+msgid "Error in syncing room(%d) user(%d): %s"
+msgstr "خطا در همگام‌سازی کاربر(%2$d) اتاق(%1$d): %s"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:288
+msgid "%d enrollment synced with server successfully"
+msgid_plural "%d enrollments synced with server successfully"
+msgstr[0] "%d ثبت‌نام با سرور همگام‌سازی شد"
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:319
+msgid "All enrollments already synced with server"
+msgstr "همه کاربران با سرور همگام‌سازی شده‌اند"
+
+#: src/Skyroom/Tasks/SyncDataTask.php:48
+msgid "Something bad happened while trying to start synchronization"
+msgstr "هنگام شروع همگام‌سازی خطایی رخ داده‌است"
+
 #: src/Skyroom/Util/AssetManager.php:63
 msgid "OK"
 msgstr "باشه"
@@ -380,6 +459,31 @@ msgstr "ووکامرس"
 msgid "Save Changes"
 msgstr "ذخیره تغییرات"
 
+#: views/sync.php:2
+msgid "Synchronization"
+msgstr "همگام‌سازی"
+
+#: views/sync.php:6
+msgid ""
+"If you have had some data before installing skyroom plugin or something bad "
+"happened for plugin while contacting with skyroom server, It's the place to "
+"synchronize your data with server."
+msgstr ""
+"اگر قبل از نصب پلاگین اسکای‌روم داده‌ای داشته‌اید یا در هنگام ارتباط با سرور برای "
+"پلاگین خطایی رخ داده‌است، اینجا جایی برای همگام‌سازی داده‌های شما با سرور است."
+
+#: views/sync.php:12
+msgid "Last Sync: %s"
+msgstr "آخرین همگام‌سازی: %s"
+
+#: views/sync.php:12
+msgid "Never"
+msgstr "هیچوقت"
+
+#: views/sync.php:16
+msgid "Perform Synchronization"
+msgstr "انجام همگام‌سازی"
+
 #: views/woocommerce-add-to-cart.php:36
 msgid "Capacity is full"
 msgstr "ظرفیت پر است"
@@ -429,6 +533,9 @@ msgstr "پلاگینی برای یکپارچه‌سازی اسکای‌روم ب
 #. Author URI of the plugin/theme
 msgid "https://skyroom.online/"
 msgstr "https://skyroom.online/"
+
+#~ msgid "Synced %d enrollments with server"
+#~ msgstr "%d ثبت‌نام با سرور همگام‌سازی شد"
 
 #~ msgid "Show room"
 #~ msgstr "نمایش اتاق"

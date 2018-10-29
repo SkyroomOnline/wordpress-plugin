@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2018-10-22 11:28:56+00:00\n"
+"POT-Creation-Date: 2018-10-29 12:58:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,27 +12,31 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:137
+#: libs/WPBackgroundProcess.php:446
+msgid "Every %d Minutes"
+msgstr ""
+
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:167
 msgid "Products"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:137
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:167
 msgid "Product"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:163
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:193
 msgid "\"%s\" access given to \"%s\""
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:179
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:209
 msgid "Failed to give \"%s\" access to \"%s\""
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:258
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:288
 msgid "Room title"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:259
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:289
 #: views/woocommerce-add-to-cart.php:29
 msgid "Enter room"
 msgstr ""
@@ -80,7 +84,7 @@ msgstr ""
 msgid "Events"
 msgstr ""
 
-#: src/Skyroom/Menu/MainMenu.php:27
+#: src/Skyroom/Menu/MainMenu.php:25
 msgid "Skyroom Integration"
 msgstr ""
 
@@ -88,7 +92,7 @@ msgstr ""
 #. Plugin Name of the plugin/theme
 #. #-#-#-#-#  skyroom.pot (Skyroom 1.0.0)  #-#-#-#-#
 #. Author of the plugin/theme
-#: src/Skyroom/Menu/MainMenu.php:28
+#: src/Skyroom/Menu/MainMenu.php:26
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:72
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:100
 msgid "Skyroom"
@@ -111,6 +115,14 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+#: src/Skyroom/Menu/SyncSubmenu.php:31
+msgid "Skyroom Synchronization"
+msgstr ""
+
+#: src/Skyroom/Menu/SyncSubmenu.php:32
+msgid "Synchronize"
+msgstr ""
+
 #: src/Skyroom/Menu/UserSubmenu.php:40
 msgid "Skyroom Users"
 msgstr ""
@@ -120,22 +132,22 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: src/Skyroom/Plugin.php:107
+#: src/Skyroom/Plugin.php:116
 msgid "\"%s\" registered in skyroom service"
 msgstr ""
 
-#: src/Skyroom/Plugin.php:120
+#: src/Skyroom/Plugin.php:129
 msgid "Failed to register \"%s\" to skyroom service"
 msgstr ""
 
-#: src/Skyroom/Plugin.php:152
+#: src/Skyroom/Plugin.php:161
 msgid ""
 "<strong>Skyroom</strong> plugin activated successfully but it's not "
 "configured yet. Please go to <a href=\"%s\">skyroom settings</a> page and "
 "configure it to start working."
 msgstr ""
 
-#: src/Skyroom/Repository/UserRepository.php:110
+#: src/Skyroom/Repository/UserRepository.php:123
 msgid "User is not registered to skyroom"
 msgstr ""
 
@@ -314,6 +326,76 @@ msgstr ""
 msgid "Select All"
 msgstr ""
 
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:73
+msgid "Syncing stopped due to errors"
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:75
+msgid "Syncing completed successfully"
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:100
+msgid "Start sync service"
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:107
+msgid "Syncing users with server..."
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:113
+msgid "All users are already synced with server"
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:140
+msgid "Error in saving '%s' to server: %s"
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:151
+msgid "%d user synced with server successfully"
+msgid_plural "%d users synced with server successfully"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:185
+msgid "Finding untracked enrollments..."
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:201
+msgid "%d enrollment tracked successfully"
+msgid_plural "%d enrollments tracked successfully"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:213
+msgid "All enrollments are tracked already"
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:221
+msgid "Syncing enrollments with server..."
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:249
+msgid "Error in syncing room(%d) users: %s"
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:265
+msgid "Error in syncing room(%d) user(%d): %s"
+msgstr ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:288
+msgid "%d enrollment synced with server successfully"
+msgid_plural "%d enrollments synced with server successfully"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Skyroom/Tasks/ActualSyncDataTask.php:319
+msgid "All enrollments already synced with server"
+msgstr ""
+
+#: src/Skyroom/Tasks/SyncDataTask.php:48
+msgid "Something bad happened while trying to start synchronization"
+msgstr ""
+
 #: src/Skyroom/Util/AssetManager.php:63
 msgid "OK"
 msgstr ""
@@ -380,6 +462,29 @@ msgstr ""
 
 #: views/settings.php:56
 msgid "Save Changes"
+msgstr ""
+
+#: views/sync.php:2
+msgid "Synchronization"
+msgstr ""
+
+#: views/sync.php:6
+msgid ""
+"If you have had some data before installing skyroom plugin or something bad "
+"happened for plugin while contacting with skyroom server, It's the place to "
+"synchronize your data with server."
+msgstr ""
+
+#: views/sync.php:12
+msgid "Last Sync: %s"
+msgstr ""
+
+#: views/sync.php:12
+msgid "Never"
+msgstr ""
+
+#: views/sync.php:16
+msgid "Perform Synchronization"
 msgstr ""
 
 #: views/woocommerce-add-to-cart.php:36
