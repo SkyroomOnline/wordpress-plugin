@@ -18,6 +18,7 @@ use Skyroom\Menu\SyncSubmenu;
 use Skyroom\Menu\UserSubmenu;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
+use Skyroom\Tasks\SyncDataTask;
 use Skyroom\Util\Activator;
 use Skyroom\Util\AssetManager;
 use Skyroom\Util\Internationalization;
@@ -56,6 +57,9 @@ class Plugin
 
         $this->registerHooks($this->container->get(EventEmitterInterface::class));
         $this->container->get(PluginAdapterInterface::class)->setup();
+
+        // Ajax handlers registered on constructor, only needs to be instantiated
+        $this->container->get(SyncDataTask::class);
     }
 
     /**
