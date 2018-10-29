@@ -111,6 +111,8 @@ class ActualSyncDataTask
 
         if (empty($unsyncedUsers)) {
             $this->addMessage(__('All users are already synced with server', 'skyroom'), 'done', true);
+
+            return true;
         }
 
         try {
@@ -129,7 +131,8 @@ class ActualSyncDataTask
             );
 
             $error = false;
-            for ($i = 0, $count = count($unsyncedUsers); $i < $count; $i++) {
+            $count = $count = count($unsyncedUsers);
+            for ($i = 0; $i < $count; $i++) {
                 if (is_int($response[$i])) {
                     update_user_meta($unsyncedUsers[$i]->ID, UserRepository::SKYROOM_ID_META_KEY, $response[$i]);
                 } else {
@@ -143,7 +146,19 @@ class ActualSyncDataTask
             }
 
             if (!$error) {
-                $this->addMessage(__('Users synced with server successfully', 'skyroom'), 'done', true);
+                $this->addMessage(
+                    sprintf(
+                        _n(
+                            '%d user synced with server successfully',
+                            '%d users synced with server successfully',
+                            $count,
+                            'skyroom'
+                        ),
+                        number_format_i18n($count)
+                    ),
+                    'done',
+                    true
+                );
 
                 return true;
             }
@@ -171,16 +186,29 @@ class ActualSyncDataTask
 
         // Get purchases that are not saved on skyroom_enrolls table
         $untrackedPurchases = $this->pluginAdapter->getUntrackedPurchases();
+        $count = count($untrackedPurchases);
 
         $skyroomEnrollsTbl = $this->wpdb->prefix.'skyroom_enrolls';
 
         // Save untracked purchases in enrolls table
-        if (count($untrackedPurchases) > 0) {
+        if ($count > 0) {
             foreach ($untrackedPurchases as $purchase) {
                 $this->wpdb->insert($skyroomEnrollsTbl, $purchase);
             }
 
-            $this->addMessage(__('Enrollments tracked successfully', 'skyroom'), 'done', true);
+            $this->addMessage(
+                sprintf(
+                    _n(
+                        '%d enrollment tracked successfully',
+                        '%d enrollments tracked successfully',
+                        $count,
+                        'skyroom'
+                    ),
+                    number_format_i18n($count)
+                ),
+                'done',
+                true
+            );
         } else {
             $this->addMessage(__('All enrollments are tracked already', 'skyroom'), 'done', true);
         }
@@ -197,85 +225,100 @@ class ActualSyncDataTask
         // Get all unsynced enrolls
         $query = "SELECT skyroom_user_id, room_id FROM $skyroomEnrollsTbl WHERE synced = false";
         $unsyncedEnrolls = $this->wpdb->get_results($query);
+        $count = count($unsyncedEnrolls);
 
         // Sync enrolls with server
         $roomUsersMap = [];
-        if (count($unsyncedEnrolls) > 0) {
+        if ($count > 0) {
             foreach ($unsyncedEnrolls as $enroll) {
                 $roomUsersMap[$enroll->room_id][] = ['user_id' => $enroll->skyroom_user_id];
             }
-        }
 
-        try {
-            $resultMap = $this->client->request(
-                'syncRoomUsers',
-                [
-                    'room_users' => $roomUsersMap,
-                ]
-            );
+            try {
+                $resultMap = $this->client->request(
+                    'syncRoomUsers',
+                    [
+                        'room_users' => $roomUsersMap,
+                    ]
+                );
 
-            $error = false;
-            foreach ($resultMap as $roomId => $usersResult) {
-                if (!is_array($usersResult)) {
-                    $this->addMessage(
-                        sprintf(__('Error in syncing room(%d) users: %s', 'skyroom'), $roomId, $usersResult),
-                        'error',
-                        !$error
-                    );
-
-                    $error = true;
-                    continue;
-                }
-
-                $userIds = [];
-                foreach ($usersResult as $i => $userResult) {
-                    if (is_numeric($userResult)) {
-                        $userIds[] = $roomUsersMap[$roomId][$i]['user_id'];
-                    } else {
+                $error = false;
+                foreach ($resultMap as $roomId => $usersResult) {
+                    if (!is_array($usersResult)) {
                         $this->addMessage(
-                            sprintf(
-                                __('Error in syncing room(%d) user(%d): %s', 'skyroom'),
-                                $roomId,
-                                $roomUsersMap[$roomId][$i]['user_id'],
-                                $usersResult
-                            ),
+                            sprintf(__('Error in syncing room(%d) users: %s', 'skyroom'), $roomId, $usersResult),
                             'error',
                             !$error
                         );
 
                         $error = true;
+                        continue;
                     }
+
+                    $userIds = [];
+                    foreach ($usersResult as $i => $userResult) {
+                        if (is_numeric($userResult)) {
+                            $userIds[] = $roomUsersMap[$roomId][$i]['user_id'];
+                        } else {
+                            $this->addMessage(
+                                sprintf(
+                                    __('Error in syncing room(%d) user(%d): %s', 'skyroom'),
+                                    $roomId,
+                                    $roomUsersMap[$roomId][$i]['user_id'],
+                                    $usersResult
+                                ),
+                                'error',
+                                !$error
+                            );
+
+                            $error = true;
+                        }
+                    }
+
+                    $userIds = implode(',', $userIds);
+                    $query = "UPDATE $skyroomEnrollsTbl SET synced = true WHERE room_id = $roomId AND skyroom_user_id IN ($userIds)";
+                    $this->wpdb->query($query);
                 }
 
-                $userIds = implode(',', $userIds);
-                $query = "UPDATE $skyroomEnrollsTbl SET synced = true WHERE room_id = $roomId AND skyroom_user_id IN ($userIds)";
-                $this->wpdb->query($query);
-            }
+                if ($error) {
+                    return false;
+                } else {
+                    $this->addMessage(
+                        sprintf(
+                            _n(
+                                '%d enrollment synced with server successfully',
+                                '%d enrollments synced with server successfully',
+                                $count,
+                                'skyroom'
+                            ),
+                            number_format_i18n($count)
+                        ),
+                        'done',
+                        true
+                    );
 
-            if ($error) {
+                    return true;
+                }
+
+            } catch (ConnectionNotEstablishedException $e) {
+                $this->addMessage($e->getMessage(), 'error');
+
                 return false;
-            } else {
-                $this->addMessage(__('Enrollments synced with server successfully', 'skyroom'), 'done', true);
+
+            } catch (InvalidResponseStatusException $e) {
+                $this->addMessage($e->getMessage(), 'error');
+
+                return false;
+
+            } catch (RequestFailedException $e) {
+                $this->addMessage($e->getMessage(), 'error');
+
+                return false;
             }
+        } else {
+            $this->addMessage(sprintf(__("All enrollments already synced with server", 'skyroom'), count($unsyncedEnrolls)), 'done', true);
 
-        } catch (ConnectionNotEstablishedException $e) {
-            $this->addMessage($e->getMessage(), 'error');
-
-            return false;
-
-        } catch (InvalidResponseStatusException $e) {
-            $this->addMessage($e->getMessage(), 'error');
-
-            return false;
-
-        } catch (RequestFailedException $e) {
-            $this->addMessage($e->getMessage(), 'error');
-
-            return false;
+            return true;
         }
-
-        $this->addMessage(sprintf(__("Synced %d enrollments with server", 'skyroom'), count($unsyncedEnrolls)), 'done', true);
-
-        return true;
     }
 }

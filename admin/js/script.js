@@ -87,7 +87,7 @@ jQuery(function ($) {
                     });
 
                     var $cardInner = $sync.find('.card-inner');
-                    $cardInner.append($ul);
+                    $cardInner.html($ul);
                     $cardInner.animate({height: ($ul.height() + 16) + 'px'}, 200);
 
                     if (data.status === 'busy') {
