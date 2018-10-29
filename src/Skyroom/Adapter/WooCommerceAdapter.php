@@ -126,6 +126,36 @@ class WooCommerceAdapter implements PluginAdapterInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    function getUntrackedPurchases()
+    {
+        global $wpdb;
+
+        $items = $wpdb->prefix.'woocommerce_order_items';
+        $itemMeta = $wpdb->prefix.'woocommerce_order_itemmeta';
+        $enrolls = $wpdb->prefix.'skyroom_enrolls';
+        $termId = get_term_by('slug', 'skyroom', 'product_type')->term_taxonomy_id;
+
+        $query
+            = "SELECT user_meta.meta_value skyroom_user_id, post_meta.meta_value room_id, order_meta.meta_value user_id, _order.ID post_id
+               FROM $items items
+               INNER JOIN $itemMeta item_meta ON item_meta.order_item_id = items.order_item_id AND item_meta.meta_key = '_product_id'
+               INNER JOIN $wpdb->posts posts ON posts.ID = item_meta.meta_value
+               INNER JOIN $wpdb->postmeta post_meta ON post_meta.post_id = posts.ID AND post_meta.meta_key = '_skyroom_id'
+               INNER JOIN $wpdb->term_relationships term_rel ON term_rel.object_id = posts.ID
+               INNER JOIN $wpdb->posts _order ON items.order_id = _order.ID
+               INNER JOIN $wpdb->postmeta order_meta ON order_meta.post_id = _order.ID AND order_meta.meta_key = '_customer_user'
+               INNER JOIN $wpdb->usermeta user_meta ON user_meta.user_id = order_meta.meta_value AND user_meta.meta_key = '_skyroom_id'
+               WHERE term_rel.term_taxonomy_id = $termId
+               AND _order.post_status = 'wc-completed'
+               AND (user_meta.meta_value, post_meta.meta_value) NOT IN (SELECT skyroom_user_id, room_id FROM $enrolls)";
+
+        return $wpdb->get_results($query, ARRAY_A);
+    }
+
+
+    /**
      * Get Product singular or plural form
      *
      * @param bool $plural Whether to get plural or singular form

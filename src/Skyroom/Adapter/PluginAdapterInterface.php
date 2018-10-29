@@ -28,6 +28,11 @@ interface PluginAdapterInterface
     function getProducts($roomIds);
 
     /**
+     * Get purchases that are not saved on enrolls table
+     */
+    function getUntrackedPurchases();
+
+    /**
      * Get singular or plural form of specific post type string
      *
      * @param bool $plural Whether to get plural or singular form
