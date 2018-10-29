@@ -12,10 +12,8 @@ class MainMenu
 
     /**
      * Register main menu and submenus
-     *
-     * @param string          $icon
      */
-    public function register($icon)
+    public function register()
     {
         // Get submenu args
         $submenus = func_get_args();
