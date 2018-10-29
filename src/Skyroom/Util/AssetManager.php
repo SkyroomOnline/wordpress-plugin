@@ -58,7 +58,7 @@ class AssetManager
 
         wp_localize_script(
             'skyroom',
-            'skyroom_l10n',
+            'skyroom_data',
             [
                 'ok' => __('OK', 'skyroom'),
                 'event_details' => __('Event details', 'skyroom'),
@@ -68,6 +68,7 @@ class AssetManager
                 'item_id' => __('Item ID', 'skyroom'),
                 'user_id' => __('User ID', 'skyroom'),
                 'room_id' => __('Room ID', 'skyroom'),
+                'skyroom_sync_nonce' => wp_create_nonce('wp_skyroom_sync_data'),
             ]
         );
     }

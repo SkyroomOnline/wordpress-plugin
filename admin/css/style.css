@@ -94,3 +94,37 @@
 .skyroom-event-type-failed {
     background: #dc5757;
 }
+
+.skyroom-sync-error-icon {
+    font-size: 1rem;
+    vertical-align: middle;
+}
+
+.skyroom-spinning-dashicon {
+    vertical-align: middle;
+    -webkit-animation: skyroom-spinning-dashicon 1s infinite linear;
+    -o-animation: skyroom-spinning-dashicon 1s infinite linear;
+    animation: skyroom-spinning-dashicon 1s infinite linear;
+}
+
+#skyroom_sync .card-inner {
+    overflow: hidden;
+}
+
+@keyframes skyroom-spinning-dashicon {
+    0% {
+        -webkit-transform: rotate(0);
+        -moz-transform: rotate(0);
+        -ms-transform: rotate(0);
+        -o-transform: rotate(0);
+        transform: rotate(0);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
