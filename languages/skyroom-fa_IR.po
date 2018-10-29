@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
 "POT-Creation-Date: 2018-10-29 12:58:24+00:00\n"
-"PO-Revision-Date: 2018-10-29 16:53+0330\n"
+"PO-Revision-Date: 2018-10-29 18:39+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -342,7 +342,7 @@ msgstr "در حال همگام‌سازی کاربران با سرور..."
 
 #: src/Skyroom/Tasks/ActualSyncDataTask.php:113
 msgid "All users are already synced with server"
-msgstr "همه کاربران همگام‌سازی شده‌اند"
+msgstr "همه کاربران با سرور همگام‌سازی شده‌اند"
 
 #: src/Skyroom/Tasks/ActualSyncDataTask.php:140
 msgid "Error in saving '%s' to server: %s"
@@ -364,7 +364,7 @@ msgstr[0] "%d ثبت‌نام با موفقیت ذخیره شد"
 
 #: src/Skyroom/Tasks/ActualSyncDataTask.php:213
 msgid "All enrollments are tracked already"
-msgstr "همه ثبت‌نام‌ها ذخیره شده‌اند"
+msgstr "همه ثبت‌نام‌ها در پلاگین ذخیره شده‌اند"
 
 #: src/Skyroom/Tasks/ActualSyncDataTask.php:221
 msgid "Syncing enrollments with server..."
