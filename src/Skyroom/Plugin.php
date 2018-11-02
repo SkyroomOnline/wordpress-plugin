@@ -155,7 +155,7 @@ class Plugin
         });
 
         $eventEmitter->on('admin_notices', function () {
-            if ($GLOBALS['pagenow'] !== 'admin.php' && $_GET['page'] !== 'skyroom-settings') {
+            if ($GLOBALS['pagenow'] !== 'admin.php' || $_GET['page'] !== 'skyroom-settings') {
                 echo '<div id="skyroom_errors" class="error notice is-dismissible">';
                 echo '<p>';
                 printf(__(
