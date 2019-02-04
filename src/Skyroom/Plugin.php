@@ -10,6 +10,7 @@ use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Controller\SkyroomController;
 use Skyroom\Entity\Event;
+use Skyroom\Factory\DICallableFactory;
 use Skyroom\Menu\EventSubmenu;
 use Skyroom\Menu\MainMenu;
 use Skyroom\Menu\RoomSubmenu;
@@ -18,6 +19,7 @@ use Skyroom\Menu\SyncSubmenu;
 use Skyroom\Menu\UserSubmenu;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
+use Skyroom\Shortcoes\UserEnrollmentShortcode;
 use Skyroom\Tasks\SyncDataTask;
 use Skyroom\Util\Activator;
 use Skyroom\Util\AssetManager;
@@ -56,6 +58,7 @@ class Plugin
         }
 
         $this->registerHooks($this->container->get(EventEmitterInterface::class));
+        $this->registerShortcodes();
         $this->container->get(PluginAdapterInterface::class)->setup();
 
         // Ajax handlers registered on constructor, only needs to be instantiated
@@ -136,6 +139,17 @@ class Plugin
 
         // Register room redirection hook
         $eventEmitter->on('do_parse_request', [$this->container->get(SkyroomController::class), 'parseRequest'], 10, 2);
+    }
+
+    /**
+     * Register plugin shortcodes
+     *
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function registerShortcodes()
+    {
+        add_shortcode('SkyroomEnrollments', [$this->container->get(UserEnrollmentShortcode::class), 'display']);
     }
 
     /**

@@ -2,7 +2,10 @@
 
 namespace Skyroom\Repository;
 
+use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Api\Client;
+use Skyroom\Entity\Enrollment;
+use Skyroom\Entity\ProductWrapperInterface;
 use Skyroom\Entity\User;
 use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\InvalidResponseStatusException;
@@ -22,13 +25,20 @@ class UserRepository
     private $client;
 
     /**
+     * @var PluginAdapterInterface
+     */
+    private $pluginAdapter;
+
+    /**
      * User Repository constructor.
      *
-     * @param Client $client
+     * @param Client                 $client
+     * @param PluginAdapterInterface $pluginAdapter
      */
-    public function __construct(Client $client)
+    public function __construct(Client $client, PluginAdapterInterface $pluginAdapter)
     {
         $this->client = $client;
+        $this->pluginAdapter = $pluginAdapter;
     }
 
     /**
@@ -142,6 +152,41 @@ class UserRepository
                 ],
             ]
         );
+    }
+
+    /**
+     * Get user enrolled rooms
+     *
+     * @param int $userId
+     *
+     * @return Enrollment[]
+     */
+    public function getUserEnrollments($userId)
+    {
+        global $wpdb;
+        $query = $wpdb->prepare(
+            "SELECT room_id, enroll_time FROM {$wpdb->prefix}skyroom_enrolls WHERE user_id=%d ORDER BY enroll_time DESC",
+            $userId
+        );
+        $enrolls = $wpdb->get_results($query);
+        $rids = array_map(function ($enroll) {
+            return $enroll->room_id;
+        },
+            $enrolls);
+
+        $prods = $this->pluginAdapter->getProducts($rids);
+        $enrollments = array_map(function (ProductWrapperInterface $product) use ($enrolls) {
+            $enrollTime = 0;
+            foreach ($enrolls as $enroll) {
+                if ($enroll->room_id === $product->getSkyroomId()) {
+                    $enrollTime = $enroll->room_id;
+                }
+            }
+
+            return new Enrollment($product, $enrollTime);
+        }, $prods);
+
+        return $enrollments;
     }
 
     /**

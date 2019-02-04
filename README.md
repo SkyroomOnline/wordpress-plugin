@@ -7,6 +7,10 @@ You can manage your sells, customers and other with wordpress and let this plugi
 
 **(For now, only WooCommerce is supported. But it's planned to support all major wordpress commerce plugins.)**
 
+## Installation
+Download latest build from [releases](https://github.com/SkyroomOnline/wordpress-plugin/releases) (skyroom.zip) and upload it to your wordpress plugins directory and activate the plugin.
+Then set up plugin with your web service info and after successful set up, from Skyroom/Synchronization menu run synchronization to sync your wordpress users with your skyroom service.
+
 ## Working with plugin
 This plugin sits between your wordpress site and your skyroom service and does things automaticlly for you.
 
