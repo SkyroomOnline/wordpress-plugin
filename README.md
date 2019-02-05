@@ -27,6 +27,13 @@ Select the 'skyroom' as your Product Type and fill room details on skyroom tab.
 
 ![skyroom-product](https://user-images.githubusercontent.com/1191702/47265648-2296e780-d538-11e8-9de0-ebc71ffd6257.png)
 
+### Dedicated user enrollments page
+Normally users can enter to enrolled classes by visiting class product page. In product page, "Add to card" button turns to "Enter class" for users that enrolled to class.
+
+To show all enrolled classes to user in one place, you can use `[SkyroomEnrollments]` shortcode in a custom page. This shortcode displays enrollments in a table.
+
+You can add markup before and after table by `skyroom_before_enrollments_table` and `skyroom_after_enrollments_table` hooks and style table as you want.
+
 ## Support
 If you found any issues or you have any idea to make the plugin better, feel free to open an issue. We greatly appreciate your feedback.
 
