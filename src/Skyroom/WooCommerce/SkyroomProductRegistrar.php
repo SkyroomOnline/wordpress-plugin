@@ -229,6 +229,7 @@ class SkyroomProductRegistrar
         $postId = $_GET['post'];
         $userId = get_current_user_id();
         if ($error = get_transient("skyroom_save_product_error_{$postId}_{$userId}")) {
+            delete_transient("skyroom_save_product_error_{$postId}_{$userId}");
             return $error;
         }
 
