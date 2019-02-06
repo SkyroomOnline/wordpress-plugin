@@ -4,8 +4,10 @@ defined('WPINC') || die;
 
 
 if (empty($enrollments)) : ?>
-    <p class="<?php echo apply_filters('skyroom_no_enrollment_class') ?>">
-        <?php echo apply_filters('skyroom_no_enrollment_class', 'no-enrollments') ?>
+    <p class="<?php echo apply_filters('skyroom_no_enrollment_class', 'no-enrollments') ?>">
+        <strong>
+            <?php echo apply_filters('skyroom_no_enrollment_class', __('You are not attended to any course yet.')) ?>
+        </strong>
     </p>
 <?php else: ?>
     <?php do_action('skyroom_before_enrollments_table') ?>

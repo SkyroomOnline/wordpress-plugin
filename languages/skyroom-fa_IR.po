@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2019-02-04 17:51:34+00:00\n"
-"PO-Revision-Date: 2019-02-04 21:24+0330\n"
+"POT-Creation-Date: 2019-02-06 11:29:35+00:00\n"
+"PO-Revision-Date: 2019-02-06 15:05+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -153,7 +153,7 @@ msgstr ""
 "لطفا به صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی را انجام دهید "
 "تا شروع به کار کند."
 
-#: src/Skyroom/Repository/UserRepository.php:133
+#: src/Skyroom/Repository/UserRepository.php:134
 msgid "User is not registered to skyroom"
 msgstr "کاربر در اسکای‌روم ثبت‌نام نشده‌است"
 
@@ -426,6 +426,10 @@ msgstr "شناسه اتاق"
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:205
 msgid "Error"
 msgstr "خطا"
+
+#: views/enrollments.php:8
+msgid "You are not attended to any course yet."
+msgstr "هنوز در دوره‌ای ثبت‌نام نکرده‌اید."
 
 #: views/enrollments.php:13
 msgid "Enrolled Courses"
