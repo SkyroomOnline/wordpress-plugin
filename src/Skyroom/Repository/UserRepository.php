@@ -173,17 +173,22 @@ class UserRepository
 
         $rids = array_map(function ($enroll) {
             return $enroll->room_id;
-        },
-            $enrolls);
+        }, $enrolls);
 
         $prods = $this->pluginAdapter->getProducts($rids);
         $enrollments = array_map(function ($enroll) use ($prods) {
-            $pindex = Utils::arrayFind($prods, function (ProductWrapperInterface $prod) use ($enroll) {
+            $pIndex = Utils::arrayFind($prods, function (ProductWrapperInterface $prod) use ($enroll) {
                 return $prod->getSkyroomId() === $enroll->room_id;
             });
 
-            return new Enrollment($prods[$pindex], strtotime($enroll->enroll_time));
+            if ($pIndex >= 0) {
+                return new Enrollment($prods[$pIndex], strtotime($enroll->enroll_time));
+            } else {
+                return null;
+            }
         }, $enrolls);
+
+        $enrollments = array_filter($enrollments);
 
         return $enrollments;
     }
