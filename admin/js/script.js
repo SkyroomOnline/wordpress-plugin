@@ -35,7 +35,7 @@ jQuery(function ($) {
                 ajaxurl,
                 {
                     action: 'skyroom_sync_start',
-                    nonce: skyroom_data.skyroom_sync_nonce,
+                    nonce: skyroom_sync_nonce.start_sync,
                 },
                 function (data) {
                     $sync.find('#synchronize').prop('disabled', false).next().hide();
@@ -64,7 +64,7 @@ jQuery(function ($) {
                 ajaxurl,
                 {
                     action: 'skyroom_sync_status',
-                    nonce: skyroom_data.skyroom_sync_nonce,
+                    nonce: skyroom_sync_nonce.sync_status,
                 },
                 function (data) {
                     var $ul = $('<ul class="skyroom-sync-status-list" />');

@@ -8,14 +8,21 @@ use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\InvalidResponseStatusException;
 use Skyroom\Exception\RequestFailedException;
 use Skyroom\Repository\UserRepository;
+use SkyroomLibs\WPBackgroundProcess;
+use wpdb;
 
 /**
- * Class ActualSyncDataTask
+ * Class SyncTask
  *
  * @package Skyroom\Tasks
  */
-class ActualSyncDataTask
+class SyncTask extends WPBackgroundProcess
 {
+    /**
+     * @var string
+     */
+    protected $action = 'skyroom_sync';
+
     private $client;
     private $userRepository;
     private $pluginAdapter;
@@ -25,26 +32,40 @@ class ActualSyncDataTask
     private $tasks;
 
     /**
-     * SyncDataTask constructor. Initializes tasks.
+     * SyncDataTaskRunner constructor. Initializes tasks.
      *
-     * @param Client                 $client
-     * @param UserRepository         $userRepository
+     * @param Client $client
+     * @param UserRepository $userRepository
      * @param PluginAdapterInterface $pluginAdapter
-     * @param \wpdb                  $wpdb
+     * @param wpdb $wpdb
      */
-    public function __construct(Client $client, UserRepository $userRepository, PluginAdapterInterface $pluginAdapter, \wpdb $wpdb)
+    public function __construct(Client $client, UserRepository $userRepository, PluginAdapterInterface $pluginAdapter, wpdb $wpdb)
     {
+        parent::__construct();
+
         $this->client = $client;
         $this->userRepository = $userRepository;
         $this->pluginAdapter = $pluginAdapter;
         $this->wpdb = $wpdb;
-
         $this->tasks = [
-            'initService',
             'syncUsers',
             'trackEnrolls',
-            'syncEnrolls',
+            'syncEnrolls'
         ];
+    }
+
+    public function initTask()
+    {
+        // Push first task to queue
+        $this->push_to_queue(0);
+
+        // Create status transient
+        set_transient('skyroom_sync_data_status', ['status' => 'busy']);
+
+        // Add start message
+        $this->addMessage(__('Start sync service', 'skyroom'), 'done');
+
+        return $this;
     }
 
     /**
@@ -54,7 +75,7 @@ class ActualSyncDataTask
      *
      * @return mixed
      */
-    public function task($item)
+    protected function task($item)
     {
         if (call_user_func([$this, $this->tasks[$item]])) {
             $next = $item + 1;
@@ -67,7 +88,7 @@ class ActualSyncDataTask
         return false;
     }
 
-    public function complete()
+    protected function complete()
     {
         if ($this->error) {
             $this->addMessage(__('Syncing stopped due to errors', 'skyroom'), 'error');
@@ -93,13 +114,6 @@ class ActualSyncDataTask
         ];
 
         set_transient('skyroom_sync_data_status', $status);
-    }
-
-    public function initService()
-    {
-        $this->addMessage(__('Start sync service', 'skyroom'), 'done');
-
-        return true;
     }
 
     public function syncUsers()
@@ -188,7 +202,7 @@ class ActualSyncDataTask
         $untrackedPurchases = $this->pluginAdapter->getUntrackedPurchases();
         $count = count($untrackedPurchases);
 
-        $skyroomEnrollsTbl = $this->wpdb->prefix.'skyroom_enrolls';
+        $skyroomEnrollsTbl = $this->wpdb->prefix . 'skyroom_enrolls';
 
         // Save untracked purchases in enrolls table
         if ($count > 0) {
@@ -220,7 +234,7 @@ class ActualSyncDataTask
     {
         $this->addMessage(__('Syncing enrollments with server...', 'skyroom'), 'pending');
 
-        $skyroomEnrollsTbl = $this->wpdb->prefix.'skyroom_enrolls';
+        $skyroomEnrollsTbl = $this->wpdb->prefix . 'skyroom_enrolls';
 
         // Get all unsynced enrolls
         $query = "SELECT skyroom_user_id, room_id FROM $skyroomEnrollsTbl WHERE synced = false";

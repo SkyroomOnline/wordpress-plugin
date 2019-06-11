@@ -41,7 +41,8 @@ class SkyroomController
      */
     function parseRequest($do, $wp)
     {
-        if ($matches = $this->matchRequestPath()) {
+        $matches = $this->matchRequestPath();
+        if ($matches) {
             global $wpdb;
             $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}skyroom_enrolls WHERE user_id=%s AND room_id=%s",
                 get_current_user_id(), $matches['id']);
@@ -108,7 +109,6 @@ class SkyroomController
     private function getPathInfo()
     {
         $home_path = parse_url(home_url(), PHP_URL_PATH);
-
         return preg_replace("#^/?{$home_path}/#", '/', add_query_arg(array()));
     }
 }

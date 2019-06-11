@@ -1,3 +1,16 @@
+<?php
+
+use \Skyroom\Controller\SyncTaskController;
+
+?>
+
+<script type="application/javascript">
+    var skyroom_sync_nonce = {
+        'start_sync': '<?php echo wp_create_nonce(SyncTaskController::startActionIdentifier) ?>',
+        'sync_status': '<?php echo wp_create_nonce(SyncTaskController::statusActionIdentifier) ?>',
+    };
+</script>
+
 <div class="wrap" id="skyroom_sync">
     <h1><?php _e('Synchronization', 'skyroom') ?></h1>
     <div class="card">
@@ -15,7 +28,8 @@
                 <button type="button" class="button button-primary" id="synchronize">
                     <?php _e('Perform Synchronization', 'skyroom') ?>
                 </button>
-                <span class="dashicons dashicons-update skyroom-spinning-dashicon loading-icon" style="display: none;"></span>
+                <span class="dashicons dashicons-update skyroom-spinning-dashicon loading-icon"
+                      style="display: none;"></span>
             </p>
         </div>
     </div>

@@ -9,6 +9,7 @@ use DI\NotFoundException;
 use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Controller\SkyroomController;
+use Skyroom\Controller\SyncTaskController;
 use Skyroom\Entity\Event;
 use Skyroom\Factory\DICallableFactory;
 use Skyroom\Menu\EventSubmenu;
@@ -20,7 +21,7 @@ use Skyroom\Menu\UserSubmenu;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
 use Skyroom\Shortcoes\UserEnrollmentShortcode;
-use Skyroom\Tasks\SyncDataTask;
+use Skyroom\Tasks\SyncDataTaskRunner;
 use Skyroom\Util\Activator;
 use Skyroom\Util\AssetManager;
 use Skyroom\Util\Internationalization;
@@ -57,12 +58,11 @@ class Plugin
             return;
         }
 
-        $this->registerHooks($this->container->get(EventEmitterInterface::class));
+        $eventEmitter = $this->container->get(EventEmitterInterface::class);
+        $this->registerHooks($eventEmitter);
         $this->registerShortcodes();
+        $this->registerAjaxActions();
         $this->container->get(PluginAdapterInterface::class)->setup();
-
-        // Ajax handlers registered on constructor, only needs to be instantiated
-        $this->container->get(SyncDataTask::class);
     }
 
     /**
@@ -150,6 +150,19 @@ class Plugin
     public function registerShortcodes()
     {
         add_shortcode('SkyroomEnrollments', [$this->container->get(UserEnrollmentShortcode::class), 'display']);
+    }
+
+    /**
+     * Register plugin ajax actions
+     *
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function registerAjaxActions()
+    {
+        $syncTaskController = $this->container->get(SyncTaskController::class);
+        add_action('wp_ajax_' . SyncTaskController::startActionIdentifier, [$syncTaskController, 'startSyncTask']);
+        add_action('wp_ajax_' . SyncTaskController::statusActionIdentifier, [$syncTaskController, 'getSyncStatus']);
     }
 
     /**

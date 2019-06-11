@@ -2,6 +2,8 @@
 
 namespace Skyroom\Util;
 
+use Skyroom\Controller\SyncTaskController;
+
 /**
  * Contains hooks for enqueuing assets to wordpress
  *
@@ -68,7 +70,6 @@ class AssetManager
                 'item_id' => __('Item ID', 'skyroom'),
                 'user_id' => __('User ID', 'skyroom'),
                 'room_id' => __('Room ID', 'skyroom'),
-                'skyroom_sync_nonce' => wp_create_nonce('wp_skyroom_sync_data'),
             ]
         );
     }
