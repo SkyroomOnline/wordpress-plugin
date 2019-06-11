@@ -4,6 +4,7 @@ namespace Skyroom\Tasks;
 
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Api\Client;
+use Skyroom\Exception\BatchOperationFailedException;
 use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\InvalidResponseStatusException;
 use Skyroom\Exception\RequestFailedException;
@@ -125,73 +126,41 @@ class SyncTask extends WPBackgroundProcess
 
         if (empty($unsyncedUsers)) {
             $this->addMessage(__('All users are already synced with server', 'skyroom'), 'done', true);
-
             return true;
         }
 
         try {
-            $response = $this->client->request(
-                'createUsers',
-                [
-                    'users' => array_map(function ($user) {
-                        return [
-                            'username' => $user->user_login,
-                            'email' => $user->user_email,
-                            'nickname' => $user->user_nicename,
-                            'password' => uniqid('', true),
-                        ];
-                    }, $unsyncedUsers),
-                ]
+            $this->userRepository->addUsers($unsyncedUsers);
+            $count = count($unsyncedUsers);
+            $this->addMessage(
+                sprintf(
+                    _n(
+                        '%d user synced with server successfully',
+                        '%d users synced with server successfully',
+                        $count,
+                        'skyroom'
+                    ),
+                    number_format_i18n($count)
+                ),
+                'done',
+                true
             );
 
-            $error = false;
-            $count = $count = count($unsyncedUsers);
-            for ($i = 0; $i < $count; $i++) {
-                if (is_int($response[$i])) {
-                    update_user_meta($unsyncedUsers[$i]->ID, UserRepository::SKYROOM_ID_META_KEY, $response[$i]);
-                } else {
-                    $this->addMessage(
-                        sprintf(__('Error in saving \'%s\' to server: %s', 'skyroom'), $unsyncedUsers[$i]->user_login, $response[$i]),
-                        'error',
-                        !$error
-                    );
-                    $error = true;
-                }
-            }
-
-            if (!$error) {
-                $this->addMessage(
-                    sprintf(
-                        _n(
-                            '%d user synced with server successfully',
-                            '%d users synced with server successfully',
-                            $count,
-                            'skyroom'
-                        ),
-                        number_format_i18n($count)
-                    ),
-                    'done',
-                    true
-                );
-
-                return true;
-            }
-
-            return false;
+            return true;
 
         } catch (ConnectionNotEstablishedException $e) {
             $this->addMessage($e->getMessage(), 'error');
-
-            return false;
         } catch (InvalidResponseStatusException $e) {
             $this->addMessage($e->getMessage(), 'error');
-
-            return false;
         } catch (RequestFailedException $e) {
             $this->addMessage($e->getMessage(), 'error');
-
-            return false;
+        } catch (BatchOperationFailedException $e) {
+            for ($i = 0, $count = count($e->errors); $i < $count; $i++) {
+                $this->addMessage($e->errors[$i], 'error', $i === 0);
+            }
         }
+
+        return false;
     }
 
     public function trackEnrolls()
@@ -330,7 +299,7 @@ class SyncTask extends WPBackgroundProcess
                 return false;
             }
         } else {
-            $this->addMessage(sprintf(__("All enrollments already synced with server", 'skyroom'), count($unsyncedEnrolls)), 'done', true);
+            $this->addMessage(__("All enrollments already synced with server", 'skyroom'), 'done', true);
 
             return true;
         }

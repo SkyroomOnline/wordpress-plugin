@@ -7,6 +7,7 @@ use Skyroom\Api\Client;
 use Skyroom\Entity\Enrollment;
 use Skyroom\Entity\ProductWrapperInterface;
 use Skyroom\Entity\User;
+use Skyroom\Exception\BatchOperationFailedException;
 use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\InvalidResponseStatusException;
 use Skyroom\Util\Utils;
@@ -33,7 +34,7 @@ class UserRepository
     /**
      * User Repository constructor.
      *
-     * @param Client                 $client
+     * @param Client $client
      * @param PluginAdapterInterface $pluginAdapter
      */
     public function __construct(Client $client, PluginAdapterInterface $pluginAdapter)
@@ -45,11 +46,11 @@ class UserRepository
     /**
      * Get users
      *
-     * @throws ConnectionNotEstablishedException
+     * @return User[]
      * @throws InvalidResponseStatusException
      * @throws \Skyroom\Exception\RequestFailedException
      *
-     * @return User[]
+     * @throws ConnectionNotEstablishedException
      */
     public function getUsers()
     {
@@ -93,16 +94,16 @@ class UserRepository
     /**
      * Add registered user to skyroom
      *
-     * @throws ConnectionNotEstablishedException
+     * @param \WP_User $user User data
      * @throws InvalidResponseStatusException
      * @throws \Skyroom\Exception\RequestFailedException
      *
-     * @param \WP_User $user User data
+     * @throws ConnectionNotEstablishedException
      */
     public function addUser($user)
     {
         $params = [
-            'username' => $user->user_login,
+            'username' => $this->generateUsername($user->ID),
             'password' => uniqid('', true),
             'email' => $user->user_email,
             'nickname' => $user->display_name,
@@ -115,15 +116,55 @@ class UserRepository
     }
 
     /**
-     * Add user to skyroom
+     * Adds multiple users to skyroom
+     *
+     * @param $users \WP_User[]
      *
      * @throws ConnectionNotEstablishedException
      * @throws InvalidResponseStatusException
      * @throws \Skyroom\Exception\RequestFailedException
+     * @throws BatchOperationFailedException
+     */
+    public function addUsers($users)
+    {
+        $params = [
+            'users' => array_map(function (\WP_User $user) {
+                return [
+                    'username' => $this->generateUsername($user->ID),
+                    'password' => uniqid('', true),
+                    'email' => $user->user_email,
+                    'nickname' => $user->display_name,
+                ];
+            }, $users),
+        ];
+
+        // Send request and get response
+        $response = $this->client->request('createUsers', $params);
+
+        $errors = false;
+        for ($i = 0, $count = count($users); $i < $count; $i++) {
+            if (is_int($response[$i])) {
+                $this->updateSkyroomId($users[$i]->ID, $response[$i]);
+            } else {
+                $errors[] = sprintf(__('Error in saving \'%s\' to server: %s', 'skyroom'), $users[$i]->user_login, $response[$i]);
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new BatchOperationFailedException($errors);
+        }
+    }
+
+    /**
+     * Add user to skyroom
      *
      * @param \WP_User $user
-     * @param integer  $roomId Room ID
-     * @param integer  $postId Related wp post id
+     * @param integer $roomId Room ID
+     * @param integer $postId Related wp post id
+     * @throws ConnectionNotEstablishedException
+     * @throws InvalidResponseStatusException
+     * @throws \Skyroom\Exception\RequestFailedException
+     *
      */
     public function addUserToRoom($user, $roomId, $postId)
     {
@@ -135,7 +176,7 @@ class UserRepository
         }
 
         $wpdb->insert(
-            $wpdb->prefix.'skyroom_enrolls',
+            $wpdb->prefix . 'skyroom_enrolls',
             [
                 'skyroom_user_id' => $skyroomUserId,
                 'room_id' => $roomId,
@@ -232,5 +273,16 @@ class UserRepository
     public function updateSkyroomId($userId, $skyroomUserId)
     {
         return update_user_meta($userId, self::SKYROOM_ID_META_KEY, $skyroomUserId);
+    }
+
+    /**
+     * Generates random username for users to save on skyroom (for avoiding conflicts)
+     *
+     * @param $userId integer
+     * @return string
+     */
+    public function generateUsername($userId)
+    {
+        return 'wp-user-' . $userId . '-' . rand(100000, 999999);
     }
 }
