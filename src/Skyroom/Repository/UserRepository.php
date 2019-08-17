@@ -105,7 +105,6 @@ class UserRepository
         $params = [
             'username' => $this->generateUsername($user->ID),
             'password' => uniqid('', true),
-            'email' => $user->user_email,
             'nickname' => $user->display_name,
         ];
 
@@ -132,7 +131,6 @@ class UserRepository
                 return [
                     'username' => $this->generateUsername($user->ID),
                     'password' => uniqid('', true),
-                    'email' => $user->user_email,
                     'nickname' => $user->display_name,
                 ];
             }, $users),
