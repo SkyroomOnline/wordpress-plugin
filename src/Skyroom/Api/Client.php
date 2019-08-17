@@ -64,6 +64,7 @@ class Client
                 'Content-Type' => 'application/json; charset=UTF-8',
             ),
             'body' => json_encode($body),
+            'timeout' => 60,
         ];
 
         $response = wp_remote_post($url, $args);
