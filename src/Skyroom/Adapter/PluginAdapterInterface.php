@@ -11,6 +11,8 @@ use Skyroom\Entity\ProductWrapperInterface;
  */
 interface PluginAdapterInterface
 {
+    const SKYROOM_ENROLLMENT_SYNCED_META_KEY = '_skyroom_synced_enrollment';
+
     /**
      * Setup plugin adapter
      *
@@ -28,9 +30,16 @@ interface PluginAdapterInterface
     function getProducts($roomIds);
 
     /**
-     * Get purchases that are not saved on enrolls table
+     * Get enrollments (purchases) that are not saved on skyroom
      */
-    function getUntrackedPurchases();
+    function getUnsyncedEnrolls();
+
+    /**
+     * Set synced meta for enrollments
+     *
+     * @param int[] $itemIds
+     */
+    function setEnrollmentsSynced($itemIds);
 
     /**
      * Get singular or plural form of specific post type string

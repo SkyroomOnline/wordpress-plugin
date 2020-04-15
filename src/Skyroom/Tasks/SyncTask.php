@@ -49,8 +49,6 @@ class SyncTask extends WPBackgroundProcess
         $this->pluginAdapter = $pluginAdapter;
         $this->wpdb = $wpdb;
         $this->tasks = [
-            'syncUsers',
-            'trackEnrolls',
             'syncEnrolls'
         ];
     }
@@ -64,7 +62,7 @@ class SyncTask extends WPBackgroundProcess
         set_transient('skyroom_sync_data_status', ['status' => 'busy']);
 
         // Add start message
-        $this->addMessage(__('Start sync service', 'skyroom'), 'done');
+        $this->addMessage(__('Start sync service', 'skyroom'), 'pending');
 
         return $this;
     }
@@ -108,7 +106,13 @@ class SyncTask extends WPBackgroundProcess
     {
         $status = get_transient('skyroom_sync_data_status');
 
-        $index = $replace ? count($status['messages']) - 1 : count($status['messages']);
+        if (empty($status['messages'])) {
+            $index = 0;
+        } else {
+            $count = count($status['messages']);
+            $index = $replace ? $count - 1 : $count;
+        }
+
         $status['messages'][$index] = [
             'message' => $message,
             'type' => $type,
@@ -117,104 +121,81 @@ class SyncTask extends WPBackgroundProcess
         set_transient('skyroom_sync_data_status', $status);
     }
 
-    public function syncUsers()
-    {
-        $this->addMessage(__('Syncing users with server...', 'skyroom'), 'pending');
-
-        // Get users that don't have skyroom_id meta
-        $unsyncedUsers = $this->userRepository->getUnsyncedWPUsers();
-
-        if (empty($unsyncedUsers)) {
-            $this->addMessage(__('All users are already synced with server', 'skyroom'), 'done', true);
-            return true;
-        }
-
-        try {
-            $this->userRepository->addUsers($unsyncedUsers);
-            $count = count($unsyncedUsers);
-            $this->addMessage(
-                sprintf(
-                    _n(
-                        '%d user synced with server successfully',
-                        '%d users synced with server successfully',
-                        $count,
-                        'skyroom'
-                    ),
-                    number_format_i18n($count)
-                ),
-                'done',
-                true
-            );
-
-            return true;
-
-        } catch (ConnectionNotEstablishedException $e) {
-            $this->addMessage($e->getMessage(), 'error');
-        } catch (InvalidResponseStatusException $e) {
-            $this->addMessage($e->getMessage(), 'error');
-        } catch (RequestFailedException $e) {
-            $this->addMessage($e->getMessage(), 'error');
-        } catch (BatchOperationFailedException $e) {
-            for ($i = 0, $count = count($e->errors); $i < $count; $i++) {
-                $this->addMessage($e->errors[$i], 'error', $i === 0);
-            }
-        }
-
-        return false;
-    }
-
-    public function trackEnrolls()
-    {
-        $this->addMessage(__('Finding untracked enrollments...', 'skyroom'), 'pending');
-
-        // Get purchases that are not saved on skyroom_enrolls table
-        $untrackedPurchases = $this->pluginAdapter->getUntrackedPurchases();
-        $count = count($untrackedPurchases);
-
-        $skyroomEnrollsTbl = $this->wpdb->prefix . 'skyroom_enrolls';
-
-        // Save untracked purchases in enrolls table
-        if ($count > 0) {
-            foreach ($untrackedPurchases as $purchase) {
-                $this->wpdb->insert($skyroomEnrollsTbl, $purchase);
-            }
-
-            $this->addMessage(
-                sprintf(
-                    _n(
-                        '%d enrollment tracked successfully',
-                        '%d enrollments tracked successfully',
-                        $count,
-                        'skyroom'
-                    ),
-                    number_format_i18n($count)
-                ),
-                'done',
-                true
-            );
-        } else {
-            $this->addMessage(__('All enrollments are tracked already', 'skyroom'), 'done', true);
-        }
-
-        return true;
-    }
-
     public function syncEnrolls()
     {
-        $this->addMessage(__('Syncing enrollments with server...', 'skyroom'), 'pending');
+        // Set start message done
+        $this->addMessage(__('Start sync service', 'skyroom'), 'done', true);
 
-        $skyroomEnrollsTbl = $this->wpdb->prefix . 'skyroom_enrolls';
+        // Add new message
+        $this->addMessage(__('Finding unsynced enrollments...', 'skyroom'), 'pending');
 
-        // Get all unsynced enrolls
-        $query = "SELECT skyroom_user_id, room_id FROM $skyroomEnrollsTbl WHERE synced = false";
-        $unsyncedEnrolls = $this->wpdb->get_results($query);
+        // Get purchases that are not saved on skyroom_enrolls table
+        $unsyncedEnrolls = $this->pluginAdapter->getUnsyncedEnrolls();
         $count = count($unsyncedEnrolls);
 
-        // Sync enrolls with server
-        $roomUsersMap = [];
+        // Sync enrollments with skyroom
         if ($count > 0) {
+            $this->addMessage(
+                sprintf(
+                    _n('Found one enrollment', 'Found %d enrollments', $count, 'skyroom'),
+                    number_format_i18n($count)
+                ),
+                'done',
+                true
+            );
+
+            $this->addMessage(
+                sprintf(
+                    _n(
+                        'Syncing one enrollment with server...',
+                        'Syncing %d enrollments with server...',
+                        $count,
+                        'skyroom'
+                    ),
+                    'pending'
+                )
+            );
+
+            // Find users that not created on skyroom yet
+            $userIds = array_unique(array_map(function ($enroll) {
+                return $enroll['user_id'];
+            }, $unsyncedEnrolls));
+            $userSkyroomIdsMap = array_reduce($userIds, function ($acc, $userId) {
+                $acc[$userId] = $this->userRepository->getSkyroomId($userId);
+                return $acc;
+            }, []);
+
+            $notCreatedUsers = array_filter($userSkyroomIdsMap, function ($val) {
+                return empty($val);
+            });
+
+            if (count($notCreatedUsers) > 0) {
+                // Try to add users to skyroom
+                $error = true;
+                try {
+                    $users = get_users(['include' => array_keys($notCreatedUsers)]);
+                    $this->userRepository->addUsers($users);
+                    $error = false;
+                } catch (ConnectionNotEstablishedException $e) {
+                    $this->addMessage($e->getMessage(), 'error');
+                } catch (InvalidResponseStatusException $e) {
+                    $this->addMessage($e->getMessage(), 'error');
+                } catch (RequestFailedException $e) {
+                    $this->addMessage($e->getMessage(), 'error');
+                } catch (BatchOperationFailedException $e) {
+                    for ($i = 0, $count = count($e->errors); $i < $count; $i++) {
+                        $this->addMessage($e->errors[$i], 'error', $i === 0);
+                    }
+                }
+
+                if ($error) {
+                    return false;
+                }
+            }
+
+            $roomUsersMap = [];
             foreach ($unsyncedEnrolls as $enroll) {
-                $roomUsersMap[$enroll->room_id][] = ['user_id' => $enroll->skyroom_user_id];
+                $roomUsersMap[$enroll['room_id']][] = ['user_id' => $this->userRepository->getSkyroomId($enroll['user_id'])];
             }
 
             try {
@@ -257,15 +238,16 @@ class SyncTask extends WPBackgroundProcess
                             $error = true;
                         }
                     }
-
-                    $userIds = implode(',', $userIds);
-                    $query = "UPDATE $skyroomEnrollsTbl SET synced = true WHERE room_id = $roomId AND skyroom_user_id IN ($userIds)";
-                    $this->wpdb->query($query);
                 }
 
                 if ($error) {
                     return false;
                 } else {
+                    $this->pluginAdapter->setEnrollmentsSynced(
+                        array_map(function ($enroll) {
+                            return $enroll['item_id'];
+                        }, $unsyncedEnrolls));
+
                     $this->addMessage(
                         sprintf(
                             _n(
@@ -295,13 +277,11 @@ class SyncTask extends WPBackgroundProcess
 
             } catch (RequestFailedException $e) {
                 $this->addMessage($e->getMessage(), 'error');
-
-                return false;
             }
         } else {
-            $this->addMessage(__("All enrollments already synced with server", 'skyroom'), 'done', true);
-
-            return true;
+            $this->addMessage(__('All enrollments already synced with skyroom', 'skyroom'), 'done', true);
         }
+
+        return true;
     }
 }

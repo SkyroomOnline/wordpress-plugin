@@ -34,7 +34,7 @@ class SyncTaskController
         if ($result instanceof WP_Error) {
             wp_send_json_error(__('Something bad happened while trying to start synchronization', 'skyroom'));
         } else {
-            wp_send_json_success();
+            wp_send_json_success(get_transient('skyroom_sync_data_status'));
         }
     }
 

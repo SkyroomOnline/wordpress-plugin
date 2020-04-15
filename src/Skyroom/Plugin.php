@@ -105,38 +105,6 @@ class Plugin
             $this->container->get(AssetManager::class)->adminAssets();
         });
 
-        // User register hook
-        $eventEmitter->on('user_register', function ($userId) {
-            $user = get_user_by('id', $userId);
-
-            try {
-                $this->container->get(UserRepository::class)->addUser($user);
-
-                $info = [
-                    'user_id' => $userId,
-                ];
-                $event = new Event(
-                    sprintf(__('"%s" registered in skyroom service', 'skyroom'), $user->user_login),
-                    Event::SUCCESSFUL,
-                    $info
-                );
-                $this->container->get(EventRepository::class)->save($event);
-
-            } catch (\Exception $exception) {
-                $info = [
-                    'error_code' => $exception->getCode(),
-                    'error_message' => $exception->getMessage(),
-                    'user_id' => $userId,
-                ];
-                $event = new Event(
-                    sprintf(__('Failed to register "%s" to skyroom service', 'skyroom'), $user->user_login),
-                    Event::FAILED,
-                    $info
-                );
-                $this->container->get(EventRepository::class)->save($event);
-            }
-        });
-
         // Register room redirection hook
         $eventEmitter->on('do_parse_request', [$this->container->get(SkyroomController::class), 'parseRequest'], 10, 2);
     }

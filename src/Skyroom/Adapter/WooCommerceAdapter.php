@@ -45,7 +45,8 @@ class WooCommerceAdapter implements PluginAdapterInterface
         DICallableFactory $callableFactory,
         SkyroomProductRegistrar $productRegistrar,
         Viewer $viewer
-    ) {
+    )
+    {
         $this->eventEmitter = $eventEmitter;
         $this->callableFactory = $callableFactory;
         $this->productRegistrar = $productRegistrar;
@@ -128,30 +129,45 @@ class WooCommerceAdapter implements PluginAdapterInterface
     /**
      * @inheritdoc
      */
-    function getUntrackedPurchases()
+    function getUnsyncedEnrolls()
     {
         global $wpdb;
 
-        $items = $wpdb->prefix.'woocommerce_order_items';
-        $itemMeta = $wpdb->prefix.'woocommerce_order_itemmeta';
-        $enrolls = $wpdb->prefix.'skyroom_enrolls';
+        $items = $wpdb->prefix . 'woocommerce_order_items';
+        $item_meta = $wpdb->prefix . 'woocommerce_order_itemmeta';
         $termId = get_term_by('slug', 'skyroom', 'product_type')->term_taxonomy_id;
+        $skyroom_synced_meta_key = PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY;
 
         $query
-            = "SELECT user_meta.meta_value skyroom_user_id, post_meta.meta_value room_id, order_meta.meta_value user_id, _order.ID post_id
+            = "SELECT post_meta.meta_value room_id, order_customer_meta.meta_value user_id, _order.ID post_id, items.order_item_id item_id
                FROM $items items
-               INNER JOIN $itemMeta item_meta ON item_meta.order_item_id = items.order_item_id AND item_meta.meta_key = '_product_id'
+               INNER JOIN $item_meta item_meta ON item_meta.order_item_id = items.order_item_id AND item_meta.meta_key = '_product_id'
                INNER JOIN $wpdb->posts posts ON posts.ID = item_meta.meta_value
                INNER JOIN $wpdb->postmeta post_meta ON post_meta.post_id = posts.ID AND post_meta.meta_key = '_skyroom_id'
                INNER JOIN $wpdb->term_relationships term_rel ON term_rel.object_id = posts.ID
                INNER JOIN $wpdb->posts _order ON items.order_id = _order.ID
-               INNER JOIN $wpdb->postmeta order_meta ON order_meta.post_id = _order.ID AND order_meta.meta_key = '_customer_user'
-               INNER JOIN $wpdb->usermeta user_meta ON user_meta.user_id = order_meta.meta_value AND user_meta.meta_key = '_skyroom_id'
+               INNER JOIN $wpdb->postmeta order_customer_meta
+                    ON order_customer_meta.post_id = _order.ID AND order_customer_meta.meta_key = '_customer_user'
+               LEFT JOIN $item_meta skyroom_synced_meta
+                    ON skyroom_synced_meta.order_item_id = items.order_item_id AND item_meta.meta_key = '$skyroom_synced_meta_key'
                WHERE term_rel.term_taxonomy_id = $termId
                AND _order.post_status = 'wc-completed'
-               AND (user_meta.meta_value, post_meta.meta_value) NOT IN (SELECT skyroom_user_id, room_id FROM $enrolls)";
+               AND skyroom_synced_meta.order_item_id IS NULL";
 
         return $wpdb->get_results($query, ARRAY_A);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function setEnrollmentsSynced($itemIds)
+    {
+        foreach ($itemIds as $itemId) {
+            try {
+                wc_add_order_item_meta($itemId, PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY, '1');
+            } catch (\Exception $e) {
+            }
+        }
     }
 
 
@@ -168,9 +184,9 @@ class WooCommerceAdapter implements PluginAdapterInterface
     }
 
     /**
-     * @param int             $orderId
-     * @param \WC_Order       $order
-     * @param UserRepository  $userRepository
+     * @param int $orderId
+     * @param \WC_Order $order
+     * @param UserRepository $userRepository
      * @param EventRepository $eventRepository
      */
     function processOrder($orderId, $order, UserRepository $userRepository, EventRepository $eventRepository)
@@ -180,9 +196,44 @@ class WooCommerceAdapter implements PluginAdapterInterface
         foreach ($items as $item) {
             $product = $item->get_product();
             if ($product->get_type() === 'skyroom') {
+                // First time user takes a product
+                if (!$userRepository->isSkyroomUserCreated($user)) {
+                    try {
+                        $userRepository->addUser($user);
+                        $info = [
+                            'user_id' => $user->ID,
+                        ];
+                        $event = new Event(
+                            sprintf(__('"%s" registered in skyroom service', 'skyroom'), $user->user_login),
+                            Event::SUCCESSFUL,
+                            $info
+                        );
+                        $eventRepository->save($event);
+                    } catch (\Exception $exception) {
+                        $info = [
+                            'error_code' => $exception->getCode(),
+                            'error_message' => $exception->getMessage(),
+                            'user_id' => $user->ID,
+                        ];
+                        $event = new Event(
+                            sprintf(__('Failed to register "%s" to skyroom service', 'skyroom'), $user->user_login),
+                            Event::FAILED,
+                            $info
+                        );
+                        $eventRepository->save($event);
+                    }
+                }
+
+                // Add user to skyroom side room
                 try {
+                    // Creating skyroom user was not successful
+                    if (!$userRepository->isSkyroomUserCreated($user)) {
+                        continue;
+                    }
+
                     $userRepository->addUserToRoom($user, $product->get_skyroom_id(), $orderId);
 
+                    // Store event
                     $info = [
                         'order_id' => $orderId,
                         'item_id' => $product->get_id(),
@@ -219,9 +270,9 @@ class WooCommerceAdapter implements PluginAdapterInterface
     /**
      * Filter order needs processing
      *
-     * @param bool        $needs
+     * @param bool $needs
      * @param \WC_Product $product
-     * @param int         $orderId
+     * @param int $orderId
      *
      * @return bool
      */
@@ -234,7 +285,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
      * Show add to cart button for user
      *
      * @param UserRepository $repository
-     * @param Viewer         $viewer
+     * @param Viewer $viewer
      */
     function addToCart(UserRepository $repository, Viewer $viewer)
     {

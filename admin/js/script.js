@@ -37,29 +37,33 @@ jQuery(function ($) {
                     action: 'skyroom_sync_start',
                     nonce: skyroom_sync_nonce.start_sync,
                 },
-                function (data) {
+                function (response) {
                     $sync.find('#synchronize').prop('disabled', false).next().hide();
 
-                    if (data.success) {
-                        startSyncing();
+                    if (response.success) {
+                        startSyncing(response.data);
                     } else {
                         $('#skyroom_sync').find('.card-inner').append(
-                            '<p class="error"><span class="dashicons dashicons-dismiss skyroom-sync-error-icon"></span> ' + data.data + '</p>'
+                            '<p class="error"><span class="dashicons dashicons-dismiss skyroom-sync-error-icon"></span> ' + response.data + '</p>'
                         );
                     }
                 }
             )
         });
 
-        function startSyncing() {
+        function startSyncing(initialData) {
             $sync.find('.card-inner').slideUp(200, function () {
                 $(this).empty().height(0).show();
 
-                checkSync();
+                // Show initial sync data
+                showSyncStatus(initialData);
+
+                // Trigger checking sync status regularly
+                triggerCheckingSyncStatus();
             });
         }
 
-        function checkSync() {
+        function triggerCheckingSyncStatus() {
             $.get(
                 ajaxurl,
                 {
@@ -67,34 +71,39 @@ jQuery(function ($) {
                     nonce: skyroom_sync_nonce.sync_status,
                 },
                 function (data) {
-                    var $ul = $('<ul class="skyroom-sync-status-list" />');
-                    $.each(data.messages, function (index, item) {
-                        var clazz = '';
-                        switch (item.type) {
-                            case 'error':
-                                clazz = 'dismiss';
-                                break;
+                    showSyncStatus(data);
 
-                            case 'done':
-                                clazz = 'yes';
-                                break;
-
-                            case 'pending':
-                                clazz = 'update skyroom-spinning-dashicon';
-                                break;
-                        }
-                        $ul.append('<li><span class="dashicons dashicons-' + clazz + '"></span> ' + item.message + '</li>');
-                    });
-
-                    var $cardInner = $sync.find('.card-inner');
-                    $cardInner.html($ul);
-                    $cardInner.animate({height: ($ul.height() + 16) + 'px'}, 200);
-
+                    // Trigger next status request
                     if (data.status === 'busy') {
-                        setTimeout(checkSync, 2000);
+                        setTimeout(triggerCheckingSyncStatus, 1000);
                     }
                 }
             )
+        }
+
+        function showSyncStatus(data) {
+            var $ul = $('<ul class="skyroom-sync-status-list" />');
+            $.each(data.messages, function (index, item) {
+                var clazz = '';
+                switch (item.type) {
+                    case 'error':
+                        clazz = 'dismiss';
+                        break;
+
+                    case 'done':
+                        clazz = 'yes';
+                        break;
+
+                    case 'pending':
+                        clazz = 'update skyroom-spinning-dashicon';
+                        break;
+                }
+                $ul.append('<li><span class="dashicons dashicons-' + clazz + '"></span> ' + item.message + '</li>');
+            });
+
+            var $cardInner = $sync.find('.card-inner');
+            $cardInner.html($ul);
+            $cardInner.animate({height: ($ul.height() + 16) + 'px'}, 200);
         }
     }
 

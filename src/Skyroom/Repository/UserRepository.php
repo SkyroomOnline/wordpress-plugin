@@ -79,19 +79,6 @@ class UserRepository
     }
 
     /**
-     * Get users that are not synced with server
-     *
-     * @return \WP_User[]
-     */
-    public function getUnsyncedWPUsers()
-    {
-        return get_users([
-            'meta_key' => self::SKYROOM_ID_META_KEY,
-            'meta_compare' => 'NOT EXISTS',
-        ]);
-    }
-
-    /**
      * Add registered user to skyroom
      *
      * @param \WP_User $user User data
@@ -151,6 +138,17 @@ class UserRepository
         if (!empty($errors)) {
             throw new BatchOperationFailedException($errors);
         }
+    }
+
+    /**
+     * Check user reflected on skyroom (check by skyroom id)
+     *
+     * @param $user
+     * @return bool User reflected or not
+     */
+    public function isSkyroomUserCreated($user)
+    {
+        return !is_null($this->getSkyroomId($user->id));
     }
 
     /**
