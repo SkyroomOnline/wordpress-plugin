@@ -2,6 +2,7 @@
 
 namespace Skyroom\Shortcoes;
 
+use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Viewer;
 
@@ -13,9 +14,9 @@ use Skyroom\Util\Viewer;
 class UserEnrollmentShortcode
 {
     /**
-     * @var UserRepository $roomRepository
+     * @var PluginAdapterInterface $pluginAdapter
      */
-    private $userRepository;
+    private $pluginAdapter;
 
     /**
      * @var Viewer $viewer
@@ -25,12 +26,12 @@ class UserEnrollmentShortcode
     /**
      * UserEnrollmentShortcode constructor
      *
-     * @param UserRepository $userRepository
-     * @param Viewer         $viewer
+     * @param PluginAdapterInterface $pluginAdapter
+     * @param Viewer $viewer
      */
-    public function __construct(UserRepository $userRepository, Viewer $viewer)
+    public function __construct(PluginAdapterInterface $pluginAdapter, Viewer $viewer)
     {
-        $this->userRepository = $userRepository;
+        $this->pluginAdapter = $pluginAdapter;
         $this->viewer = $viewer;
     }
 
@@ -39,7 +40,7 @@ class UserEnrollmentShortcode
         $user = wp_get_current_user();
         if ($user->exists()) {
             $context = [];
-            $context['enrollments'] = $this->userRepository->getUserEnrollments($user->ID);
+            $context['enrollments'] = $this->pluginAdapter->getUserEnrollments($user->ID);
 
             $this->viewer->view('enrollments.php', $context);
         } else {

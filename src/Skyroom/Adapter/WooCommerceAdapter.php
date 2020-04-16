@@ -3,6 +3,7 @@
 namespace Skyroom\Adapter;
 
 use DownShift\WordPress\EventEmitterInterface;
+use Skyroom\Entity\Enrollment;
 use Skyroom\Entity\Event;
 use Skyroom\Entity\ProductWrapperInterface;
 use Skyroom\Entity\WooCommerceProductWrapper;
@@ -139,20 +140,23 @@ class WooCommerceAdapter implements PluginAdapterInterface
         $skyroom_synced_meta_key = PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY;
 
         $query
-            = "SELECT post_meta.meta_value room_id, order_customer_meta.meta_value user_id, _order.ID post_id, items.order_item_id item_id
-               FROM $items items
-               INNER JOIN $item_meta item_meta ON item_meta.order_item_id = items.order_item_id AND item_meta.meta_key = '_product_id'
-               INNER JOIN $wpdb->posts posts ON posts.ID = item_meta.meta_value
-               INNER JOIN $wpdb->postmeta post_meta ON post_meta.post_id = posts.ID AND post_meta.meta_key = '_skyroom_id'
-               INNER JOIN $wpdb->term_relationships term_rel ON term_rel.object_id = posts.ID
-               INNER JOIN $wpdb->posts _order ON items.order_id = _order.ID
-               INNER JOIN $wpdb->postmeta order_customer_meta
-                    ON order_customer_meta.post_id = _order.ID AND order_customer_meta.meta_key = '_customer_user'
-               LEFT JOIN $item_meta skyroom_synced_meta
-                    ON skyroom_synced_meta.order_item_id = items.order_item_id AND item_meta.meta_key = '$skyroom_synced_meta_key'
-               WHERE term_rel.term_taxonomy_id = $termId
-               AND _order.post_status = 'wc-completed'
-               AND skyroom_synced_meta.order_item_id IS NULL";
+            = "SELECT `product_skyroom_meta`.`meta_value` `room_id`, `order_customer_meta`.`meta_value` `user_id`, `order`.`ID` `order_id`,
+                    `items`.`order_item_id` `item_id`
+               FROM `$items` `items`
+               INNER JOIN `$item_meta` `item_meta` ON `item_meta`.`order_item_id` = `items`.`order_item_id`
+                    AND `item_meta`.`meta_key` = '_product_id'
+               INNER JOIN `$wpdb->posts` `product` ON `product`.`ID` = `item_meta`.`meta_value`
+               INNER JOIN `$wpdb->postmeta` `product_skyroom_meta` ON `product_skyroom_meta`.`post_id` = `product`.`ID`
+                    AND `product_skyroom_meta`.`meta_key` = '_skyroom_id'
+               INNER JOIN `$wpdb->term_relationships` `term_rel` ON `term_rel`.`term_taxonomy_id` = '$termId'
+                    AND `term_rel`.`object_id` = `product`.`ID`
+               INNER JOIN `$wpdb->posts` `order` ON `items`.`order_id` = `order`.`ID`
+               INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
+                    AND `order_customer_meta`.`meta_key` = '_customer_user'
+               LEFT JOIN `$item_meta` `skyroom_synced_meta` ON `skyroom_synced_meta`.`meta_key` = '$skyroom_synced_meta_key'
+                    AND `skyroom_synced_meta`.`order_item_id` = `items`.`order_item_id`
+               WHERE `order`.`post_status` = 'wc-completed'
+               AND `skyroom_synced_meta`.`order_item_id` IS NULL";
 
         return $wpdb->get_results($query, ARRAY_A);
     }
@@ -164,12 +168,88 @@ class WooCommerceAdapter implements PluginAdapterInterface
     {
         foreach ($itemIds as $itemId) {
             try {
-                wc_add_order_item_meta($itemId, PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY, '1');
+                wc_update_order_item_meta($itemId, PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY, '1');
             } catch (\Exception $e) {
             }
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    function getProductBySkyroomId($skyroomId)
+    {
+        $query = new \WP_Query([
+            'post_type' => 'product',
+            'tax_query' => [
+                [
+                    'taxonomy' => 'product_type',
+                    'field' => 'slug',
+                    'terms' => 'skyroom',
+                ],
+            ],
+            'meta_key' => '_skyroom_id',
+            'meta_value' => $skyroomId
+        ]);
+        $posts = $query->get_posts();
+
+        if (!empty($posts)) {
+            return $this->wrapProduct(wc_get_product($posts[0]));
+        }
+
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function userBoughtProduct($userId, $product)
+    {
+        return wc_customer_bought_product(null, $userId, $product->getId());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getUserEnrollments($userId)
+    {
+        global $wpdb;
+
+        $items = $wpdb->prefix . 'woocommerce_order_items';
+        $item_meta = $wpdb->prefix . 'woocommerce_order_itemmeta';
+        $termId = get_term_by('slug', 'skyroom', 'product_type')->term_taxonomy_id;
+
+        $query
+            = "SELECT `product`.`id` AS `product_id`, `order_date_meta`.`meta_value` AS `enrollment_date`
+               FROM `$wpdb->posts` `product`
+               INNER JOIN `$wpdb->term_relationships` `term_rel` ON `term_rel`.`object_id` = `product`.`ID`
+               INNER JOIN `$item_meta` `product_type_item_meta` ON `product_type_item_meta`.`meta_key` = '_product_id'
+                    AND `product_type_item_meta`.`meta_value` = `product`.`ID`
+               INNER JOIN `$items` `item` ON `item`.`order_item_id` = `product_type_item_meta`.`order_item_id`
+               INNER JOIN `$wpdb->posts` `order` ON `order`.`ID` = `item`.`order_id`
+               INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
+               INNER JOIN `$wpdb->postmeta` `order_date_meta` ON `order_date_meta`.`meta_key` = '_completed_date'
+                    AND `order_date_meta`.`post_id` = `order`.`ID`
+               WHERE `term_rel`.`term_taxonomy_id` = '$termId'
+               AND `product_type_item_meta`.`order_item_id` = `item`.`order_item_id`
+               AND `order`.`post_status` = 'wc-completed'
+               AND `order_customer_meta`.`meta_key` = '_customer_user'
+               AND `order_customer_meta`.`meta_value` = '$userId'
+               ORDER BY `order_date_meta`.`meta_value` DESC";
+
+        $enrolls = $wpdb->get_results($query);
+        $rawProducts = wc_get_products(['include' => array_map(function ($value) {
+            return $value->product_id;
+        }, $enrolls)]);
+        $products = array_reduce($rawProducts, function ($array, $product) {
+            $array[$product->get_id()] = $this->wrapProduct($product);
+            return $array;
+        }, []);
+
+        return array_map(function ($enroll) use ($products) {
+            return new Enrollment($products[$enroll->product_id], strtotime($enroll->enrollment_date));
+        }, $enrolls);
+    }
 
     /**
      * Get Product singular or plural form
@@ -197,7 +277,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
             $product = $item->get_product();
             if ($product->get_type() === 'skyroom') {
                 // First time user takes a product
-                if (!$userRepository->isSkyroomUserCreated($user)) {
+                if (!$userRepository->hasSkyroomUser($user->ID)) {
                     try {
                         $userRepository->addUser($user);
                         $info = [
@@ -227,7 +307,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
                 // Add user to skyroom side room
                 try {
                     // Creating skyroom user was not successful
-                    if (!$userRepository->isSkyroomUserCreated($user)) {
+                    if (!$userRepository->hasSkyroomUser($user->ID)) {
                         continue;
                     }
 
@@ -287,14 +367,15 @@ class WooCommerceAdapter implements PluginAdapterInterface
      * @param UserRepository $repository
      * @param Viewer $viewer
      */
-    function addToCart(UserRepository $repository, Viewer $viewer)
+    function addToCart(Viewer $viewer)
     {
         global $product;
 
         $context = [
             'product' => $product,
-            'purchased' => $repository->isUserInRoom(get_current_user_id(), $product->get_skyroom_id()),
+            'user_id' => get_current_user_id(),
         ];
+
         $viewer->view('woocommerce-add-to-cart.php', $context);
     }
 
@@ -305,11 +386,11 @@ class WooCommerceAdapter implements PluginAdapterInterface
         }
 
         $product = wc_get_product($productId);
-        if ($product->get_type() !== 'skyroom') {
+        if (!$product || $product->get_type() !== 'skyroom') {
             return $prev;
         }
 
-        return !$repository->isUserInRoom(get_current_user_id(), get_post_meta($productId, '_skyroom_id', true));
+        return !$this->userBoughtProduct(get_current_user_id(), $this->wrapProduct($product));
     }
 
     /**

@@ -129,7 +129,7 @@ class SyncTask extends WPBackgroundProcess
         // Add new message
         $this->addMessage(__('Finding unsynced enrollments...', 'skyroom'), 'pending');
 
-        // Get purchases that are not saved on skyroom_enrolls table
+        // Get purchases that are not saved on skyroom
         $unsyncedEnrolls = $this->pluginAdapter->getUnsyncedEnrolls();
         $count = count($unsyncedEnrolls);
 

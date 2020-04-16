@@ -2,9 +2,12 @@
 
 namespace Skyroom\Controller;
 
+use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Api\Client;
 use Skyroom\Entity\Event;
 use Skyroom\Repository\EventRepository;
+use Skyroom\Repository\RoomRepository;
+use Skyroom\Repository\UserRepository;
 
 /**
  * Class Skyroom
@@ -16,6 +19,16 @@ class SkyroomController
     const REDIRECT_SKYROOM_PATH = '#^redirect-to-room/(?<id>\d+)$#';
 
     /**
+     * @var PluginAdapterInterface
+     */
+    private $pluginAdapter;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * @var Client
      */
     private $client;
@@ -25,9 +38,16 @@ class SkyroomController
      */
     private $eventRepository;
 
-    public function __construct(Client $client, EventRepository $eventRepository)
+    public function __construct(
+        Client $client,
+        PluginAdapterInterface $pluginAdapter,
+        UserRepository $userRepository,
+        EventRepository $eventRepository
+    )
     {
         $this->client = $client;
+        $this->pluginAdapter = $pluginAdapter;
+        $this->userRepository = $userRepository;
         $this->eventRepository = $eventRepository;
     }
 
@@ -35,7 +55,7 @@ class SkyroomController
      * Parse request
      *
      * @param bool $do
-     * @param \WP  $wp
+     * @param \WP $wp
      *
      * @return bool
      */
@@ -43,19 +63,17 @@ class SkyroomController
     {
         $matches = $this->matchRequestPath();
         if ($matches) {
-            global $wpdb;
-            $query = $wpdb->prepare("SELECT * FROM {$wpdb->prefix}skyroom_enrolls WHERE user_id=%s AND room_id=%s",
-                get_current_user_id(), $matches['id']);
-            $enrollment = $wpdb->get_row($query);
+            $product = $this->pluginAdapter->getProductBySkyroomId($matches['id']);
+            $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $product);
 
-            if (empty($enrollment)) {
-                return true;
+            if (!$bought) {
+                wp_die(__('You should buy this course before logging into class'));
             }
 
             try {
                 $url = $this->client->request('getLoginUrl', [
-                    'room_id' => $enrollment->room_id,
-                    'user_id' => $enrollment->skyroom_user_id,
+                    'room_id' => $product->getSkyroomId(),
+                    'user_id' => $this->userRepository->getSkyroomId(get_current_user_id()),
                     'ttl' => 60,
                 ]);
 
@@ -67,8 +85,8 @@ class SkyroomController
                 $info = [
                     'error_code' => $exception->getCode(),
                     'error_message' => $exception->getMessage(),
-                    'user_id' => $enrollment->user_id,
-                    'room_id' => $enrollment->room_id,
+                    'user_id' => get_current_user_id(),
+                    'room_id' => $product->getSkyroomId(),
                 ];
                 $event = new Event(
                     sprintf(__('Redirecting "%s" to classroom failed', 'skyroom'), wp_get_current_user()->user_login),
@@ -78,11 +96,9 @@ class SkyroomController
                 $this->eventRepository->save($event);
 
                 $title = __('Error entering class', 'skyroom');
-                $message = __('There was an error communicating with class holder. Please contact site support to fix problem.', 'skyroom');
-                wp_die('<h1>'.$title.'</h1>'.'<p>'.$message.'</p>', $title);
+                $message = __('Seems there is a problem on our side server. Please contact support to resolve issue.', 'skyroom');
+                wp_die('<h1>' . $title . '</h1>' . '<p>' . $message . '</p>', $title);
             }
-
-            return true;
         }
 
         return $do;

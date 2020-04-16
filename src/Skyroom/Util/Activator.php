@@ -20,7 +20,7 @@ class Activator
     }
 
     /**
-     * Create skyroom_enrolls database table
+     * Create skyroom_events database table
      */
     private static function createTables()
     {
@@ -41,6 +41,7 @@ class Activator
         require_once(ABSPATH.'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 
+        // Remove skyroom_enrolls table if exists
         $enrollsTable = $wpdb->prefix.'skyroom_enrolls';
         $wpdb->query("DROP TABLE IF EXISTS $enrollsTable");
 

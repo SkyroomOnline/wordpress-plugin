@@ -2,6 +2,7 @@
 
 namespace Skyroom\Adapter;
 
+use Skyroom\Entity\Enrollment;
 use Skyroom\Entity\ProductWrapperInterface;
 
 /**
@@ -40,6 +41,31 @@ interface PluginAdapterInterface
      * @param int[] $itemIds
      */
     function setEnrollmentsSynced($itemIds);
+
+    /**
+     * Get product by it's skyroom id
+     *
+     * @param $skyroomId
+     * @return ProductWrapperInterface
+     */
+    function getProductBySkyroomId($skyroomId);
+
+    /**
+     * Check that user bought product
+     *
+     * @param int $userId
+     * @param ProductWrapperInterface $product
+     * @return mixed
+     */
+    function userBoughtProduct($userId, $product);
+
+    /**
+     * Get all enrollments of user
+     *
+     * @param int $userId
+     * @return Enrollment[]
+     */
+    function getUserEnrollments($userId);
 
     /**
      * Get singular or plural form of specific post type string

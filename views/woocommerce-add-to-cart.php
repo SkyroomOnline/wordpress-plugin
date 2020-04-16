@@ -6,6 +6,8 @@ if (!$product->is_purchasable()) {
     return;
 }
 
+$purchased = wc_customer_bought_product(null, $user_id, $product->get_id());
+
 if ($product->is_in_stock() && !$purchased) : ?>
 
     <?php do_action('woocommerce_before_add_to_cart_form'); ?>
@@ -25,7 +27,7 @@ if ($product->is_in_stock() && !$purchased) : ?>
 
 <?php elseif ($purchased) : ?>
     <?php do_action('skyroom_before_enter_room_button') ?>
-    <a href="<?php echo home_url('redirect-to-room/'.$product->get_skyroom_id()) ?>" class="button alt">
+    <a href="<?php echo home_url('redirect-to-room/' . $product->get_skyroom_id()) ?>" class="button alt">
         <?php _e('Enter room', 'skyroom') ?>
     </a>
     <?php do_action('skyroom_after_enter_room_button') ?>
