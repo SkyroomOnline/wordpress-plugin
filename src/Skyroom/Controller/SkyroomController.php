@@ -96,7 +96,7 @@ class SkyroomController
                 $this->eventRepository->save($event);
 
                 $title = __('Error entering class', 'skyroom');
-                $message = __('Seems there is a problem on our side server. Please contact support to resolve issue.', 'skyroom');
+                $message = __('Seems there is a problem on our side. Please contact support to resolve issue.', 'skyroom');
                 wp_die('<h1>' . $title . '</h1>' . '<p>' . $message . '</p>', $title);
             }
         }

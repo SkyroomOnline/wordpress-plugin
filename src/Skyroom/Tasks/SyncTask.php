@@ -219,17 +219,14 @@ class SyncTask extends WPBackgroundProcess
                         continue;
                     }
 
-                    $userIds = [];
                     foreach ($usersResult as $i => $userResult) {
-                        if (is_numeric($userResult)) {
-                            $userIds[] = $roomUsersMap[$roomId][$i]['user_id'];
-                        } else {
+                        if (!is_numeric($userResult)) {
                             $this->addMessage(
                                 sprintf(
                                     __('Error in syncing room(%d) user(%d): %s', 'skyroom'),
                                     $roomId,
                                     $roomUsersMap[$roomId][$i]['user_id'],
-                                    $usersResult
+                                    $userResult
                                 ),
                                 'error',
                                 !$error
