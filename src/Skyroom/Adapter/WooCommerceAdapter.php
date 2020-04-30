@@ -155,6 +155,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
                     AND `order_customer_meta`.`meta_key` = '_customer_user'
                LEFT JOIN `$item_meta` `skyroom_synced_meta` ON `skyroom_synced_meta`.`meta_key` = '$skyroom_synced_meta_key'
                     AND `skyroom_synced_meta`.`order_item_id` = `items`.`order_item_id`
+               INNER JOIN `wp_users` `user` ON `user`.`id` = `order_customer_meta`.`meta_value`
                WHERE `order`.`post_status` = 'wc-completed'
                AND `skyroom_synced_meta`.`order_item_id` IS NULL";
 
