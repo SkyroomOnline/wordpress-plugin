@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2020-04-23 10:02+0430\n"
+"POT-Creation-Date: 2020-05-16 09:25+0430\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,43 +15,44 @@ msgstr ""
 "X-Generator: Poedit 2.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;_n;esc_html__;esc_attr__\n"
+"X-Poedit-KeywordsList: __;_e;_n;_x;_ex;_nx;esc_attr__;esc_attr_e;esc_attr_x;"
+"esc_html__;esc_html_e;esc_html_x;_n_noop;_nx_noop;translate_nooped_plural\n"
 "X-Poedit-SearchPath-0: src/Skyroom\n"
 "X-Poedit-SearchPath-1: views\n"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:263
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:264
 msgid "Products"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:263
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:264
 msgid "Product"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:287
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:288
 #, php-format
 msgid "\"%s\" registered in skyroom service"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:299
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:300
 #, php-format
 msgid "Failed to register \"%s\" to skyroom service"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:324
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:325
 #, php-format
 msgid "\"%s\" access given to \"%s\""
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:340
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:341
 #, php-format
 msgid "Failed to give \"%s\" access to \"%s\""
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:420
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:421
 msgid "Room title"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:421
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:422
 #: views/woocommerce-add-to-cart.php:31
 msgid "Enter room"
 msgstr ""
@@ -323,6 +324,11 @@ msgstr ""
 msgid "Current Page"
 msgstr ""
 
+#: src/Skyroom/Tables/WPListTable.php:872
+#, php-format
+msgid "%1$s of %2$s"
+msgstr ""
+
 #: src/Skyroom/Tables/WPListTable.php:881
 msgid "Next page"
 msgstr ""
@@ -364,17 +370,17 @@ msgstr ""
 msgid "Error in syncing room(%d) users: %s"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:229
+#: src/Skyroom/Tasks/SyncTask.php:226
 #, php-format
 msgid "Error in syncing room(%d) user(%d): %s"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:254
+#: src/Skyroom/Tasks/SyncTask.php:251
 #, php-format
 msgid "%d enrollment synced with server successfully"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:282
+#: src/Skyroom/Tasks/SyncTask.php:279
 msgid "All enrollments already synced with skyroom"
 msgstr ""
 
@@ -513,4 +519,15 @@ msgstr ""
 
 #: views/woocommerce-product-tab.php:23
 msgid "Room Capacity"
+msgstr ""
+
+#: views/woocommerce-skyroom-order.php:2
+msgid "Courses"
+msgstr ""
+
+#: views/woocommerce-skyroom-order.php:3
+msgid ""
+"You successfully enrolled in purchased courses. To attend classes, on "
+"announced schedules navigate to course page and click on 'Enter room' "
+"button. (Remember you should be logged in to site)"
 msgstr ""
