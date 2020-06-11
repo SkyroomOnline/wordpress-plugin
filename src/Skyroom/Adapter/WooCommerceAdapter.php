@@ -281,6 +281,8 @@ class WooCommerceAdapter implements PluginAdapterInterface
                 if (!$userRepository->hasSkyroomUser($user->ID)) {
                     try {
                         $userRepository->addUser($user);
+
+                        // Insert event
                         $info = [
                             'user_id' => $user->ID,
                         ];

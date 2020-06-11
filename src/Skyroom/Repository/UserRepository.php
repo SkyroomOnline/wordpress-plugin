@@ -4,13 +4,11 @@ namespace Skyroom\Repository;
 
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Api\Client;
-use Skyroom\Entity\Enrollment;
-use Skyroom\Entity\ProductWrapperInterface;
 use Skyroom\Entity\User;
 use Skyroom\Exception\BatchOperationFailedException;
 use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\InvalidResponseStatusException;
-use Skyroom\Util\Utils;
+use Skyroom\Exception\RequestFailedException;
 
 /**
  * User Repository
@@ -35,9 +33,10 @@ class UserRepository
      * User Repository constructor.
      *
      * @param Client $client
+     * @param EventRepository $eventRepository
      * @param PluginAdapterInterface $pluginAdapter
      */
-    public function __construct(Client $client, PluginAdapterInterface $pluginAdapter)
+    public function __construct(Client $client, EventRepository $eventRepository, PluginAdapterInterface $pluginAdapter)
     {
         $this->client = $client;
         $this->pluginAdapter = $pluginAdapter;
@@ -82,9 +81,9 @@ class UserRepository
      * Add registered user to skyroom
      *
      * @param \WP_User $user User data
+     *
      * @throws InvalidResponseStatusException
      * @throws \Skyroom\Exception\RequestFailedException
-     *
      * @throws ConnectionNotEstablishedException
      */
     public function addUser($user)
@@ -149,6 +148,22 @@ class UserRepository
     public function hasSkyroomUser($userId)
     {
         return !empty($this->getSkyroomId($userId));
+    }
+
+    /**
+     * Ensure that sykroom user added for given wp_user, if it's not added, add it
+     *
+     * @param \WP_User $user
+     *
+     * @throws ConnectionNotEstablishedException
+     * @throws InvalidResponseStatusException
+     * @throws RequestFailedException
+     */
+    public function ensureSkyroomUserAdded($user)
+    {
+        if (!$this->hasSkyroomUser($user->ID)) {
+            $this->addUser($user);
+        }
     }
 
     /**

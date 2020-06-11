@@ -71,9 +71,13 @@ class SkyroomController
             }
 
             try {
+                $this->userRepository->ensureSkyroomUserAdded(wp_get_current_user());
+                $skyroomUserId = $this->userRepository->getSkyroomId(get_current_user_id());
+                $skyroomRoomId = $product->getSkyroomId();
+
                 $url = $this->client->request('getLoginUrl', [
-                    'room_id' => $product->getSkyroomId(),
-                    'user_id' => $this->userRepository->getSkyroomId(get_current_user_id()),
+                    'room_id' => $skyroomRoomId,
+                    'user_id' => $skyroomUserId,
                     'ttl' => 60,
                 ]);
 
@@ -86,6 +90,7 @@ class SkyroomController
                     'error_code' => $exception->getCode(),
                     'error_message' => $exception->getMessage(),
                     'user_id' => get_current_user_id(),
+                    'skyroom_user_id' => $this->userRepository->getSkyroomId(get_current_user_id()),
                     'room_id' => $product->getSkyroomId(),
                 ];
                 $event = new Event(
