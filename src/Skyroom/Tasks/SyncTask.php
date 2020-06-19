@@ -253,7 +253,7 @@ class SyncTask extends WPBackgroundProcess
                 // Try to add users to skyroom
                 $error = true;
                 try {
-                    $users = get_users(['include' => array_keys($notCreatedUsers)]);
+                    $users = get_users(['include' => $notCreatedUsers]);
                     $this->userRepository->addUsers($users);
                     $error = false;
                 } catch (ConnectionNotEstablishedException $e) {
