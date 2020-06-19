@@ -139,7 +139,7 @@ class SyncTask extends WPBackgroundProcess
         $this->addMessage(__('Start sync service', 'skyroom'), 'done', true);
 
         // Add new message
-        $this->addMessage(__('Finding unsynced rooms...', 'skyroom'), 'pending');
+        $this->addMessage(__('Finding unsynced products...', 'skyroom'), 'pending');
 
         // Get purchases that are not saved on skyroom
         $products = $this->pluginAdapter->getProducts();

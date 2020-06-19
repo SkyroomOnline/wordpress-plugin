@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2020-05-16 09:25+0430\n"
+"POT-Creation-Date: 2020-06-19 21:05+0430\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,64 +20,64 @@ msgstr ""
 "X-Poedit-SearchPath-0: src/Skyroom\n"
 "X-Poedit-SearchPath-1: views\n"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:264
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:268
 msgid "Products"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:264
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:268
 msgid "Product"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:288
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:294
 #, php-format
 msgid "\"%s\" registered in skyroom service"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:300
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:306
 #, php-format
 msgid "Failed to register \"%s\" to skyroom service"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:325
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:331
 #, php-format
 msgid "\"%s\" access given to \"%s\""
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:341
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:347
 #, php-format
 msgid "Failed to give \"%s\" access to \"%s\""
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:421
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:443
 msgid "Room title"
 msgstr ""
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:422
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:444
 #: views/woocommerce-add-to-cart.php:31
 msgid "Enter room"
 msgstr ""
 
-#: src/Skyroom/Controller/SkyroomController.php:70
+#: src/Skyroom/Controller/MaintenanceController.php:45
+msgid "Something bad happened while trying to start synchronization"
+msgstr ""
+
+#: src/Skyroom/Controller/SkyroomController.php:69
 msgid "You should buy this course before logging into class"
 msgstr ""
 
-#: src/Skyroom/Controller/SkyroomController.php:92
+#: src/Skyroom/Controller/SkyroomController.php:96
 #, php-format
 msgid "Redirecting \"%s\" to classroom failed"
 msgstr ""
 
-#: src/Skyroom/Controller/SkyroomController.php:98
+#: src/Skyroom/Controller/SkyroomController.php:102
 msgid "Error entering class"
 msgstr ""
 
-#: src/Skyroom/Controller/SkyroomController.php:99
+#: src/Skyroom/Controller/SkyroomController.php:103
 msgid ""
 "Seems there is a problem on our side. Please contact support to resolve "
 "issue."
-msgstr ""
-
-#: src/Skyroom/Controller/SyncTaskController.php:35
-msgid "Something bad happened while trying to start synchronization"
 msgstr ""
 
 #: src/Skyroom/Entity/Room.php:88 src/Skyroom/Entity/User.php:91
@@ -119,6 +119,14 @@ msgstr ""
 msgid "Skyroom"
 msgstr ""
 
+#: src/Skyroom/Menu/MaintenanceSubmenu.php:31
+msgid "Skyroom Maintenance"
+msgstr ""
+
+#: src/Skyroom/Menu/MaintenanceSubmenu.php:32
+msgid "Maintenance"
+msgstr ""
+
 #: src/Skyroom/Menu/RoomSubmenu.php:40
 msgid "Skyroom Rooms"
 msgstr ""
@@ -136,14 +144,6 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/Skyroom/Menu/SyncSubmenu.php:31
-msgid "Skyroom Synchronization"
-msgstr ""
-
-#: src/Skyroom/Menu/SyncSubmenu.php:32
-msgid "Synchronize"
-msgstr ""
-
 #: src/Skyroom/Menu/UserSubmenu.php:40
 msgid "Skyroom Users"
 msgstr ""
@@ -153,7 +153,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: src/Skyroom/Plugin.php:157
+#: src/Skyroom/Plugin.php:158
 #, php-format
 msgid ""
 "<strong>Skyroom</strong> plugin activated successfully but it's not "
@@ -161,12 +161,12 @@ msgid ""
 "configure it to start working."
 msgstr ""
 
-#: src/Skyroom/Repository/UserRepository.php:134
+#: src/Skyroom/Repository/UserRepository.php:133
 #, php-format
 msgid "Error in saving '%s' to server: %s"
 msgstr ""
 
-#: src/Skyroom/Repository/UserRepository.php:171
+#: src/Skyroom/Repository/UserRepository.php:186
 msgid "User is not registered to skyroom"
 msgstr ""
 
@@ -341,46 +341,71 @@ msgstr ""
 msgid "Select All"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:65 src/Skyroom/Tasks/SyncTask.php:127
+#: src/Skyroom/Tasks/SyncTask.php:78 src/Skyroom/Tasks/SyncTask.php:139
 msgid "Start sync service"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:93
+#: src/Skyroom/Tasks/SyncTask.php:106
 msgid "Syncing stopped due to errors"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:95
+#: src/Skyroom/Tasks/SyncTask.php:108
 msgid "Syncing completed successfully"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:130
+#: src/Skyroom/Tasks/SyncTask.php:142
+msgid "Finding unsynced products..."
+msgstr ""
+
+#: src/Skyroom/Tasks/SyncTask.php:171
+msgid "Found one product"
+msgstr ""
+
+#: src/Skyroom/Tasks/SyncTask.php:181
+msgid "Syncing one product with server..."
+msgstr ""
+
+#: src/Skyroom/Tasks/SyncTask.php:198
+#, php-format
+msgid "name: %s"
+msgstr ""
+
+#: src/Skyroom/Tasks/SyncTask.php:203
+msgid "All products synced with skyroom"
+msgstr ""
+
+#: src/Skyroom/Tasks/SyncTask.php:205
+msgid "All products already synced with skyroom"
+msgstr ""
+
+#: src/Skyroom/Tasks/SyncTask.php:214
 msgid "Finding unsynced enrollments..."
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:140
+#: src/Skyroom/Tasks/SyncTask.php:224
 msgid "Found one enrollment"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:150
+#: src/Skyroom/Tasks/SyncTask.php:234
 msgid "Syncing one enrollment with server..."
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:213
+#: src/Skyroom/Tasks/SyncTask.php:294
 #, php-format
 msgid "Error in syncing room(%d) users: %s"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:226
+#: src/Skyroom/Tasks/SyncTask.php:314 src/Skyroom/Tasks/SyncTask.php:351
 #, php-format
 msgid "Error in syncing room(%d) user(%d): %s"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:251
+#: src/Skyroom/Tasks/SyncTask.php:377
 #, php-format
 msgid "%d enrollment synced with server successfully"
 msgstr ""
 
-#: src/Skyroom/Tasks/SyncTask.php:279
+#: src/Skyroom/Tasks/SyncTask.php:413
 msgid "All enrollments already synced with skyroom"
 msgstr ""
 
@@ -416,6 +441,16 @@ msgstr ""
 msgid "Room ID"
 msgstr ""
 
+#: src/Skyroom/Util/AssetManager.php:73
+msgid "Skyroom User ID"
+msgstr ""
+
+#: src/Skyroom/Util/AssetManager.php:74
+msgid ""
+"This will delete all data related to skyroom from your wordpress. Are you "
+"sure what you are doing?"
+msgstr ""
+
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:205
 msgid "Error"
 msgstr ""
@@ -438,6 +473,52 @@ msgstr ""
 
 #: views/enrollments.php:22 views/enrollments.php:32
 msgid "Enter class"
+msgstr ""
+
+#: views/maintenance.php:17
+msgid "Synchronization"
+msgstr ""
+
+#: views/maintenance.php:22
+msgid ""
+"If you have had some data before installing skyroom plugin or something bad "
+"happened for plugin while contacting with skyroom server, It's the place to "
+"synchronize your data with server."
+msgstr ""
+
+#: views/maintenance.php:27
+#, php-format
+msgid "Last Sync: %s"
+msgstr ""
+
+#: views/maintenance.php:27
+msgid "Never"
+msgstr ""
+
+#: views/maintenance.php:31
+msgid "Perform Synchronization"
+msgstr ""
+
+#: views/maintenance.php:41
+msgid "Purge plugin data"
+msgstr ""
+
+#: views/maintenance.php:46
+msgid ""
+"Clear all skyroom data (user ids, room ids and enrollments) from your "
+"wordpress database."
+msgstr ""
+
+#: views/maintenance.php:52
+msgid "Purge Data"
+msgstr ""
+
+#: views/maintenance.php:57
+msgid "Data purged successfully."
+msgstr ""
+
+#: views/maintenance.php:60
+msgid "Data purge failed."
 msgstr ""
 
 #: views/settings.php:5
@@ -471,30 +552,6 @@ msgstr ""
 
 #: views/settings.php:56
 msgid "Save Changes"
-msgstr ""
-
-#: views/sync.php:15
-msgid "Synchronization"
-msgstr ""
-
-#: views/sync.php:20
-msgid ""
-"If you have had some data before installing skyroom plugin or something bad "
-"happened for plugin while contacting with skyroom server, It's the place to "
-"synchronize your data with server."
-msgstr ""
-
-#: views/sync.php:25
-#, php-format
-msgid "Last Sync: %s"
-msgstr ""
-
-#: views/sync.php:25
-msgid "Never"
-msgstr ""
-
-#: views/sync.php:29
-msgid "Perform Synchronization"
 msgstr ""
 
 #: views/woocommerce-add-to-cart.php:38
