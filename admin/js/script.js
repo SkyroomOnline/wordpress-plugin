@@ -24,12 +24,12 @@ jQuery(function ($) {
         });
     }
 
-    // Synchronize page
-    if (pagenow.indexOf('page_skyroom-sync') !== -1) {
-        var $sync = $('#skyroom_sync');
-        $sync.find('#synchronize').on('click', function () {
+    // Synchronize actions
+    if (pagenow.indexOf('page_skyroom-maintenance') !== -1) {
+        var $maintenance = $('.skyroom-maintenance');
+        $maintenance.find('.synchronize-btn').on('click', function () {
             $(this).prop('disabled', true).next().show();
-            $sync.find('.error').remove();
+            $maintenance.find('.error').remove();
 
             $.get(
                 ajaxurl,
@@ -38,7 +38,7 @@ jQuery(function ($) {
                     nonce: skyroom_sync_nonce.start_sync,
                 },
                 function (response) {
-                    $sync.find('#synchronize').prop('disabled', false).next().hide();
+                    $maintenance.find('.synchronize-btn').prop('disabled', false).next().hide();
 
                     if (response.success) {
                         startSyncing(response.data);
@@ -48,63 +48,87 @@ jQuery(function ($) {
                         );
                     }
                 }
-            )
+            );
+
+            function startSyncing(initialData) {
+                $maintenance.find('.skyroom-sync .card-inner').slideUp(200, function () {
+                    $(this).empty().height(0).show();
+
+                    // Show initial sync data
+                    showSyncStatus(initialData);
+
+                    // Trigger checking sync status regularly
+                    triggerCheckingSyncStatus();
+                });
+            }
+
+            function triggerCheckingSyncStatus() {
+                $.get(
+                    ajaxurl,
+                    {
+                        action: 'skyroom_sync_status',
+                        nonce: skyroom_sync_nonce.sync_status,
+                    },
+                    function (data) {
+                        showSyncStatus(data);
+
+                        // Trigger next status request
+                        if (data.status === 'busy') {
+                            setTimeout(triggerCheckingSyncStatus, 1000);
+                        }
+                    }
+                )
+            }
+
+            function showSyncStatus(data) {
+                var $ul = $('<ul class="skyroom-sync-status-list" />');
+                $.each(data.messages, function (index, item) {
+                    var clazz = '';
+                    switch (item.type) {
+                        case 'error':
+                            clazz = 'dismiss';
+                            break;
+
+                        case 'done':
+                            clazz = 'yes';
+                            break;
+
+                        case 'pending':
+                            clazz = 'update skyroom-spinning-dashicon';
+                            break;
+                    }
+                    $ul.append('<li><span class="dashicons dashicons-' + clazz + '"></span> ' + item.message + '</li>');
+                });
+
+                var $cardInner = $maintenance.find('.skyroom-sync .card-inner');
+                $cardInner.html($ul);
+                $cardInner.animate({height: $ul.height() + 'px'}, 200);
+            }
         });
 
-        function startSyncing(initialData) {
-            $sync.find('.card-inner').slideUp(200, function () {
-                $(this).empty().height(0).show();
-
-                // Show initial sync data
-                showSyncStatus(initialData);
-
-                // Trigger checking sync status regularly
-                triggerCheckingSyncStatus();
-            });
-        }
-
-        function triggerCheckingSyncStatus() {
-            $.get(
-                ajaxurl,
-                {
-                    action: 'skyroom_sync_status',
-                    nonce: skyroom_sync_nonce.sync_status,
-                },
-                function (data) {
-                    showSyncStatus(data);
-
-                    // Trigger next status request
-                    if (data.status === 'busy') {
-                        setTimeout(triggerCheckingSyncStatus, 1000);
+        $maintenance.find('.purge-btn').on('click', function () {
+            var agree = confirm(skyroom_data.purge_data_confirm);
+            if (agree) {
+                var $this = $(this);
+                $this.prop('disabled', true).next().show();
+                $this.next().next().hide().next().hide();
+                $.get(
+                    ajaxurl,
+                    {
+                        action: 'skyroom_purge_data',
+                        nonce: skyroom_sync_nonce.purge_data,
+                    },
+                    function (response) {
+                        $this.prop('disabled', false).next().hide();
+                        if (response.success) {
+                            $this.next().next().show();
+                        } else {
+                            $this.next().next().next().show();
+                        }
                     }
-                }
-            )
-        }
-
-        function showSyncStatus(data) {
-            var $ul = $('<ul class="skyroom-sync-status-list" />');
-            $.each(data.messages, function (index, item) {
-                var clazz = '';
-                switch (item.type) {
-                    case 'error':
-                        clazz = 'dismiss';
-                        break;
-
-                    case 'done':
-                        clazz = 'yes';
-                        break;
-
-                    case 'pending':
-                        clazz = 'update skyroom-spinning-dashicon';
-                        break;
-                }
-                $ul.append('<li><span class="dashicons dashicons-' + clazz + '"></span> ' + item.message + '</li>');
-            });
-
-            var $cardInner = $sync.find('.card-inner');
-            $cardInner.html($ul);
-            $cardInner.animate({height: ($ul.height() + 16) + 'px'}, 200);
-        }
+                );
+            }
+        });
     }
 
     /*******************************\

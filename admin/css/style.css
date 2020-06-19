@@ -131,3 +131,55 @@
         transform: rotate(360deg);
     }
 }
+
+.skyroom-maintenance > div {
+    float: left;
+}
+
+.skyroom-maintenance > div:not(:first-child) {
+    margin-left: 20px;
+}
+
+.skyroom-maintenance .card {
+    padding: 16px 25px 10px;
+}
+
+.skyroom-maintenance .card ul {
+    margin: 0;
+}
+
+.rtl .skyroom-maintenance > div {
+    float: right;
+}
+
+.rtl .skyroom-maintenance > div:not(:first-child) {
+    margin-left: unset;
+    margin-right: 20px;
+}
+
+.purge-successful-message {
+    margin-left: 10px;
+}
+
+.rtl .purge-successful-message {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
+@media screen and (max-width: 1250px) {
+    .skyroom-maintenance > div {
+        float: none;
+    }
+
+    .skyroom-maintenance > div:not(:first-child) {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-top: 30px;
+    }
+}
+
+@media screen and (min-width: 1250px) {
+    .skyroom-maintenance > div {
+        width: 520px;
+    }
+}

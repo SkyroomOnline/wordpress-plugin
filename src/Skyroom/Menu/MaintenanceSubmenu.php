@@ -9,7 +9,7 @@ use Skyroom\Util\Viewer;
  *
  * @package Skyroom\Menu
  */
-class SyncSubmenu extends AbstractSubmenu
+class MaintenanceSubmenu extends AbstractSubmenu
 {
     /**
      * @var Viewer $viewer
@@ -27,9 +27,9 @@ class SyncSubmenu extends AbstractSubmenu
 
         // Set user menu attributes
         parent::__construct(
-            'skyroom-sync',
-            __('Skyroom Synchronization', 'skyroom'),
-            __('Synchronize', 'skyroom'),
+            'skyroom-maintenance',
+            __('Skyroom Maintenance', 'skyroom'),
+            __('Maintenance', 'skyroom'),
             'manage_options'
         );
     }
@@ -43,6 +43,6 @@ class SyncSubmenu extends AbstractSubmenu
         $context = [
             'lastSync' => get_option('skyroom_last_sync'),
         ];
-        $this->viewer->view('sync.php', $context);
+        $this->viewer->view('maintenance.php', $context);
     }
 }
