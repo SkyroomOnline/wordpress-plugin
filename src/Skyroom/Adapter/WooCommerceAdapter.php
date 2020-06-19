@@ -89,9 +89,9 @@ class WooCommerceAdapter implements PluginAdapterInterface
      *
      * @return WooCommerceProductWrapper[]
      */
-    function getProducts($roomIds)
+    function getProducts($roomIds = null)
     {
-        $query = new \WP_Query([
+        $query = [
             'post_type' => 'product',
             'tax_query' => [
                 [
@@ -100,16 +100,20 @@ class WooCommerceAdapter implements PluginAdapterInterface
                     'terms' => 'skyroom',
                 ],
             ],
-            'meta_query' => [
+        ];
+
+        if (!empty($roomIds)) {
+            $query['meta_query'] = [
                 [
                     'key' => '_skyroom_id',
                     'value' => $roomIds,
                     'compare' => 'IN',
                 ],
-            ],
-        ]);
+            ];
+        }
 
-        $wcProducts = array_map('wc_get_product', $query->get_posts());
+        $wpQuery = new \WP_Query($query);
+        $wcProducts = array_map('wc_get_product', $wpQuery->get_posts());
         $products = array_map([$this, 'wrapProduct'], $wcProducts);
 
         return $products;
@@ -415,6 +419,22 @@ class WooCommerceAdapter implements PluginAdapterInterface
         if ($hasSkyroomProduct) {
             $this->viewer->view('woocommerce-skyroom-order.php');
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function purgeData()
+    {
+        global $wpdb;
+
+        $postMeta = $wpdb->prefix . 'postmeta';
+        $itemMeta = $wpdb->prefix . 'woocommerce_order_itemmeta';
+        $userMeta = $wpdb->prefix . 'usermeta';
+
+        $wpdb->delete($postMeta, ['meta_key' => PluginAdapterInterface::SKYROOM_ID_META_KEY]);
+        $wpdb->delete($itemMeta, ['meta_key' => PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY]);
+        $wpdb->delete($userMeta, ['meta_key' => UserRepository::SKYROOM_ID_META_KEY]);
     }
 
     public function getOrderColumns()

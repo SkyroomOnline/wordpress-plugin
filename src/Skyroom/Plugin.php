@@ -9,14 +9,14 @@ use DI\NotFoundException;
 use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Controller\SkyroomController;
-use Skyroom\Controller\SyncTaskController;
+use Skyroom\Controller\MaintenanceController;
 use Skyroom\Entity\Event;
 use Skyroom\Factory\DICallableFactory;
 use Skyroom\Menu\EventSubmenu;
 use Skyroom\Menu\MainMenu;
 use Skyroom\Menu\RoomSubmenu;
 use Skyroom\Menu\SettingSubmenu;
-use Skyroom\Menu\SyncSubmenu;
+use Skyroom\Menu\MaintenanceSubmenu;
 use Skyroom\Menu\UserSubmenu;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
@@ -95,7 +95,7 @@ class Plugin
                 $this->container->get(RoomSubmenu::class),
                 $this->container->get(UserSubmenu::class),
                 $this->container->get(EventSubmenu::class),
-                $this->container->get(SyncSubmenu::class),
+                $this->container->get(MaintenanceSubmenu::class),
                 $this->container->get(SettingSubmenu::class)
             );
         });
@@ -128,9 +128,10 @@ class Plugin
      */
     public function registerAjaxActions()
     {
-        $syncTaskController = $this->container->get(SyncTaskController::class);
-        add_action('wp_ajax_' . SyncTaskController::startActionIdentifier, [$syncTaskController, 'startSyncTask']);
-        add_action('wp_ajax_' . SyncTaskController::statusActionIdentifier, [$syncTaskController, 'getSyncStatus']);
+        $syncTaskController = $this->container->get(MaintenanceController::class);
+        add_action('wp_ajax_' . MaintenanceController::startActionIdentifier, [$syncTaskController, 'startSyncTask']);
+        add_action('wp_ajax_' . MaintenanceController::statusActionIdentifier, [$syncTaskController, 'getSyncStatus']);
+        add_action('wp_ajax_' . MaintenanceController::purgeActionIdentifier, [$syncTaskController, 'purgeData']);
     }
 
     /**

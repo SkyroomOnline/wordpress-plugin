@@ -6,7 +6,6 @@ use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Api\Client;
 use Skyroom\Entity\Event;
 use Skyroom\Repository\EventRepository;
-use Skyroom\Repository\RoomRepository;
 use Skyroom\Repository\UserRepository;
 
 /**

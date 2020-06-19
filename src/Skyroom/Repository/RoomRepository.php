@@ -7,6 +7,7 @@ use Skyroom\Api\Client;
 use Skyroom\Entity\Room;
 use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\InvalidResponseStatusException;
+use Skyroom\Exception\RequestFailedException;
 
 /**
  * Room Repository
@@ -28,7 +29,7 @@ class RoomRepository
     /**
      * Room Repository constructor.
      *
-     * @param Client                 $client
+     * @param Client $client
      * @param PluginAdapterInterface $pluginAdapter
      */
     public function __construct(Client $client, PluginAdapterInterface $pluginAdapter)
@@ -40,11 +41,11 @@ class RoomRepository
     /**
      * Get rooms
      *
-     * @throws ConnectionNotEstablishedException
-     * @throws InvalidResponseStatusException
-     * @throws \Skyroom\Exception\RequestFailedException
-     *
      * @return Room[]
+     * @throws InvalidResponseStatusException
+     * @throws RequestFailedException
+     *
+     * @throws ConnectionNotEstablishedException
      */
     public function getRooms()
     {
@@ -78,5 +79,45 @@ class RoomRepository
     public function getPostString($plural = false)
     {
         return $this->pluginAdapter->getPostString($plural);
+    }
+
+    /**
+     * Create room on skyroom API
+     *
+     * @param $data array
+     *
+     * @return integer ID of created room
+     *
+     * @throws ConnectionNotEstablishedException
+     * @throws InvalidResponseStatusException
+     * @throws RequestFailedException
+     */
+    function createRoom($data)
+    {
+        $params = [
+            'name' => $data['name'],
+            'title' => $data['title'],
+            'opLoginFirst' => isset($data['opLoginFirst']) ? $data['opLoginFirst'] : false,
+        ];
+
+        return $this->client->request('createRoom', $params);
+    }
+
+    function updateRoom($id, $data)
+    {
+        $params = ['room_id' => $id];
+        if (isset($data['name'])) {
+            $params['name'] = $data['name'];
+        }
+
+        if (isset($data['title'])) {
+            $params['title'] = $data['title'];
+        }
+
+        if (isset($data['opLoginFirst'])) {
+            $params['op_login_first'] = $data['opLoginFirst'];
+        }
+
+        return $this->client->request('updateRoom', $params);
     }
 }

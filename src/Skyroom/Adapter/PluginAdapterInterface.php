@@ -13,6 +13,9 @@ use Skyroom\Entity\ProductWrapperInterface;
 interface PluginAdapterInterface
 {
     const SKYROOM_ENROLLMENT_SYNCED_META_KEY = '_skyroom_synced_enrollment';
+    const SKYROOM_ID_META_KEY = '_skyroom_id';
+    const SKYROOM_ROOM_TITLE_META_KEY = '_skyroom_title';
+    const SKYROOM_ROOM_NAME_META_KEY = '_skyroom_name';
 
     /**
      * Setup plugin adapter
@@ -28,7 +31,7 @@ interface PluginAdapterInterface
      *
      * @return ProductWrapperInterface[]
      */
-    function getProducts($roomIds);
+    function getProducts($roomIds = []);
 
     /**
      * Get enrollments (purchases) that are not saved on skyroom
@@ -75,4 +78,11 @@ interface PluginAdapterInterface
      * @return string
      */
     function getPostString($plural = false);
+
+    /**
+     * Purge skyroom plugin data from this plugin
+     *
+     * @return void
+     */
+    function purgeData();
 }
