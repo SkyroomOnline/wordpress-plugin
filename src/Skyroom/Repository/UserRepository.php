@@ -186,16 +186,6 @@ class UserRepository
             throw new \InvalidArgumentException(__('User is not registered to skyroom', 'skyroom'));
         }
 
-        $wpdb->insert(
-            $wpdb->prefix . 'skyroom_enrolls',
-            [
-                'skyroom_user_id' => $skyroomUserId,
-                'room_id' => $roomId,
-                'user_id' => $user->ID,
-                'post_id' => $postId,
-            ]
-        );
-
         $this->client->request(
             'addRoomUsers',
             [
@@ -205,6 +195,8 @@ class UserRepository
                 ],
             ]
         );
+
+        $this->pluginAdapter->setEnrollmentSynced($user->ID, $postId);
     }
 
     /**
