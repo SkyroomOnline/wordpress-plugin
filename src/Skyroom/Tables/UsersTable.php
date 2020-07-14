@@ -19,7 +19,7 @@ class UsersTable extends WPListTable
     /**
      * RoomsTable constructor.
      *
-     * @param   array $users Table items
+     * @param array $users Table items
      */
     public function __construct($users)
     {
@@ -41,7 +41,11 @@ class UsersTable extends WPListTable
         $hidden = array();
         $sortable = array();
         $this->_column_headers = array($columns, $hidden, $sortable);
-        $usersCount = count($this->users);
+//        if ($this->users) {
+            $usersCount = count($this->users);
+//        } else {
+//            $usersCount = 0;
+//        }
         $this->set_pagination_args(array(
             'total_items' => $usersCount,
             'per_page' => $usersCount,
@@ -52,8 +56,8 @@ class UsersTable extends WPListTable
     /**
      * General method for rendering columns
      *
-     * @param   User   $item
-     * @param   string $column_name
+     * @param User $item
+     * @param string $column_name
      *
      * @return  string Rendered item
      */
@@ -77,23 +81,23 @@ class UsersTable extends WPListTable
     /**
      * Render nickname column
      *
-     * @param   User $item Row data
+     * @param User $item Row data
      *
      * @return  string Rendered item
      */
     public function column_nickname($item)
     {
         if (empty($wpUser = $item->getWpUser())) {
-            return '<strong>'.$item->getNickname().'</strong>';
+            return '<strong>' . $item->getNickname() . '</strong>';
         } else {
-            return '<strong><a href="'.get_edit_user_link($item->getWpUser()->ID).'">'.$item->getNickname().'</a>';
+            return '<strong><a href="' . get_edit_user_link($item->getWpUser()->ID) . '">' . $item->getNickname() . '</a>';
         }
     }
 
     /**
      * Render wp user_login column
      *
-     * @param   User $item Row data
+     * @param User $item Row data
      *
      * @return  string Rendered item
      */
@@ -116,8 +120,8 @@ class UsersTable extends WPListTable
     {
         return array(
             'nickname' => __('Nickname', 'skyroom'),
-            'username' => __('Username', 'skyroom'),
             'wp_user_login' => __('Wordpress username', 'skyroom'),
+//            'product' => __('Product', 'skyroom'),
             'status' => __('Status', 'skyroom'),
         );
     }

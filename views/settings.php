@@ -23,7 +23,7 @@
                 <td>
                     <input type="text" name="skyroom_site_url" id="skyroom_site_url" class="regular-text ltr"
                            value="<?php echo ($skyroomSiteUrl ? esc_attr($skyroomSiteUrl) : 'https://skyroom.online') ?>"
-                           placeholder="<?php echo esc_attr(sprintf(__('e.g: %s', 'skyroom'), 'https://skyroom.online')) ?>">
+                           placeholder="<?php echo esc_attr(sprintf(__('e.g: %s', 'skyroom'), 'https://skyroom.online')) ?>" required>
                     <p id="skyroom_site_url_desc">
                 </td>
             </tr>
@@ -33,7 +33,7 @@
                 </th>
                 <td>
                     <input type="text" name="skyroom_api_key" id="skyroom_api_key" class="regular-text ltr"
-                           value="<?php echo ($skyroomApiKey ? esc_attr($skyroomApiKey) : '') ?>">
+                           value="<?php echo ($skyroomApiKey ? esc_attr($skyroomApiKey) : '') ?>" required>
                     <p class="description"><?php _e('API key should be provided to you by skyroom support', 'skyroom') ?></p>
                 </td>
             </tr>
@@ -42,11 +42,19 @@
                     <label for="skyroom_integrated_plugin"><?php _e('Plugin you want to integrate skyroom with:', 'skyroom') ?></label>
                 </th>
                 <td>
-                    <select name="skyroom_integrated_plugin" id="skyroom_integrated_plugin">
+                    <select name="skyroom_integrated_plugin" id="skyroom_integrated_plugin" required>
                         <option value="woocommerce"<?php echo $skyroomIntegratedPlugin === 'wocommerce' ? ' selected' : '' ?>>
                             <?php _e('WooCommerce', 'skyroom') ?>
                         </option>
                     </select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label for="skyroom_username"><?php _e('Username:', 'skyroom') ?></label>
+                </th>
+                <td>
+                    <?php echo ($username ? esc_attr($username) : _e('Not Registred:', 'skyroom')) ?>
                 </td>
             </tr>
             </tbody>

@@ -51,12 +51,21 @@ class SettingSubmenu extends AbstractSubmenu
         // initialize vars
         $error = '';
         $success = null;
+        $username = null;
 
         // Handle form submit
         if (isset($_POST['save'])) {
-            $skyroomSiteUrl = $_POST['skyroom_site_url'];
-            $skyroomApiKey = $_POST['skyroom_api_key'];
-            $skyroomIntegratedPlugin = $_POST['skyroom_integrated_plugin'];
+            if(isset($_POST['skyroom_site_url']) && !empty($_POST['skyroom_site_url'])){
+                $skyroomSiteUrl = $this->checkInput($_POST['skyroom_site_url']);
+            }
+
+            if (isset($_POST['skyroom_api_key']) && !empty($_POST['skyroom_api_key'])){
+                $skyroomApiKey = $this->checkInput($_POST['skyroom_api_key']);
+            }
+
+            if (isset($_POST['skyroom_integrated_plugin']) && !empty($_POST['skyroom_integrated_plugin'])){
+                $skyroomIntegratedPlugin = $this->checkInput($_POST['skyroom_integrated_plugin']);
+            }
 
             // Change Client url object
             $URL = new URL($skyroomSiteUrl, $skyroomApiKey);
@@ -77,6 +86,10 @@ class SettingSubmenu extends AbstractSubmenu
             $skyroomSiteUrl = get_option('skyroom_site_url');
             $skyroomApiKey = get_option('skyroom_api_key');
             $skyroomIntegratedPlugin = get_option('skyroom_integrated_plugin');
+            if(!empty($skyroomSiteUrl)) {
+                $data = $this->client->request('ping');
+                $username = $data->username;
+            }
         }
 
         $context = [
@@ -85,7 +98,14 @@ class SettingSubmenu extends AbstractSubmenu
             'skyroomSiteUrl' => $skyroomSiteUrl,
             'skyroomApiKey' => $skyroomApiKey,
             'skyroomIntegratedPlugin' => $skyroomIntegratedPlugin,
+            'username' => $username,
         ];
         $this->viewer->view('settings.php', $context);
+    }
+    public function checkInput($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
 }

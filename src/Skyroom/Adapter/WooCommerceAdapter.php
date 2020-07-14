@@ -3,6 +3,7 @@
 namespace Skyroom\Adapter;
 
 use DownShift\WordPress\EventEmitterInterface;
+use Skyroom\Api\Client;
 use Skyroom\Entity\Enrollment;
 use Skyroom\Entity\Event;
 use Skyroom\Entity\ProductWrapperInterface;
@@ -13,6 +14,8 @@ use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Viewer;
 use Skyroom\WooCommerce\SkyroomProduct;
 use Skyroom\WooCommerce\SkyroomProductRegistrar;
+use Skyroom\WooCommerce\SkyroomWooMyAccount;
+use function DI\string;
 
 /**
  * WooCommerce adapter
@@ -41,17 +44,26 @@ class WooCommerceAdapter implements PluginAdapterInterface
      */
     private $viewer;
 
+    /**
+     * @var Client
+     */
+    private $client;
+
     public function __construct(
         EventEmitterInterface $eventEmitter,
         DICallableFactory $callableFactory,
         SkyroomProductRegistrar $productRegistrar,
-        Viewer $viewer
+        SkyroomWooMyAccount $skyroomWooMyAccount,
+        Viewer $viewer,
+        Client $client
     )
     {
         $this->eventEmitter = $eventEmitter;
         $this->callableFactory = $callableFactory;
         $this->productRegistrar = $productRegistrar;
+        $this->skyroomWooMyAccount = $skyroomWooMyAccount;
         $this->viewer = $viewer;
+        $this->client = $client;
     }
 
     /**
@@ -61,6 +73,9 @@ class WooCommerceAdapter implements PluginAdapterInterface
     {
         // Register custom product type
         $this->productRegistrar->register();
+
+        // Setup Woocommerce My Account Menu
+        $this->skyroomWooMyAccount->setup();
 
         // Show add-to-card btn
         $this->eventEmitter->on('woocommerce_skyroom_add_to_cart',
@@ -160,7 +175,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
                LEFT JOIN `$item_meta` `skyroom_synced_meta` ON `skyroom_synced_meta`.`meta_key` = '$skyroom_synced_meta_key'
                     AND `skyroom_synced_meta`.`order_item_id` = `items`.`order_item_id`
                INNER JOIN `$wpdb->users` `user` ON `user`.`id` = `order_customer_meta`.`meta_value`
-               WHERE `order`.`post_status` IN ('wc-completed', 'wc-processing')
+               WHERE `order`.`post_status` = 'wc-completed'
                AND `skyroom_synced_meta`.`order_item_id` IS NULL";
 
         return $wpdb->get_results($query, ARRAY_A);
@@ -173,53 +188,9 @@ class WooCommerceAdapter implements PluginAdapterInterface
     {
         foreach ($itemIds as $itemId) {
             try {
-                wc_update_order_item_meta(
-                    $itemId,
-                    PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY,
-                    '1'
-                );
+                wc_update_order_item_meta($itemId, PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY, '1');
             } catch (\Exception $e) {
             }
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    function setEnrollmentSynced($userId, $roomId)
-    {
-        global $wpdb;
-
-        $items = $wpdb->prefix . 'woocommerce_order_items';
-        $itemMeta = $wpdb->prefix . 'woocommerce_order_itemmeta';
-        $skyroomIdMeta = PluginAdapterInterface::SKYROOM_ID_META_KEY;
-
-        $query
-            = "SELECT `item`.`id` AS `id`
-               FROM `$items` `items`
-               INNER JOIN `$itemMeta` `product_id_meta` ON `product_id_meta`.`meta_key` = '_product_id'
-               INNER JOIN `$wpdb->posts` `product` ON `product`.`ID` = `product_id_meta`.`meta_value`
-               INNER JOIN `$wpdb->postmeta` `product_skyroom_meta` ON `product_skyroom_meta`.`post_id` = `product`.`ID`
-                   AND `product_skyroom_meta`.`meta_key` = $skyroomIdMeta
-               INNER JOIN `$wpdb->posts` `order` ON `order`.`ID` = `item`.`order_id`
-               INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
-                   AND `order_customer_meta`.`meta_key` = '_customer_user'
-                   AND `order_customer_meta`.`meta_value` = '$userId'
-               AND `order`.`post_status` IN ('wc-completed', 'wc-processing')
-               ORDER BY `order_date_meta`.`meta_value` DESC
-        ";
-
-        $items = $wpdb->get_results($query);
-
-        try {
-            foreach ($items as $item) {
-                wc_update_order_item_meta(
-                    $item->id,
-                    PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY,
-                    true
-                );
-            }
-        } catch (\Exception $exception) {
         }
     }
 
@@ -276,13 +247,12 @@ class WooCommerceAdapter implements PluginAdapterInterface
                     AND `product_type_item_meta`.`meta_value` = `product`.`ID`
                INNER JOIN `$items` `item` ON `item`.`order_item_id` = `product_type_item_meta`.`order_item_id`
                INNER JOIN `$wpdb->posts` `order` ON `order`.`ID` = `item`.`order_id`
-                    AND `order`.`post_status` IN ('wc-completed', 'wc-processing')
                INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
                INNER JOIN `$wpdb->postmeta` `order_date_meta` ON `order_date_meta`.`meta_key` = '_completed_date'
                     AND `order_date_meta`.`post_id` = `order`.`ID`
                WHERE `term_rel`.`term_taxonomy_id` = '$termId'
-               AND `product`.`post_status` = 'publish'
                AND `product_type_item_meta`.`order_item_id` = `item`.`order_item_id`
+               AND `order`.`post_status` = 'wc-completed'
                AND `order_customer_meta`.`meta_key` = '_customer_user'
                AND `order_customer_meta`.`meta_value` = '$userId'
                ORDER BY `order_date_meta`.`meta_value` DESC";
@@ -363,7 +333,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
                         continue;
                     }
 
-                    $userRepository->addUserToRoom($user, $product->get_skyroom_id(), $orderId);
+//                    $userRepository->addUserToRoom($user, $product->get_skyroom_id(), $orderId);
 
                     // Store event
                     $info = [
@@ -421,12 +391,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
      */
     function addToCart(Viewer $viewer)
     {
-        global $product;
-
-        $context = [
-            'product' => $product,
-            'user_id' => get_current_user_id(),
-        ];
+        $context = $this->addToCartLink();
 
         $viewer->view('woocommerce-add-to-cart.php', $context);
     }
@@ -488,5 +453,29 @@ class WooCommerceAdapter implements PluginAdapterInterface
             'title' => __('Room title', 'skyroom'),
             'enter' => __('Enter room', 'skyroom'),
         ];
+    }
+
+    public function addToCartLink(){
+        global $product;
+
+        $url = null;
+        $id = get_current_user_id();
+        $user = get_userdata( $id );
+        $channelId = $product->get_skyroom_id();
+        $params = [
+            'id' => strval($id),
+            'channelId' => intval($channelId),
+            'nickname' => $user->display_name,
+            'role' => 0
+        ];
+
+        $url = $this->client->request('getLoginUrl', $params);
+
+        $context = [
+            'product' => $product,
+            'user_id' => $id,
+            'url' => $url->login,
+        ];
+        return $context;
     }
 }

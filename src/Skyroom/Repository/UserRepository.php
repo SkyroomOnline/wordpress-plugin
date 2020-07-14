@@ -9,6 +9,7 @@ use Skyroom\Exception\BatchOperationFailedException;
 use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\InvalidResponseStatusException;
 use Skyroom\Exception\RequestFailedException;
+use function DI\object;
 
 /**
  * User Repository
@@ -36,10 +37,11 @@ class UserRepository
      * @param EventRepository $eventRepository
      * @param PluginAdapterInterface $pluginAdapter
      */
-    public function __construct(Client $client, EventRepository $eventRepository, PluginAdapterInterface $pluginAdapter)
+    public function __construct(Client $client, EventRepository $eventRepository, PluginAdapterInterface $pluginAdapter, EventRepository $event)
     {
         $this->client = $client;
         $this->pluginAdapter = $pluginAdapter;
+        $this->event = $event;
     }
 
     /**
@@ -53,10 +55,31 @@ class UserRepository
      */
     public function getUsers()
     {
-        $usersArray = $this->client->request('getUsers');
+        $events = $this->event->getAll();
+        $usersArray = [];
+        foreach ($events as $ev) {
+            $usersArray[] = $ev->getErrorInfo();
+        }
+        $usersArrayFinal = [];
+        foreach ($usersArray as $user) {
+            if (!empty($user['item_id'])) {
+                $userData = get_userdata($user['user_id']);
+                $product = wc_get_product($user['item_id']);
+                $usersArrayFinal[] = (object)array(
+                    'id' => $user['user_id'],
+                    'product' => $product->name,
+                    'nickname' => $userData->display_name,
+                    'status' => 1,
+                );
+//                print_r($product->name." | ");
+            }
+        }
+
+//        die(1);
+
         $ids = array_map(function ($user) {
             return $user->id;
-        }, $usersArray);
+        }, $usersArrayFinal);
 
         $wpUsersArray = get_users([
             'meta_name' => self::SKYROOM_ID_META_KEY,
@@ -65,15 +88,20 @@ class UserRepository
         ]);
 
         $wpUsers = [];
+        $res = [];
         foreach ($wpUsersArray as $wpUser) {
             $wpUsers[$this->getSkyroomId($wpUser->ID)] = $wpUser;
+            $res [] = $wpUser->ID;
+//                $res [] = $this->getSkyroomId($wpUser->ID);
         }
+
 
         $users = [];
-        foreach ($usersArray as $user) {
+        foreach ($usersArrayFinal as $user) {
             $users[] = new User($user, isset($wpUsers[$user->id]) ? $wpUsers[$user->id] : null);
         }
-
+//        print_r($users);
+//        die(1);
         return $users;
     }
 
@@ -88,16 +116,7 @@ class UserRepository
      */
     public function addUser($user)
     {
-        $params = [
-            'username' => $this->generateUsername($user->ID),
-            'password' => uniqid('', true),
-            'nickname' => $user->display_name,
-        ];
-
-        $id = $this->client->request('createUser', $params);
-
-        // Link skyroom user to wordpress
-        $this->updateSkyroomId($user->ID, $id);
+        $this->updateSkyroomId($user->ID, $user->ID);
     }
 
     /**
@@ -186,6 +205,16 @@ class UserRepository
             throw new \InvalidArgumentException(__('User is not registered to skyroom', 'skyroom'));
         }
 
+        $wpdb->insert(
+            $wpdb->prefix . 'skyroom_enrolls',
+            [
+                'skyroom_user_id' => $skyroomUserId,
+                'room_id' => $roomId,
+                'user_id' => $user->ID,
+                'post_id' => $postId,
+            ]
+        );
+
         $this->client->request(
             'addRoomUsers',
             [
@@ -195,8 +224,6 @@ class UserRepository
                 ],
             ]
         );
-
-        $this->pluginAdapter->setEnrollmentSynced($user->ID, $postId);
     }
 
     /**

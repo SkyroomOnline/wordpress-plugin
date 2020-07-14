@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
-"POT-Creation-Date: 2020-07-03 18:03+0430\n"
-"PO-Revision-Date: 2020-07-03 18:12+0430\n"
+"POT-Creation-Date: 2020-06-19 21:05+0430\n"
+"PO-Revision-Date: 2020-06-19 21:13+0430\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -13,13 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;"
-"_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;esc_attr__;esc_attr_e;"
-"esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
-"X-Poedit-SearchPath-0: src/Skyroom\n"
-"X-Poedit-SearchPath-1: views\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:268
 msgid "Products"
@@ -161,9 +155,9 @@ msgid ""
 "yet. Please go to <a href=\"%s\">skyroom settings</a> page and configure it to "
 "start working."
 msgstr ""
-"پلاگین <strong>اسکای‌روم</strong> با موفقیت فعال شد اما هنوز پیکربندی نشده‌است. لطفا "
-"به صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی را انجام دهید تا شروع "
-"به کار کند."
+"پلاگین <strong>اسکای‌روم</strong> با موفقیت فعال شد اما هنوز پیکربندی نشده‌است. "
+"لطفا به صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی را انجام دهید "
+"تا شروع به کار کند."
 
 #: src/Skyroom/Repository/UserRepository.php:133
 #, php-format
@@ -282,23 +276,17 @@ msgstr "%1$s %2$d"
 #: src/Skyroom/Tables/WPListTable.php:689
 #, php-format
 msgid "%s comment"
-msgid_plural "%s comments"
-msgstr[0] "%s دیدگاه"
-msgstr[1] "%s دیدگاه"
+msgstr "%s دیدگاه"
 
 #: src/Skyroom/Tables/WPListTable.php:690
 #, php-format
 msgid "%s approved comment"
-msgid_plural "%s approved comments"
-msgstr[0] "%s دیدگاه تایید شده"
-msgstr[1] "%s دیدگاه تایید شده"
+msgstr "%s دیدگاه تایید شده"
 
 #: src/Skyroom/Tables/WPListTable.php:692
 #, php-format
 msgid "%s pending comment"
-msgid_plural "%s pending comments"
-msgstr[0] "%s دیدگاه منتظر تایید"
-msgstr[1] "%s دیدگاه منتظر تایید"
+msgstr "%s دیدگاه منتظر تایید"
 
 #: src/Skyroom/Tables/WPListTable.php:698 src/Skyroom/Tables/WPListTable.php:711
 #: src/Skyroom/Tables/WPListTable.php:725
@@ -316,9 +304,7 @@ msgstr "بدون دیدگاه منتظر تایید"
 #: src/Skyroom/Tables/WPListTable.php:805 src/Skyroom/Tables/WPListTable.php:1416
 #, php-format
 msgid "%s item"
-msgid_plural "%s items"
-msgstr[0] "%s مورد"
-msgstr[1] "%s مورد"
+msgstr "%s مورد"
 
 #: src/Skyroom/Tables/WPListTable.php:843
 msgid "First page"
@@ -334,7 +320,6 @@ msgstr "صفحه کنونی"
 
 #: src/Skyroom/Tables/WPListTable.php:872
 #, php-format
-msgctxt "paging"
 msgid "%1$s of %2$s"
 msgstr "%1$s از %2$s"
 
@@ -367,18 +352,12 @@ msgid "Finding unsynced products..."
 msgstr "در حال یافتن محصولات همگام‌سازی نشده..."
 
 #: src/Skyroom/Tasks/SyncTask.php:171
-#, php-format
 msgid "Found one product"
-msgid_plural "Found %d products"
-msgstr[0] "یک محصول پیدا شد"
-msgstr[1] "%d محصول پیدا شد"
+msgstr "یک محصول پیدا شد"
 
 #: src/Skyroom/Tasks/SyncTask.php:181
-#, php-format
 msgid "Syncing one product with server..."
-msgid_plural "Syncing %d products with server..."
-msgstr[0] "در حال همگام‌سازی یک محصول با سرور..."
-msgstr[1] "در حال همگام‌سازی %d محصول با سرور..."
+msgstr "در حال همگام‌سازی یک محصول با سرور..."
 
 #: src/Skyroom/Tasks/SyncTask.php:198
 #, php-format
@@ -398,18 +377,12 @@ msgid "Finding unsynced enrollments..."
 msgstr "در حال یافتن ثبت‌نام‌های همگام‌سازی نشده..."
 
 #: src/Skyroom/Tasks/SyncTask.php:224
-#, php-format
 msgid "Found one enrollment"
-msgid_plural "Found %d enrollments"
-msgstr[0] "یک ثبت‌نام پیدا شد"
-msgstr[1] "%d ثبت‌نام پیدا شد"
+msgstr "یک ثبت‌نام پیدا شد"
 
 #: src/Skyroom/Tasks/SyncTask.php:234
-#, php-format
 msgid "Syncing one enrollment with server..."
-msgid_plural "Syncing %d enrollments with server..."
-msgstr[0] "در حال همگام‌سازی یک ثبت‌نام با سرور..."
-msgstr[1] "در حال همگام‌سازی %d ثبت‌نام با سرور..."
+msgstr "در حال همگام‌سازی یک ثبت‌نام‌ها با سرور..."
 
 #: src/Skyroom/Tasks/SyncTask.php:294
 #, php-format
@@ -424,9 +397,7 @@ msgstr "خطا در همگام‌سازی کاربرِ (%2$d) در اتاقِ (%
 #: src/Skyroom/Tasks/SyncTask.php:377
 #, php-format
 msgid "%d enrollment synced with server successfully"
-msgid_plural "%d enrollments synced with server successfully"
-msgstr[0] "یک ثبت‌نام با موفقیت با سرور همگام‌سازی شد"
-msgstr[1] "%d ثبت‌نام با موفقیت با سرور همگام‌سازی شدند"
+msgstr "%d ثبت‌نام با موفقیت با سرور همگام‌سازی شد"
 
 #: src/Skyroom/Tasks/SyncTask.php:413
 msgid "All enrollments already synced with skyroom"
@@ -535,8 +506,8 @@ msgid ""
 "Clear all skyroom data (user ids, room ids and enrollments) from your wordpress "
 "database."
 msgstr ""
-"پاکسازی همه اطلاعات اسکای‌روم (شناسه کاربران، شناسه اتاق‌ها و ثبت‌نام‌ها) از دیتابیس "
-"وردپرس."
+"پاکسازی همه اطلاعات اسکای‌روم (شناسه کاربران، شناسه اتاق‌ها و ثبت‌نام‌ها) از "
+"دیتابیس وردپرس."
 
 #: views/maintenance.php:52
 msgid "Purge Data"
@@ -614,12 +585,12 @@ msgstr "دوره‌ها"
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on announced "
-"schedules navigate to course page and click on 'Enter room' button. (Remember you "
-"should be logged in to site)"
+"schedules navigate to course page and click on 'Enter room' button. (Remember "
+"you should be logged in to site)"
 msgstr ""
 "ثبت‌نام شما در دوره‌های خریداری شده با موفقیت انجام شد. برای شرکت در کلاس‌ها در "
-"زمان‌های اعلام شده وارد صفحه دوره شده و روی دکمه 'ورود به کلاس' کلیک نمایید. (لطفا "
-"توجه کنید که باید وارد سایت شده باشید)"
+"زمان‌های اعلام شده وارد صفحه دوره شده و روی دکمه 'ورود به کلاس' کلیک نمایید. "
+"(لطفا توجه کنید که باید وارد سایت شده باشید)"
 
 #~ msgid "Skyroom Synchronization"
 #~ msgstr "همگام‌سازی اسکای‌روم"

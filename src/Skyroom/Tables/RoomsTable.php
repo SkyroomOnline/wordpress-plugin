@@ -121,7 +121,8 @@ class RoomsTable extends WPListTable
             'title' => __('Title', 'skyroom'),
             'post' => $this->postTypeString,
             'name' => __('Name', 'skyroom'),
-            'status' => __('Status', 'skyroom'),
+//            'status' => __('Status', 'skyroom'),
+//            'delete' => __('Delete', 'skyroom'),
         );
     }
 }

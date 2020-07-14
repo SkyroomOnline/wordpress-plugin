@@ -46,15 +46,6 @@ interface PluginAdapterInterface
     function setEnrollmentsSynced($itemIds);
 
     /**
-     * Set enrollment synced
-     *
-     * @param int $userId
-     * @param int $productId
-     * @return void
-     */
-    function setEnrollmentSynced($userId, $productId);
-
-    /**
      * Get product by it's skyroom id
      *
      * @param $skyroomId

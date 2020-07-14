@@ -137,4 +137,14 @@ jQuery(function ($) {
 
     // Show woocommerce metabox general tab for skyroom product type
     $('.options_group.pricing').addClass('show_if_skyroom');
+
+    // check room name input
+    $('.english_input').on('keyup', function (event) {
+        var input = $('.english_input').val();
+        var arregex = /^[a-zA-Z0-9_ ]*$/;
+        if (!arregex.test(input)) {
+            alert('برای نام اتاق فقط کاراکترهای لاتین مورد قبول است.');
+            $('.english_input').val("");
+        }
+    });
 });

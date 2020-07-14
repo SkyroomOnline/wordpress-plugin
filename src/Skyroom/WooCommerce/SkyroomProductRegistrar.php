@@ -131,9 +131,18 @@ class SkyroomProductRegistrar
      */
     public function processMeta($postId, Client $client)
     {
-        $name = $_POST['_skyroom_name'] ?: $_POST['post_name'];
-        $title = $_POST['_skyroom_title'] ?: $_POST['post_title'];
-        $capacity = $_POST['_skyroom_capacity'] ?: null;
+        if (isset($_POST['_skyroom_name']) && !empty($_POST['_skyroom_name'])) {
+            $name = $_POST['_skyroom_name'] ?: $_POST['post_name'];
+            $name = $this->checkInput($name);
+        }
+        if (isset($_POST['_skyroom_title']) && !empty($_POST['_skyroom_title'])) {
+            $title = $_POST['_skyroom_title'] ?: $_POST['post_title'];
+            $title = $this->checkInput($title);
+        }
+        if (isset($_POST['_skyroom_capacity']) && !empty($_POST['_skyroom_capacity'])) {
+            $capacity = $_POST['_skyroom_capacity'] ?: null;
+            $capacity = $this->checkInput($capacity);
+        }
 
         $product = wc_get_product($postId);
         $skyroomId = $product->get_skyroom_id();
@@ -165,6 +174,7 @@ class SkyroomProductRegistrar
 
             $room = $client->request('getRoom', ['room_id' => $skyroomId]);
             $totalSales = get_post_meta($postId, 'total_sales', true);
+
 
             update_post_meta($postId, '_skyroom_name', $room->name);
             update_post_meta($postId, '_skyroom_title', $room->title);
@@ -234,5 +244,11 @@ class SkyroomProductRegistrar
         }
 
         return null;
+    }
+    public function checkInput($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
 }

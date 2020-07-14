@@ -7,6 +7,8 @@
             'label' => __('Room Name', 'skyroom'),
             'value' => $name,
             'desc_tip' => true,
+            'custom_attributes' => array( 'required' => 'required' ),
+            'class' => 'english_input',
             'description' => __('Contains of only latin letters and -_ characters', 'skyroom'),
         ]);
 
@@ -15,12 +17,15 @@
             'label' => __('Room Title', 'skyroom'),
             'value' => $title,
             'desc_tip' => true,
+            'custom_attributes' => array( 'required' => 'required' ),
             'description' => __('Title of counterpart room on skyroom', 'skyroom'),
         ]);
 
         woocommerce_wp_text_input([
             'id' => '_skyroom_capacity',
             'label' => __('Room Capacity', 'skyroom'),
+            'type' => 'number',
+            'custom_attributes' => array( 'required' => 'required' , 'min' => 1),
             'value' => $capacity,
         ]);
         ?>

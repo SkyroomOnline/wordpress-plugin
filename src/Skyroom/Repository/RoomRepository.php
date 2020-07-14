@@ -54,7 +54,9 @@ class RoomRepository
             return $room->id;
         }, $roomsArray);
 
+
         $prods = $this->pluginAdapter->getProducts($ids);
+
         $products = [];
         foreach ($prods as $product) {
             $products[$product->getSkyroomId()] = $product;
@@ -65,7 +67,6 @@ class RoomRepository
             $product = isset($products[$room->id]) ? $products[$room->id] : null;
             $rooms[] = new Room($room, $product);
         }
-
         return $rooms;
     }
 

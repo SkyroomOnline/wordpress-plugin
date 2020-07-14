@@ -51,11 +51,14 @@ class UserSubmenu extends AbstractSubmenu
         try {
             $users = $this->repository->getUsers();
             $table = new UsersTable($users);
+
             $table->prepare_items();
 
             $context = [
                 'table' => $table,
             ];
+//            print_r($context);
+//            die(1);
             $this->viewer->view('users.php', $context);
 
         } catch (\Exception $e) {

@@ -38,6 +38,9 @@ class URL
      */
     public function toString()
     {
-        return rtrim($this->siteUrl, '/').'/skyroom/api/'.$this->apiKey;
+//        $data = [];
+        $data['url'] = 'https://api.skyroom.online/v2/';
+        $data['api'] =  $this->apiKey;
+        return $data;
     }
 }

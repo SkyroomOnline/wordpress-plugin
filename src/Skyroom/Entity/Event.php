@@ -93,4 +93,5 @@ class Event
     {
         return $this->createdAt;
     }
+
 }

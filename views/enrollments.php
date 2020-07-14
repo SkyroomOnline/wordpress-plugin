@@ -2,8 +2,7 @@
 
 defined('WPINC') || die;
 
-
-if (empty($enrollments)) : ?>
+if (empty($context)) : ?>
     <p class="<?php echo apply_filters('skyroom_no_enrollment_class', 'no-enrollments') ?>">
         <strong>
             <?php echo apply_filters('skyroom_no_enrollment_class', __('You are not attended to any course yet.', 'skyroom')) ?>
@@ -23,17 +22,20 @@ if (empty($enrollments)) : ?>
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($enrollments as $enrollment) : ?>
+        <?php foreach ($context as $enroll) : ?>
+        <?php $enrollment = $enroll['enrollments']; ?>
+        <?php $url = $enroll['url']; ?>
+        <?php if($enrollment->getProduct()) {?>
             <tr>
                 <td><?php echo $enrollment->getProduct()->getTitle() ?></td>
                 <td><?php echo date_i18n('j F Y', $enrollment->getEnrollTime()) ?></td>
                 <td>
-                    <a href="<?php echo home_url('redirect-to-room/'.$enrollment->getProduct()->getSkyroomId()) ?>" class="button alt">
+                    <a href="<?php echo $url->login ?>" class="button alt">
                         <?php echo apply_filters('skyroom_enrollments_enter_class_text', __('Enter class', 'skyroom')) ?>
                     </a>
                 </td>
             </tr>
-        <?php endforeach; ?>
+        <?php } endforeach; ?>
         </tbody>
     </table>
 

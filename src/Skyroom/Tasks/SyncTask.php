@@ -62,7 +62,7 @@ class SyncTask extends WPBackgroundProcess
         $this->wpdb = $wpdb;
         $this->tasks = [
             'syncRooms',
-            'syncEnrolls'
+//            'syncEnrolls'
         ];
     }
 
