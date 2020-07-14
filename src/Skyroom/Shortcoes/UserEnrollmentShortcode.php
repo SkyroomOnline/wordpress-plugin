@@ -45,6 +45,7 @@ class UserEnrollmentShortcode
     public function display()
     {
         $user = wp_get_current_user();
+        $error = '';
         if ($user->exists()) {
             $url = null;
             $id = get_current_user_id();
@@ -61,20 +62,25 @@ class UserEnrollmentShortcode
                         'nickname' => $user->display_name,
                         'role' => 0
                     ];
-                    $url = $this->client->request('getLoginUrl', $params);
+                    try {
+                        $url = $this->client->request('getLoginUrl', $params);
+                    }
+                    catch (\Exception $exception){
+                        $error = $exception->getMessage();
+                    }
+
                     $context [] = [
                             'enrollments' => $res,
                             'url' => $url
                     ];
-//                    print_r($context);
-//                    echo "\r\n *************************************************************************************";
 
                 }
             }
-//            print_r($context);
-//            echo "\r\n *************************************************************************************";
-//
-//            die(1);
+            if(!empty($error)){
+                $context = [
+                    'error' => $error
+                ];
+            }
 
             $this->viewer->view('enrollments.php', $context);
         } else {

@@ -134,15 +134,12 @@ class SkyroomProductRegistrar
         if (isset($_POST['_skyroom_name']) && !empty($_POST['_skyroom_name'])) {
 
             $name = sanitize_title($_POST['_skyroom_name']) ?: sanitize_title($_POST['post_name']);
-//            $name = $this->checkInput($name);
         }
         if (isset($_POST['_skyroom_title']) && !empty($_POST['_skyroom_title'])) {
-            $title = $_POST['_skyroom_title'] ?: $_POST['post_title'];
-            $title = $this->checkInput($title);
+            $title = sanitize_title($_POST['_skyroom_title']) ?: sanitize_title($_POST['post_title']);
         }
         if (isset($_POST['_skyroom_capacity']) && !empty($_POST['_skyroom_capacity'])) {
-            $capacity = $_POST['_skyroom_capacity'] ?: null;
-            $capacity = $this->checkInput($capacity);
+            $capacity = sanitize_title($_POST['_skyroom_capacity']) ?: null;
         }
 
         $product = wc_get_product($postId);
@@ -245,11 +242,5 @@ class SkyroomProductRegistrar
         }
 
         return null;
-    }
-    public function checkInput($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
     }
 }

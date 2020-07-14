@@ -27,9 +27,15 @@ if ($product->is_in_stock() && !$purchased) : ?>
 
 <?php elseif ($purchased) : ?>
     <?php do_action('skyroom_before_enter_room_button') ?>
-    <a href="<?php echo $url ?>" class="button alt">
-        <?php _e('Enter room', 'skyroom') ?>
-    </a>
+    <?php if (empty($error)) : ?>
+        <a href="<?php echo $url ?>" class="button alt">
+            <?php _e('Enter room', 'skyroom') ?>
+        </a>
+    <?php else: ?>
+        <div class="notice notice-error is-dismissible">
+            <p><?php echo $error ?></p>
+        </div>
+    <?php endif; ?>
     <?php do_action('skyroom_after_enter_room_button') ?>
 <?php else : ?>
     <?php do_action('skyroom_before_capacity_full') ?>

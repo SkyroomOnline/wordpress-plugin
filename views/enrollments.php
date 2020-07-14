@@ -8,6 +8,12 @@ if (empty($context)) : ?>
             <?php echo apply_filters('skyroom_no_enrollment_class', __('You are not attended to any course yet.', 'skyroom')) ?>
         </strong>
     </p>
+<?php elseif (!empty($error)): ?>
+    <h2><?php echo apply_filters('skyroom_enrollments_enrolled_courses', __('Enrolled Courses', 'skyroom')) ?></h2>
+
+    <div class="notice notice-error is-dismissible">
+        <p><?php echo $error ?></p>
+    </div>
 <?php else: ?>
     <?php do_action('skyroom_before_enrollments_table') ?>
 

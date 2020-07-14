@@ -56,15 +56,15 @@ class SettingSubmenu extends AbstractSubmenu
         // Handle form submit
         if (isset($_POST['save'])) {
             if(isset($_POST['skyroom_site_url']) && !empty($_POST['skyroom_site_url'])){
-                $skyroomSiteUrl = $this->checkInput($_POST['skyroom_site_url']);
+                $skyroomSiteUrl = sanitize_text_field($_POST['skyroom_site_url']);
             }
 
             if (isset($_POST['skyroom_api_key']) && !empty($_POST['skyroom_api_key'])){
-                $skyroomApiKey = $this->checkInput($_POST['skyroom_api_key']);
+                $skyroomApiKey = sanitize_text_field($_POST['skyroom_api_key']);
             }
 
             if (isset($_POST['skyroom_integrated_plugin']) && !empty($_POST['skyroom_integrated_plugin'])){
-                $skyroomIntegratedPlugin = $this->checkInput($_POST['skyroom_integrated_plugin']);
+                $skyroomIntegratedPlugin = sanitize_text_field($_POST['skyroom_integrated_plugin']);
             }
 
             // Change Client url object
@@ -87,8 +87,14 @@ class SettingSubmenu extends AbstractSubmenu
             $skyroomApiKey = get_option('skyroom_api_key');
             $skyroomIntegratedPlugin = get_option('skyroom_integrated_plugin');
             if(!empty($skyroomSiteUrl)) {
-                $data = $this->client->request('ping');
-                $username = $data->username;
+                try {
+                    $data = $this->client->request('ping');
+                    $username = $data->username;
+                }
+                catch (\Exception $e){
+                    $error = $e->getMessage();
+                }
+
             }
         }
 
@@ -101,11 +107,5 @@ class SettingSubmenu extends AbstractSubmenu
             'username' => $username,
         ];
         $this->viewer->view('settings.php', $context);
-    }
-    public function checkInput($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
     }
 }

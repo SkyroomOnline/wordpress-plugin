@@ -197,6 +197,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
             }
         }
     }
+
     /**
      * @inheritDoc
      */
@@ -497,13 +498,15 @@ class WooCommerceAdapter implements PluginAdapterInterface
         ];
     }
 
-    public function addToCartLink(){
+    public function addToCartLink()
+    {
         global $product;
 
         $url = null;
         $id = get_current_user_id();
-        $user = get_userdata( $id );
+        $user = get_userdata($id);
         $channelId = $product->get_skyroom_id();
+        $error = '';
         $params = [
             'id' => strval($id),
             'channelId' => intval($channelId),
@@ -511,12 +514,18 @@ class WooCommerceAdapter implements PluginAdapterInterface
             'role' => 0
         ];
 
-        $url = $this->client->request('getLoginUrl', $params);
+        try {
+            $url = $this->client->request('getLoginUrl', $params);
+        } catch (\Exception $exception) {
+            $error = $exception->getMessage();
+        }
+
 
         $context = [
             'product' => $product,
             'user_id' => $id,
             'url' => $url->login,
+            'error' => $error,
         ];
         return $context;
     }
