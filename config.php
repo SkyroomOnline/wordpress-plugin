@@ -38,7 +38,7 @@ $services = [
 
 $parameters = [
     'name' => 'skyroom',
-    'version' => '1.4.1',
+    'version' => '2.0.0',
     'plugin.path' => plugin_dir_path(__FILE__),
     'plugin.url' => plugin_dir_url(__FILE__),
     'plugin.path.languages' => 'skyroom/languages',

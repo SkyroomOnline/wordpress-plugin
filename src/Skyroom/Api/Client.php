@@ -110,9 +110,6 @@ class Client
         $status = wp_remote_retrieve_response_code($response);
 
 
-//        print_r($response);
-//        die(1);
-
         if (empty($status)) {
             throw new ConnectionNotEstablishedException();
         }
@@ -133,19 +130,6 @@ class Client
             return $result;
         }
 
-//        print_r($body);
-//        die(1);
-
-//        if ($result === null && json_last_error() !== JSON_ERROR_NONE
-//            || !property_exists($result, 'ok')
-//        ) {
-//            throw new InvalidResponseStatusException();
-//        }
-//
-//        if ($result->ok === false) {
-//            throw new RequestFailedException($result->error_code, $result->error_message);
-//        }
-//        print_r($result->items);
         return $result->items;
     }
 }

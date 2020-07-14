@@ -175,7 +175,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
                LEFT JOIN `$item_meta` `skyroom_synced_meta` ON `skyroom_synced_meta`.`meta_key` = '$skyroom_synced_meta_key'
                     AND `skyroom_synced_meta`.`order_item_id` = `items`.`order_item_id`
                INNER JOIN `$wpdb->users` `user` ON `user`.`id` = `order_customer_meta`.`meta_value`
-               WHERE `order`.`post_status` = 'wc-completed'
+               WHERE `order`.`post_status` IN ('wc-completed', 'wc-processing')
                AND `skyroom_synced_meta`.`order_item_id` IS NULL";
 
         return $wpdb->get_results($query, ARRAY_A);
@@ -188,9 +188,52 @@ class WooCommerceAdapter implements PluginAdapterInterface
     {
         foreach ($itemIds as $itemId) {
             try {
-                wc_update_order_item_meta($itemId, PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY, '1');
+                wc_update_order_item_meta(
+                    $itemId,
+                    PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY,
+                    '1'
+                );
             } catch (\Exception $e) {
             }
+        }
+    }
+    /**
+     * @inheritDoc
+     */
+    function setEnrollmentSynced($userId, $roomId)
+    {
+        global $wpdb;
+
+        $items = $wpdb->prefix . 'woocommerce_order_items';
+        $itemMeta = $wpdb->prefix . 'woocommerce_order_itemmeta';
+        $skyroomIdMeta = PluginAdapterInterface::SKYROOM_ID_META_KEY;
+
+        $query
+            = "SELECT `item`.`id` AS `id`
+               FROM `$items` `items`
+               INNER JOIN `$itemMeta` `product_id_meta` ON `product_id_meta`.`meta_key` = '_product_id'
+               INNER JOIN `$wpdb->posts` `product` ON `product`.`ID` = `product_id_meta`.`meta_value`
+               INNER JOIN `$wpdb->postmeta` `product_skyroom_meta` ON `product_skyroom_meta`.`post_id` = `product`.`ID`
+                   AND `product_skyroom_meta`.`meta_key` = $skyroomIdMeta
+               INNER JOIN `$wpdb->posts` `order` ON `order`.`ID` = `item`.`order_id`
+               INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
+                   AND `order_customer_meta`.`meta_key` = '_customer_user'
+                   AND `order_customer_meta`.`meta_value` = '$userId'
+               AND `order`.`post_status` IN ('wc-completed', 'wc-processing')
+               ORDER BY `order_date_meta`.`meta_value` DESC
+        ";
+
+        $items = $wpdb->get_results($query);
+
+        try {
+            foreach ($items as $item) {
+                wc_update_order_item_meta(
+                    $item->id,
+                    PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY,
+                    true
+                );
+            }
+        } catch (\Exception $exception) {
         }
     }
 
@@ -247,12 +290,13 @@ class WooCommerceAdapter implements PluginAdapterInterface
                     AND `product_type_item_meta`.`meta_value` = `product`.`ID`
                INNER JOIN `$items` `item` ON `item`.`order_item_id` = `product_type_item_meta`.`order_item_id`
                INNER JOIN `$wpdb->posts` `order` ON `order`.`ID` = `item`.`order_id`
+                    AND `order`.`post_status` IN ('wc-completed', 'wc-processing')
                INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
                INNER JOIN `$wpdb->postmeta` `order_date_meta` ON `order_date_meta`.`meta_key` = '_completed_date'
                     AND `order_date_meta`.`post_id` = `order`.`ID`
                WHERE `term_rel`.`term_taxonomy_id` = '$termId'
+               AND `product`.`post_status` = 'publish'
                AND `product_type_item_meta`.`order_item_id` = `item`.`order_item_id`
-               AND `order`.`post_status` = 'wc-completed'
                AND `order_customer_meta`.`meta_key` = '_customer_user'
                AND `order_customer_meta`.`meta_value` = '$userId'
                ORDER BY `order_date_meta`.`meta_value` DESC";
@@ -332,8 +376,6 @@ class WooCommerceAdapter implements PluginAdapterInterface
                     if (!$userRepository->hasSkyroomUser($user->ID)) {
                         continue;
                     }
-
-//                    $userRepository->addUserToRoom($user, $product->get_skyroom_id(), $orderId);
 
                     // Store event
                     $info = [

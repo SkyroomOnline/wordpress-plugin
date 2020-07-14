@@ -38,7 +38,6 @@ class URL
      */
     public function toString()
     {
-//        $data = [];
         $data['url'] = 'https://api.skyroom.online/v2/';
         $data['api'] =  $this->apiKey;
         return $data;

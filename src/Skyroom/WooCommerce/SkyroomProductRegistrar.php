@@ -132,8 +132,9 @@ class SkyroomProductRegistrar
     public function processMeta($postId, Client $client)
     {
         if (isset($_POST['_skyroom_name']) && !empty($_POST['_skyroom_name'])) {
-            $name = $_POST['_skyroom_name'] ?: $_POST['post_name'];
-            $name = $this->checkInput($name);
+
+            $name = sanitize_title($_POST['_skyroom_name']) ?: sanitize_title($_POST['post_name']);
+//            $name = $this->checkInput($name);
         }
         if (isset($_POST['_skyroom_title']) && !empty($_POST['_skyroom_title'])) {
             $title = $_POST['_skyroom_title'] ?: $_POST['post_title'];

@@ -71,11 +71,8 @@ class UserRepository
                     'nickname' => $userData->display_name,
                     'status' => 1,
                 );
-//                print_r($product->name." | ");
             }
         }
-
-//        die(1);
 
         $ids = array_map(function ($user) {
             return $user->id;
@@ -92,7 +89,6 @@ class UserRepository
         foreach ($wpUsersArray as $wpUser) {
             $wpUsers[$this->getSkyroomId($wpUser->ID)] = $wpUser;
             $res [] = $wpUser->ID;
-//                $res [] = $this->getSkyroomId($wpUser->ID);
         }
 
 
@@ -100,8 +96,6 @@ class UserRepository
         foreach ($usersArrayFinal as $user) {
             $users[] = new User($user, isset($wpUsers[$user->id]) ? $wpUsers[$user->id] : null);
         }
-//        print_r($users);
-//        die(1);
         return $users;
     }
 
@@ -205,16 +199,6 @@ class UserRepository
             throw new \InvalidArgumentException(__('User is not registered to skyroom', 'skyroom'));
         }
 
-        $wpdb->insert(
-            $wpdb->prefix . 'skyroom_enrolls',
-            [
-                'skyroom_user_id' => $skyroomUserId,
-                'room_id' => $roomId,
-                'user_id' => $user->ID,
-                'post_id' => $postId,
-            ]
-        );
-
         $this->client->request(
             'addRoomUsers',
             [
@@ -224,6 +208,7 @@ class UserRepository
                 ],
             ]
         );
+        $this->pluginAdapter->setEnrollmentSynced($user->ID, $postId);
     }
 
     /**

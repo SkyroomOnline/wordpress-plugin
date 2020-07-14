@@ -6,7 +6,7 @@
  * Plugin Name:       Skyroom
  * Plugin URI:        https://skyroom.online/pages/wordpress-integration
  * Description:       A plugin to integrate skyroom with your wordpress site
- * Version:           1.4.1
+ * Version:           2.0.0
  * Author:            Skyroom
  * Author URI:        https://skyroom.online/
  * License:           GPL-2.0+
