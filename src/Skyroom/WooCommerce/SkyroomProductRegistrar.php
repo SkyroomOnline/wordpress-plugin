@@ -135,7 +135,7 @@ class SkyroomProductRegistrar
             $name = sanitize_title($_POST['_skyroom_name']) ?: sanitize_title($_POST['post_name']);
         }
         if (isset($_POST['_skyroom_title']) && !empty($_POST['_skyroom_title'])) {
-            $title = sanitize_title($_POST['_skyroom_title']) ?: sanitize_title($_POST['post_title']);
+            $title = sanitize_text_field($_POST['_skyroom_title']) ?: sanitize_text_field($_POST['post_title']);
         }
         if (isset($_POST['_skyroom_capacity']) && !empty($_POST['_skyroom_capacity'])) {
             $capacity = sanitize_title($_POST['_skyroom_capacity']) ?: null;
