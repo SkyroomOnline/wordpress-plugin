@@ -27,4 +27,8 @@ register_activation_hook(__FILE__, [Skyroom\Util\Activator::class, 'activate']);
 // Boot plugin
 add_action('plugins_loaded', [new Skyroom\Plugin(), 'boot']);
 
-
+//add languages
+function skyroom_load_plugin_textdomain() {
+    load_plugin_textdomain( 'skyroom', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'skyroom_load_plugin_textdomain' );

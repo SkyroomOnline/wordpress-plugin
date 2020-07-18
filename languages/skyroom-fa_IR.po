@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
 "POT-Creation-Date: 2020-06-19 21:05+0430\n"
-"PO-Revision-Date: 2020-06-19 21:13+0430\n"
+"PO-Revision-Date: 2020-07-18 09:08+0430\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -13,7 +13,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: src/Skyroom\n"
+"X-Poedit-SearchPath-1: views\n"
 
 #: src/Skyroom/Adapter/WooCommerceAdapter.php:268
 msgid "Products"
@@ -382,7 +388,7 @@ msgstr "یک ثبت‌نام پیدا شد"
 
 #: src/Skyroom/Tasks/SyncTask.php:234
 msgid "Syncing one enrollment with server..."
-msgstr "در حال همگام‌سازی یک ثبت‌نام‌ها با سرور..."
+msgstr "در حال همگام‌سازی یک ثبت‌نام با سرور..."
 
 #: src/Skyroom/Tasks/SyncTask.php:294
 #, php-format
@@ -564,7 +570,7 @@ msgstr "نام اتاق"
 
 #: views/woocommerce-product-tab.php:10
 msgid "Contains of only latin letters and -_ characters"
-msgstr "تشکیل شده از حروف الفبای لاتین و کاراکترهای - و _"
+msgstr "تشکیل شده از حروف الفبای لاتین و کاراکتر _ قابل قبول است"
 
 #: views/woocommerce-product-tab.php:15
 msgid "Room Title"
@@ -581,6 +587,18 @@ msgstr "ظرفیت اتاق"
 #: views/woocommerce-skyroom-order.php:2
 msgid "Courses"
 msgstr "دوره‌ها"
+
+#: views/woocommerce-skyroom-order.php:3
+msgid "Username:"
+msgstr "نام کاربری:"
+
+#: views/woocommerce-skyroom-order.php:4
+msgid "Not Registred"
+msgstr "ثبت نشده"
+
+#: views/woocommerce-skyroom-order.php:5
+msgid "This room already exists"
+msgstr "نام اتاق تکراری است و اتاقی با این نام از قبل وجود دارد."
 
 #: views/woocommerce-skyroom-order.php:3
 msgid ""

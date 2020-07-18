@@ -12,6 +12,7 @@ msgstr ""
 "PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 2.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: ..\n"
@@ -580,6 +581,18 @@ msgstr ""
 
 #: views/woocommerce-skyroom-order.php:2
 msgid "Courses"
+msgstr ""
+
+#: views/woocommerce-skyroom-order.php:3
+msgid "Username:"
+msgstr ""
+
+#: views/woocommerce-skyroom-order.php:4
+msgid "Not Registred"
+msgstr ""
+
+#: views/woocommerce-skyroom-order.php:5
+msgid "This room already exists"
 msgstr ""
 
 #: views/woocommerce-skyroom-order.php:3

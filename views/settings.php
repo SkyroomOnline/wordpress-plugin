@@ -54,7 +54,7 @@
                     <label for="skyroom_username"><?php _e('Username:', 'skyroom') ?></label>
                 </th>
                 <td>
-                    <?php echo ($username ? esc_attr($username) : _e('Not Registred:', 'skyroom')) ?>
+                    <?php echo ($username ? esc_attr($username) : _e('Not Registred', 'skyroom')) ?>
                 </td>
             </tr>
             </tbody>

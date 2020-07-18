@@ -3,6 +3,7 @@
 namespace Skyroom\Api;
 
 use Skyroom\Exception\ConnectionNotEstablishedException;
+use Skyroom\Exception\CreateRoomFailedDuplicateNameExeption;
 use Skyroom\Exception\InvalidResponseStatusException;
 use Skyroom\Exception\RequestFailedException;
 
@@ -88,7 +89,7 @@ class Client
         if ($method == 'GET') {
             $args = [
                 'headers' => array(
-                    'Content-Type' => 'application/json',
+                    'Content-Type' => 'application/json; charset=UTF-8',
                     'Authorization' => 'Bearer ' . $data['api'],
                 ),
                 'method' => $method,
@@ -98,7 +99,7 @@ class Client
             $args = array(
                     'method' => $method,
                     'headers' => array(
-                        'Content-Type' => 'application/json',
+                        'Content-Type' => 'application/json; charset=UTF-8',
                         'Authorization' => 'Bearer ' . $data['api'],
                     ),
                     'body' => json_encode($params),
@@ -109,6 +110,11 @@ class Client
         $response = wp_remote_post($url, $args);
         $status = wp_remote_retrieve_response_code($response);
 
+
+
+        if ($action == 'createRoom' && $status == 400) {
+            throw new CreateRoomFailedDuplicateNameExeption();
+        }
 
         if (empty($status)) {
             throw new ConnectionNotEstablishedException();

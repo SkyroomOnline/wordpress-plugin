@@ -143,7 +143,7 @@ jQuery(function ($) {
         var input = $('.english_input').val();
         var arregex = /^[a-zA-Z0-9_ ]*$/;
         if (!arregex.test(input)) {
-            alert('برای نام اتاق فقط کاراکترهای لاتین مورد قبول است.');
+            alert('برای نام اتاق فقط کاراکترهای لاتین و کاراکتر _ مورد قبول است.');
             $('.english_input').val("");
         }
     });
