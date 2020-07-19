@@ -64,19 +64,18 @@ class UserEnrollmentShortcode
                     ];
                     try {
                         $url = $this->client->request('getLoginUrl', $params);
-                    }
-                    catch (\Exception $exception){
+                    } catch (\Exception $exception) {
                         $error = $exception->getMessage();
                     }
 
                     $context [] = [
-                            'enrollments' => $res,
-                            'url' => $url
+                        'enrollments' => $res,
+                        'url' => $url
                     ];
 
                 }
             }
-            if(!empty($error)){
+            if (!empty($error)) {
                 $context = [
                     'error' => $error
                 ];

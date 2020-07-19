@@ -81,7 +81,7 @@ class Client
             $method = 'GET';
         }
         if ($action == 'getLoginUrl'){
-            $url = $url . 'attendees/token';
+            $url = $url . 'rooms/'.$params['channelId'].'/attendee';
             $method = 'POST';
         }
 
