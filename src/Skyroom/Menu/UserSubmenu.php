@@ -57,8 +57,6 @@ class UserSubmenu extends AbstractSubmenu
             $context = [
                 'table' => $table,
             ];
-//            print_r($context);
-//            die(1);
             $this->viewer->view('users.php', $context);
 
         } catch (\Exception $e) {

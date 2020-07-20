@@ -47,6 +47,7 @@ class User
         $this->nickname = $user->nickname;
         $this->status = $user->status;
         $this->wpUser = $wpUser;
+        $this->product = $user->product;
     }
 
     /**
@@ -104,5 +105,10 @@ class User
     public function getWpUser()
     {
         return $this->wpUser;
+    }
+
+    public function getProductName()
+    {
+        return $this->product;
     }
 }

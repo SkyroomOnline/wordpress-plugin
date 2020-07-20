@@ -63,6 +63,7 @@ class UsersTable extends WPListTable
      */
     public function column_default($item, $column_name)
     {
+
         switch ($column_name) {
             case 'username':
                 return $item->getUsername();
@@ -70,6 +71,11 @@ class UsersTable extends WPListTable
 
             case 'status':
                 return $item->getStatusAsString();
+                break;
+
+            case 'product':
+
+                return $item->getProductName();
                 break;
 
             default:
@@ -121,8 +127,8 @@ class UsersTable extends WPListTable
         return array(
             'nickname' => __('Nickname', 'skyroom'),
             'wp_user_login' => __('Wordpress username', 'skyroom'),
-//            'product' => __('Product', 'skyroom'),
-            'status' => __('Status', 'skyroom'),
+            'product' => __('Product', 'skyroom'),
+//            'status' => __('Status', 'skyroom'),
         );
     }
 }
