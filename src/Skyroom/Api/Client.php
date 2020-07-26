@@ -2,9 +2,13 @@
 
 namespace Skyroom\Api;
 
+use DI\NotFoundException;
 use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\CreateRoomFailedDuplicateNameExeption;
+use Skyroom\Exception\InternalServerErrorException;
+use Skyroom\Exception\InvalidInputErrorException;
 use Skyroom\Exception\InvalidResponseStatusException;
+use Skyroom\Exception\NotFoundErrorException;
 use Skyroom\Exception\RequestFailedException;
 
 /**
@@ -54,79 +58,60 @@ class Client
     public function request($action, $params = null)
     {
         $data = $this->URL->toString();
-        $body = [];
-        $body['action'] = $action;
-        if (!empty($params)) {
-            $body['params'] = $params;
-        }
         $url = $data['url'];
-        if ($action == 'ping') {
-            $url = $url . 'info';
-            $method = 'GET';
-        }
-        if ($action == 'getRooms') {
-            $url = $url . 'rooms';
-            $method = 'GET';
-        }
-        if ($action == 'createRoom') {
-            $url = $url . 'rooms';
-            $method = 'POST';
-        }
-        if ($action == 'updateRoom'){
-            $url = $url . 'rooms/'.$params['room_id'];
-            $method = 'PATCH';
-        }
-        if ($action == 'getRoom'){
-            $url = $url . 'rooms/'.$params['room_id'];
-            $method = 'GET';
-        }
-        if ($action == 'getLoginUrl'){
-            $url = $url . 'rooms/'.$params['channelId'].'/attendee';
-            $method = 'POST';
-        }
 
-
-        if ($method == 'GET') {
-            $args = [
-                'headers' => array(
-                    'Content-Type' => 'application/json; charset=UTF-8',
-                    'Authorization' => 'Bearer ' . $data['api'],
-                ),
-                'method' => $method,
-                'timeout' => 60,
-            ];
-        } elseif ($method == 'POST' || $method == 'PATCH') {
-            $args = array(
-                    'method' => $method,
-                    'headers' => array(
-                        'Content-Type' => 'application/json; charset=UTF-8',
-                        'Authorization' => 'Bearer ' . $data['api'],
-                    ),
-                    'body' => json_encode($params),
-                    'timeout' => 60,
-            );
+        switch ($action) {
+            case 'ping':
+                $url = $url . 'info';
+                $response = $this->get_method($data['api'], $url);
+                break;
+            case 'getRooms':
+                $url = $url . 'rooms';
+                $response = $this->get_method($data['api'], $url);
+                break;
+            case 'createRoom':
+                $url = $url . 'rooms';
+                $response = $this->post_method($data['api'], $params, $url);
+                break;
+            case 'updateRoom':
+                $url = $url . 'rooms/' . 250;
+                $response = $this->patch_method($data['api'], $params, $url);
+                break;
+            case 'getRoom':
+                $url = $url . 'rooms/' . $params['room_id'];
+                $response = $this->get_method($data['api'], $url);
+                break;
+            case 'getLoginUrl':
+                $url = $url . 'rooms/' . $params['channelId'] . '/attendee';
+                $paramsLink = [
+                    'id' => $params['id'],
+                    'nickname' => $params['nickname'],
+                    'role' => $params['role']
+                ];
+                $response = $this->post_method($data['api'], $paramsLink, $url);
+                break;
         }
-
-        $response = wp_remote_post($url, $args);
         $status = wp_remote_retrieve_response_code($response);
+        $body = wp_remote_retrieve_body($response);
+        $result = json_decode($body);
 
 
-
-        if ($action == 'createRoom' && $status == 400) {
-            throw new CreateRoomFailedDuplicateNameExeption();
+        if ($status == 500) {
+            throw new InternalServerErrorException();
+        }
+        if ($status == 400) {
+            throw new InvalidInputErrorException();
+        }
+        if ($status == 404) {
+            throw new NotFoundErrorException();
         }
 
         if (empty($status)) {
             throw new ConnectionNotEstablishedException();
         }
-
         if ($status < 200 || $status > 299) {
             throw new InvalidResponseStatusException();
         }
-
-
-        $body = wp_remote_retrieve_body($response);
-        $result = json_decode($body);
 
         if ($action == 'createRoom') {
             return $result->id;
@@ -135,7 +120,50 @@ class Client
         if ($action == 'getRoom' || $action == 'ping' || $action == 'getLoginUrl') {
             return $result;
         }
-
         return $result->items;
+    }
+
+    private function post_method($api, $params, $url)
+    {
+        $args = array(
+            'method' => 'POST',
+            'headers' => array(
+                'Content-Type' => 'application/json; charset=UTF-8',
+                'Authorization' => 'Bearer ' . $api,
+            ),
+            'body' => json_encode($params),
+            'timeout' => 60,
+        );
+        $response = wp_remote_post($url, $args);
+        return $response;
+    }
+
+    private function get_method($api, $url)
+    {
+        $args = [
+            'headers' => array(
+                'Content-Type' => 'application/json; charset=UTF-8',
+                'Authorization' => 'Bearer ' . $api,
+            ),
+            'method' => 'GET',
+            'timeout' => 60,
+        ];
+        $response = wp_remote_post($url, $args);
+        return $response;
+    }
+
+    private function patch_method($api, $params, $url)
+    {
+        $args = array(
+            'method' => 'PATCH',
+            'headers' => array(
+                'Content-Type' => 'application/json; charset=UTF-8',
+                'Authorization' => 'Bearer ' . $api,
+            ),
+            'body' => json_encode($params),
+            'timeout' => 60,
+        );
+        $response = wp_remote_post($url, $args);
+        return $response;
     }
 }

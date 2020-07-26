@@ -595,6 +595,14 @@ msgstr ""
 msgid "This room already exists"
 msgstr ""
 
+#: views/woocommerce-skyroom-order.php:6
+msgid "Invalid input"
+msgstr ""
+
+#: views/woocommerce-skyroom-order.php:7
+msgid "Internal server error"
+msgstr ""
+
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on "

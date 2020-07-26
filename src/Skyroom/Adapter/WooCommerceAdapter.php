@@ -511,7 +511,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
             'id' => strval($id),
             'channelId' => intval($channelId),
             'nickname' => $user->display_name,
-            'role' => 0
+            'role' => "Normal"
         ];
 
         try {

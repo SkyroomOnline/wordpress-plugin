@@ -60,7 +60,7 @@ class UserEnrollmentShortcode
                         'id' => strval($id),
                         'channelId' => intval($channelId),
                         'nickname' => $user->display_name,
-                        'role' => 0
+                        'role' => "Normal"
                     ];
                     try {
                         $url = $this->client->request('getLoginUrl', $params);
