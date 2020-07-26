@@ -64,10 +64,10 @@ class RoomRepository
 
         $rooms = [];
         foreach ($roomsArray as $room) {
-//            if (isset($products[$room->id])) {
+            if (isset($products[$room->id])) {
                 $product = isset($products[$room->id]) ? $products[$room->id] : null;
                 $rooms[] = new Room($room, $product);
-//            }
+            }
         }
         return $rooms;
     }
