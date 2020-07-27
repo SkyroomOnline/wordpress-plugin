@@ -10,6 +10,7 @@ use Skyroom\Exception\InvalidInputErrorException;
 use Skyroom\Exception\InvalidResponseStatusException;
 use Skyroom\Exception\NotFoundErrorException;
 use Skyroom\Exception\RequestFailedException;
+use Skyroom\Exception\UnauthorizedErrorException;
 
 /**
  * Skyroom API client.
@@ -104,6 +105,9 @@ class Client
         }
         if ($status == 404) {
             throw new NotFoundErrorException();
+        }
+        if ($status == 401) {
+            throw new UnauthorizedErrorException();
         }
 
         if (empty($status)) {

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
 "POT-Creation-Date: 2020-06-19 21:05+0430\n"
-"PO-Revision-Date: 2020-07-26 11:44+0430\n"
+"PO-Revision-Date: 2020-07-27 12:19+0430\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -607,6 +607,10 @@ msgstr "ورودی نامعتبر است"
 #: views/woocommerce-skyroom-order.php:7
 msgid "Internal server error"
 msgstr "سرور مشغول است"
+
+#: views/woocommerce-skyroom-order.php:7
+msgid "Unauthorized token api"
+msgstr "توکن شما نامعتبر است"
 
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
