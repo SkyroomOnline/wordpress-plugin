@@ -5,6 +5,7 @@ namespace Skyroom\Controller;
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Api\Client;
 use Skyroom\Entity\Event;
+use Skyroom\Entity\WooCommerceProductWrapper;
 use Skyroom\Repository\EventRepository;
 use Skyroom\Repository\UserRepository;
 
@@ -63,12 +64,14 @@ class SkyroomController
         $matches = $this->matchRequestPath();
         if ($matches) {
             $product = wc_get_product($matches['id']);
-            $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $matches['id']);
+            $product = new WooCommerceProductWrapper($product);
+            $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $product);
 
             if (!$bought) {
                 wp_die(__('You should buy this course before logging into class'));
             }
-            $skyroomRoomId = get_post_meta($product->get_id(), '_skyroom_id', true);
+
+            $skyroomRoomId = $product->getSkyroomId();
 
             try {
                 $this->userRepository->ensureSkyroomUserAdded(wp_get_current_user());

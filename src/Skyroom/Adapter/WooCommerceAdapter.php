@@ -254,7 +254,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
      */
     function userBoughtProduct($userId, $product)
     {
-        return wc_customer_bought_product(null, $userId, $product);
+        return wc_customer_bought_product(null, $userId, $product->getId());
     }
 
     /**
