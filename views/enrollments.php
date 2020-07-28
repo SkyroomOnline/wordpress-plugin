@@ -28,7 +28,7 @@ if (empty($enrollments)) : ?>
                 <td><?php echo $enrollment->getProduct()->getTitle() ?></td>
                 <td><?php echo date_i18n('j F Y', $enrollment->getEnrollTime()) ?></td>
                 <td>
-                    <a href="<?php echo home_url('redirect-to-room/'.$enrollment->getProduct()->getSkyroomId()) ?>" class="button alt">
+                    <a href="<?php echo home_url('redirect-to-room/'.$enrollment->getProduct()->getId()) ?>" class="button alt">
                         <?php echo apply_filters('skyroom_enrollments_enter_class_text', __('Enter class', 'skyroom')) ?>
                     </a>
                 </td>

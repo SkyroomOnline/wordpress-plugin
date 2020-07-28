@@ -62,17 +62,17 @@ class SkyroomController
     {
         $matches = $this->matchRequestPath();
         if ($matches) {
-            $product = $this->pluginAdapter->getProductBySkyroomId($matches['id']);
-            $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $product);
+            $product = wc_get_product($matches['id']);
+            $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $matches['id']);
 
             if (!$bought) {
                 wp_die(__('You should buy this course before logging into class'));
             }
+            $skyroomRoomId = get_post_meta($product->get_id(), '_skyroom_id', true);
 
             try {
                 $this->userRepository->ensureSkyroomUserAdded(wp_get_current_user());
                 $skyroomUserId = $this->userRepository->getSkyroomId(get_current_user_id());
-                $skyroomRoomId = $product->getSkyroomId();
 
                 $url = $this->client->request('getLoginUrl', [
                     'room_id' => $skyroomRoomId,
@@ -90,7 +90,7 @@ class SkyroomController
                     'error_message' => $exception->getMessage(),
                     'user_id' => get_current_user_id(),
                     'skyroom_user_id' => $this->userRepository->getSkyroomId(get_current_user_id()),
-                    'room_id' => $product->getSkyroomId(),
+                    'room_id' => $skyroomRoomId,
                 ];
                 $event = new Event(
                     sprintf(__('Redirecting "%s" to classroom failed', 'skyroom'), wp_get_current_user()->user_login),
@@ -115,7 +115,6 @@ class SkyroomController
     {
         $path = trim($this->getPathInfo(), '/');
         $found = preg_match(self::REDIRECT_SKYROOM_PATH, $path, $matches);
-
         if ($found) {
             return $matches;
         }
