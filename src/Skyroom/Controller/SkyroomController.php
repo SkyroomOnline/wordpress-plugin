@@ -64,46 +64,53 @@ class SkyroomController
         $matches = $this->matchRequestPath();
         if ($matches) {
             $product = wc_get_product($matches['id']);
-            $product = new WooCommerceProductWrapper($product);
-            $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $product);
+            if($product->get_type() === "skyroom") {
+                $product = $this->pluginAdapter->wrapProduct($product);
 
-            if (!$bought) {
-                wp_die(__('You should buy this course before logging into class'));
-            }
+                $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $product);
 
-            $skyroomRoomId = $product->getSkyroomId();
+                if (!$bought) {
+                    wp_die(__('You should buy this course before logging into class'));
+                }
 
-            try {
-                $this->userRepository->ensureSkyroomUserAdded(wp_get_current_user());
-                $skyroomUserId = $this->userRepository->getSkyroomId(get_current_user_id());
+                $skyroomRoomId = $product->getSkyroomId();
 
-                $url = $this->client->request('getLoginUrl', [
-                    'room_id' => $skyroomRoomId,
-                    'user_id' => $skyroomUserId,
-                    'ttl' => 60,
-                ]);
+                try {
+                    $this->userRepository->ensureSkyroomUserAdded(wp_get_current_user());
+                    $skyroomUserId = $this->userRepository->getSkyroomId(get_current_user_id());
 
-                wp_redirect($url);
-                exit;
+                    $url = $this->client->request('getLoginUrl', [
+                        'room_id' => $skyroomRoomId,
+                        'user_id' => $skyroomUserId,
+                        'ttl' => 60,
+                    ]);
 
-            } catch (\Exception $exception) {
-                // Save error event
-                $info = [
-                    'error_code' => $exception->getCode(),
-                    'error_message' => $exception->getMessage(),
-                    'user_id' => get_current_user_id(),
-                    'skyroom_user_id' => $this->userRepository->getSkyroomId(get_current_user_id()),
-                    'room_id' => $skyroomRoomId,
-                ];
-                $event = new Event(
-                    sprintf(__('Redirecting "%s" to classroom failed', 'skyroom'), wp_get_current_user()->user_login),
-                    Event::FAILED,
-                    $info
-                );
-                $this->eventRepository->save($event);
+                    wp_redirect($url);
+                    exit;
 
-                $title = __('Error entering class', 'skyroom');
-                $message = __('Seems there is a problem on our side. Please contact support to resolve issue.', 'skyroom');
+                } catch (\Exception $exception) {
+                    // Save error event
+                    $info = [
+                        'error_code' => $exception->getCode(),
+                        'error_message' => $exception->getMessage(),
+                        'user_id' => get_current_user_id(),
+                        'skyroom_user_id' => $this->userRepository->getSkyroomId(get_current_user_id()),
+                        'room_id' => $skyroomRoomId,
+                    ];
+                    $event = new Event(
+                        sprintf(__('Redirecting "%s" to classroom failed', 'skyroom'), wp_get_current_user()->user_login),
+                        Event::FAILED,
+                        $info
+                    );
+                    $this->eventRepository->save($event);
+
+                    $title = __('Error entering class', 'skyroom');
+                    $message = __('Seems there is a problem on our side. Please contact support to resolve issue.', 'skyroom');
+                    wp_die('<h1>' . $title . '</h1>' . '<p>' . $message . '</p>', $title);
+                }
+            }else{
+                $title = __('Error product type', 'skyroom');
+                $message = __('This product is not skyroom type.', 'skyroom');
                 wp_die('<h1>' . $title . '</h1>' . '<p>' . $message . '</p>', $title);
             }
         }

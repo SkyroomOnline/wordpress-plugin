@@ -583,6 +583,14 @@ msgstr ""
 msgid "Courses"
 msgstr ""
 
+#: views/woocommerce-skyroom-order.php:2
+msgid "Error product type"
+msgstr ""
+
+#: views/woocommerce-skyroom-order.php:2
+msgid "This product is not skyroom type."
+msgstr ""
+
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on "

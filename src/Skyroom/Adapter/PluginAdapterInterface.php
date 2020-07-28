@@ -34,6 +34,12 @@ interface PluginAdapterInterface
     function getProducts($roomIds = []);
 
     /**
+     * @param $product
+     * @return mixed
+     */
+    public function wrapProduct($product);
+
+    /**
      * Get enrollments (purchases) that are not saved on skyroom
      */
     function getUnsyncedEnrolls();
