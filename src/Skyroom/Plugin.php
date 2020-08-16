@@ -10,6 +10,7 @@ use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Controller\MaintenanceController;
 use Skyroom\Controller\SkyroomController;
+use Skyroom\Entity\SkyroomWidget;
 use Skyroom\Menu\EventSubmenu;
 use Skyroom\Menu\MainMenu;
 use Skyroom\Menu\MaintenanceSubmenu;
@@ -21,6 +22,7 @@ use Skyroom\Tasks\SyncDataTaskRunner;
 use Skyroom\Util\Activator;
 use Skyroom\Util\AssetManager;
 use Skyroom\Util\Internationalization;
+use function DI\add;
 
 /**
  * Plugin main class to build container and register wp hooks.
@@ -59,6 +61,17 @@ class Plugin
         $this->registerShortcodes();
         $this->registerAjaxActions();
         $this->container->get(PluginAdapterInterface::class)->setup();
+        $this->widgets_skyroom($eventEmitter);
+
+    }
+
+    /**
+     * @param EventEmitterInterface $eventEmitter
+     */
+    public function widgets_skyroom(EventEmitterInterface $eventEmitter){
+        $eventEmitter->on('widgets_init', function () {
+            $this->container->get(SkyroomWidget::class)->register_widget();
+        });
     }
 
     /**

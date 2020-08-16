@@ -591,6 +591,18 @@ msgstr ""
 msgid "This product is not skyroom type."
 msgstr ""
 
+#: src/Skyroom/Entity/SkyroomWidget.php:13
+msgid "Skyroom wplms widget"
+msgstr ""
+
+#: src/Skyroom/Entity/SkyroomWidget.php:15
+msgid "This widget skyroom for wplms courses and and it does not work in any other plugins"
+msgstr ""
+
+#: src/Skyroom/Entity/SkyroomWidget.php:53
+msgid "Join to course room"
+msgstr ""
+
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on "
