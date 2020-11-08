@@ -76,12 +76,16 @@ class SkyroomController
                 $skyroomRoomId = $product->getSkyroomId();
 
                 try {
-                    $this->userRepository->ensureSkyroomUserAdded(wp_get_current_user());
-                    $skyroomUserId = $this->userRepository->getSkyroomId(get_current_user_id());
+                    $userData = wp_get_current_user();
 
-                    $url = $this->client->request('getLoginUrl', [
+                    $username = $userData->data->user_login;
+                    $nickname = $userData->data->display_name;
+
+                    $url = $this->client->request('createLoginUrl', [
                         'room_id' => $skyroomRoomId,
-                        'user_id' => $skyroomUserId,
+                        'user_id' => $username,
+                        'nickname' => $nickname,
+                        'access' => 1,
                         'ttl' => 60,
                     ]);
 
