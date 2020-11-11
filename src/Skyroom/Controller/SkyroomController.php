@@ -85,7 +85,7 @@ class SkyroomController
                         'room_id' => $skyroomRoomId,
                         'user_id' => $username,
                         'nickname' => $nickname,
-                        'role' => 1,
+                        'access' => 1,
                         'concurrent' => 1,
                         'ttl' => 60,
                     ]);
