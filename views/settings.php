@@ -39,6 +39,17 @@
             </tr>
             <tr>
                 <th scope="row">
+                    <label for="skyroom_site_url"><?php _e('Room entry link expiration time (scound) :', 'skyroom') ?></label>
+                </th>
+                <td>
+                    <input type="text" name="skyroom_link_ttl" id="skyroom_link_ttl" class="regular-text ltr"
+                           value="<?php echo ($skyroomLinkTtl ? esc_attr($skyroomLinkTtl) : '60') ?>"
+                           placeholder="<?php echo esc_attr(sprintf(__('e.g: %s', 'skyroom'), '60')) ?>">
+                    <p id="skyroom_link_ttl_desc">
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
                     <label for="skyroom_integrated_plugin"><?php _e('Plugin you want to integrate skyroom with:', 'skyroom') ?></label>
                 </th>
                 <td>

@@ -603,6 +603,9 @@ msgstr ""
 msgid "Join to course room"
 msgstr ""
 
+msgid "Room entry link expiration time (scound) :"
+msgstr ""
+
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on "

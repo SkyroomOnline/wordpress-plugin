@@ -56,6 +56,7 @@ class SettingSubmenu extends AbstractSubmenu
         if (isset($_POST['save'])) {
             $skyroomSiteUrl = $_POST['skyroom_site_url'];
             $skyroomApiKey = $_POST['skyroom_api_key'];
+            $skyroomLinkTtl = $_POST['skyroom_link_ttl'];
             $skyroomIntegratedPlugin = $_POST['skyroom_integrated_plugin'];
 
             // Change Client url object
@@ -68,6 +69,7 @@ class SettingSubmenu extends AbstractSubmenu
                 // Update wordpress options
                 update_option('skyroom_site_url', $skyroomSiteUrl);
                 update_option('skyroom_api_key', $skyroomApiKey);
+                update_option('skyroom_link_ttl', $skyroomLinkTtl);
                 update_option('skyroom_integrated_plugin', $skyroomIntegratedPlugin);
             } catch (\Exception $exception) {
                 $error = $exception->getMessage();
@@ -76,6 +78,7 @@ class SettingSubmenu extends AbstractSubmenu
         } else {
             $skyroomSiteUrl = get_option('skyroom_site_url');
             $skyroomApiKey = get_option('skyroom_api_key');
+            $skyroomLinkTtl = get_option('skyroom_link_ttl');
             $skyroomIntegratedPlugin = get_option('skyroom_integrated_plugin');
         }
 
@@ -84,6 +87,7 @@ class SettingSubmenu extends AbstractSubmenu
             'success' => $success,
             'skyroomSiteUrl' => $skyroomSiteUrl,
             'skyroomApiKey' => $skyroomApiKey,
+            'skyroomLinkTtl' => $skyroomLinkTtl,
             'skyroomIntegratedPlugin' => $skyroomIntegratedPlugin,
         ];
         $this->viewer->view('settings.php', $context);

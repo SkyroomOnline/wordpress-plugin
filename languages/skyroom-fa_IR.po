@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
 "POT-Creation-Date: 2020-06-19 21:05+0430\n"
-"PO-Revision-Date: 2020-08-15 12:35+0430\n"
+"PO-Revision-Date: 2020-12-18 20:21+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -611,6 +611,9 @@ msgstr ""
 #: src/Skyroom/Entity/SkyroomWidget.php:53
 msgid "Join to course room"
 msgstr "ورود به اتاق دوره"
+
+msgid "Room entry link expiration time (scound) :"
+msgstr "مدت زمان انقضای لینک ورود به اتاق (ثانیه) :"
 
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
