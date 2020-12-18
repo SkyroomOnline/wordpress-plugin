@@ -78,11 +78,15 @@ class SkyroomController
                 try {
                     $this->userRepository->ensureSkyroomUserAdded(wp_get_current_user());
                     $skyroomUserId = $this->userRepository->getSkyroomId(get_current_user_id());
+                    $ttl = get_option('skyroom_link_ttl');
+                    if(!$ttl){
+                        $ttl = 60;
+                    }
 
                     $url = $this->client->request('getLoginUrl', [
                         'room_id' => $skyroomRoomId,
                         'user_id' => $skyroomUserId,
-                        'ttl' => 60,
+                        'ttl' => $ttl,
                     ]);
 
                     wp_redirect($url);
