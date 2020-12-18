@@ -46,6 +46,8 @@
                            value="<?php echo ($skyroomLinkTtl ? esc_attr($skyroomLinkTtl) : '60') ?>"
                            placeholder="<?php echo esc_attr(sprintf(__('e.g: %s', 'skyroom'), '60')) ?>">
                     <p id="skyroom_link_ttl_desc">
+                        <?php _e('ttl or Time To Live is the validity period of the link in seconds, which in the example above is 60 seconds is equivalent to one hour. After this period, the generated link is not valid and if used, the user will encounter an error invalidating the link.', 'skyroom') ?>
+                    </p>
                 </td>
             </tr>
             <tr>
