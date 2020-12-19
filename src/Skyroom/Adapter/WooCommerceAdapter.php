@@ -363,8 +363,6 @@ class WooCommerceAdapter implements PluginAdapterInterface
                         continue;
                     }
 
-//                    $userRepository->addUserToRoom($user, $product->get_skyroom_id(), $orderId);
-
                     // Store event
                     $info = [
                         'order_id' => $orderId,
