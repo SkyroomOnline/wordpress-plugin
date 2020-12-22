@@ -10,7 +10,6 @@ use Skyroom\Exception\ConnectionNotEstablishedException;
 use Skyroom\Exception\InvalidResponseStatusException;
 use Skyroom\Exception\RequestFailedException;
 use Skyroom\Repository\RoomRepository;
-use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Utils;
 use SkyroomLibs\WPBackgroundProcess;
 use wpdb;
@@ -28,7 +27,6 @@ class SyncTask extends WPBackgroundProcess
     protected $action = 'skyroom_sync';
 
     private $client;
-    private $userRepository;
     private $roomRepository;
     private $pluginAdapter;
     private $wpdb;
@@ -40,14 +38,12 @@ class SyncTask extends WPBackgroundProcess
      * SyncDataTaskRunner constructor. Initializes tasks.
      *
      * @param Client $client
-     * @param UserRepository $userRepository
      * @param RoomRepository $roomRepository
      * @param PluginAdapterInterface $pluginAdapter
      * @param wpdb $wpdb
      */
     public function __construct(
         Client $client,
-        UserRepository $userRepository,
         RoomRepository $roomRepository,
         PluginAdapterInterface $pluginAdapter,
         wpdb $wpdb
@@ -56,7 +52,6 @@ class SyncTask extends WPBackgroundProcess
         parent::__construct();
 
         $this->client = $client;
-        $this->userRepository = $userRepository;
         $this->roomRepository = $roomRepository;
         $this->pluginAdapter = $pluginAdapter;
         $this->wpdb = $wpdb;

@@ -61,13 +61,8 @@ class UsersTable extends WPListTable
     {
         switch ($column_name) {
             case 'username':
-                return $item->getUsername();
+                return $item['username'];
                 break;
-
-            case 'status':
-                return $item->getStatusAsString();
-                break;
-
             default:
                 // What?
                 break;
@@ -83,28 +78,18 @@ class UsersTable extends WPListTable
      */
     public function column_nickname($item)
     {
-        if (empty($wpUser = $item->getWpUser())) {
-            return '<strong>'.$item->getNickname().'</strong>';
-        } else {
-            return '<strong><a href="'.get_edit_user_link($item->getWpUser()->ID).'">'.$item->getNickname().'</a>';
-        }
+        return '<strong><a href="'.get_edit_user_link($item['user_id']).'">'.$item['nickname'].'</a>';
     }
 
     /**
-     * Render wp user_login column
+     * Render product column
      *
-     * @param   User $item Row data
-     *
-     * @return  string Rendered item
+     * @param $item
+     * @return string
      */
-    function column_wp_user_login($item)
+    public function column_product($item)
     {
-        $wpUser = $item->getWpUser();
-        if (empty($wpUser)) {
-            return '&mdash;';
-        }
-
-        return $wpUser->user_login;
+        return '<a href="'.get_edit_post_link($item['product_id']).'">'.$item['title'].'</a>';
     }
 
     /**
@@ -117,8 +102,7 @@ class UsersTable extends WPListTable
         return array(
             'nickname' => __('Nickname', 'skyroom'),
             'username' => __('Username', 'skyroom'),
-            'wp_user_login' => __('Wordpress username', 'skyroom'),
-            'status' => __('Status', 'skyroom'),
+            'product' => __('Product', 'skyroom'),
         );
     }
 }

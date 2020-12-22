@@ -9,7 +9,6 @@ use Skyroom\Entity\ProductWrapperInterface;
 use Skyroom\Entity\WooCommerceProductWrapper;
 use Skyroom\Factory\DICallableFactory;
 use Skyroom\Repository\EventRepository;
-use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Viewer;
 use Skyroom\WooCommerce\SkyroomProduct;
 use Skyroom\WooCommerce\SkyroomProductRegistrar;
@@ -316,53 +315,17 @@ class WooCommerceAdapter implements PluginAdapterInterface
     /**
      * @param int $orderId
      * @param \WC_Order $order
-     * @param UserRepository $userRepository
      * @param EventRepository $eventRepository
      */
-    function processOrder($orderId, $order, UserRepository $userRepository, EventRepository $eventRepository)
+    function processOrder($orderId, $order, EventRepository $eventRepository)
     {
         $items = $order->get_items();
         $user = $order->get_user();
         foreach ($items as $item) {
             $product = $item->get_product();
             if ($product->get_type() === 'skyroom') {
-                // First time user takes a product
-                if (!$userRepository->hasSkyroomUser($user->ID)) {
-                    try {
-                        $userRepository->addUser($user);
-
-                        // Insert event
-                        $info = [
-                            'user_id' => $user->ID,
-                        ];
-                        $event = new Event(
-                            sprintf(__('"%s" registered in skyroom service', 'skyroom'), $user->user_login),
-                            Event::SUCCESSFUL,
-                            $info
-                        );
-                        $eventRepository->save($event);
-                    } catch (\Exception $exception) {
-                        $info = [
-                            'error_code' => $exception->getCode(),
-                            'error_message' => $exception->getMessage(),
-                            'user_id' => $user->ID,
-                        ];
-                        $event = new Event(
-                            sprintf(__('Failed to register "%s" to skyroom service', 'skyroom'), $user->user_login),
-                            Event::FAILED,
-                            $info
-                        );
-                        $eventRepository->save($event);
-                    }
-                }
-
                 // Add user to skyroom side room
                 try {
-                    // Creating skyroom user was not successful
-                    if (!$userRepository->hasSkyroomUser($user->ID)) {
-                        continue;
-                    }
-
                     // Store event
                     $info = [
                         'order_id' => $orderId,
@@ -414,7 +377,6 @@ class WooCommerceAdapter implements PluginAdapterInterface
     /**
      * Show add to cart button for user
      *
-     * @param UserRepository $repository
      * @param Viewer $viewer
      */
     function addToCart(Viewer $viewer)
@@ -429,7 +391,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
         $viewer->view('woocommerce-add-to-cart.php', $context);
     }
 
-    function validateAddToCart($prev, $productId, UserRepository $repository)
+    function validateAddToCart($prev, $productId)
     {
         if (empty($prev)) {
             return $prev;
@@ -473,11 +435,9 @@ class WooCommerceAdapter implements PluginAdapterInterface
 
         $postMeta = $wpdb->prefix . 'postmeta';
         $itemMeta = $wpdb->prefix . 'woocommerce_order_itemmeta';
-        $userMeta = $wpdb->prefix . 'usermeta';
 
         $wpdb->delete($postMeta, ['meta_key' => PluginAdapterInterface::SKYROOM_ID_META_KEY]);
         $wpdb->delete($itemMeta, ['meta_key' => PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY]);
-        $wpdb->delete($userMeta, ['meta_key' => UserRepository::SKYROOM_ID_META_KEY]);
     }
 
     public function getOrderColumns()
@@ -486,5 +446,33 @@ class WooCommerceAdapter implements PluginAdapterInterface
             'title' => __('Room title', 'skyroom'),
             'enter' => __('Enter room', 'skyroom'),
         ];
+    }
+
+    function getSkyroomUsers()
+    {
+        global $wpdb;
+
+        $items = $wpdb->prefix . 'woocommerce_order_items';
+        $item_meta = $wpdb->prefix . 'woocommerce_order_itemmeta';
+        $termId = get_term_by('slug', 'skyroom', 'product_type')->term_taxonomy_id;
+
+        $query
+            = "SELECT `user`.`display_name` `nickname`, `user`.`user_login` `username`, `product`.`post_title` `title`,
+                    `product`.`id` `product_id`, `user`.`id` `user_id`
+               FROM `$items` `items`
+               INNER JOIN `$item_meta` `item_meta` ON `item_meta`.`order_item_id` = `items`.`order_item_id`
+                    AND `item_meta`.`meta_key` = '_product_id'
+               INNER JOIN `$wpdb->posts` `product` ON `product`.`ID` = `item_meta`.`meta_value`
+               INNER JOIN `$wpdb->postmeta` `product_skyroom_meta` ON `product_skyroom_meta`.`post_id` = `product`.`ID`
+                    AND `product_skyroom_meta`.`meta_key` = '_skyroom_id'
+               INNER JOIN `$wpdb->term_relationships` `term_rel` ON `term_rel`.`term_taxonomy_id` = '$termId'
+                    AND `term_rel`.`object_id` = `product`.`ID`
+               INNER JOIN `$wpdb->posts` `order` ON `items`.`order_id` = `order`.`ID`
+               INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
+                    AND `order_customer_meta`.`meta_key` = '_customer_user'
+               INNER JOIN `$wpdb->users` `user` ON `user`.`id` = `order_customer_meta`.`meta_value`
+               WHERE `order`.`post_status` IN ('wc-completed', 'wc-processing')";
+
+        return $wpdb->get_results($query, ARRAY_A);
     }
 }

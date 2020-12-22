@@ -7,7 +7,6 @@ use Skyroom\Api\Client;
 use Skyroom\Entity\Event;
 use Skyroom\Entity\WooCommerceProductWrapper;
 use Skyroom\Repository\EventRepository;
-use Skyroom\Repository\UserRepository;
 
 /**
  * Class Skyroom
@@ -24,11 +23,6 @@ class SkyroomController
     private $pluginAdapter;
 
     /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
      * @var Client
      */
     private $client;
@@ -41,13 +35,11 @@ class SkyroomController
     public function __construct(
         Client $client,
         PluginAdapterInterface $pluginAdapter,
-        UserRepository $userRepository,
         EventRepository $eventRepository
     )
     {
         $this->client = $client;
         $this->pluginAdapter = $pluginAdapter;
-        $this->userRepository = $userRepository;
         $this->eventRepository = $eventRepository;
     }
 
@@ -99,7 +91,7 @@ class SkyroomController
                         'error_code' => $exception->getCode(),
                         'error_message' => $exception->getMessage(),
                         'user_id' => get_current_user_id(),
-                        'skyroom_user_id' => $this->userRepository->getSkyroomId(get_current_user_id()),
+                        'skyroom_user_id' => "-",
                         'room_id' => $skyroomRoomId,
                     ];
                     $event = new Event(

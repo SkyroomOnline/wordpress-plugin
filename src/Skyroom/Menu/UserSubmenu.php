@@ -2,7 +2,7 @@
 
 namespace Skyroom\Menu;
 
-use Skyroom\Repository\UserRepository;
+use Skyroom\Adapter\WooCommerceAdapter;
 use Skyroom\Tables\UsersTable;
 use Skyroom\Util\Viewer;
 
@@ -14,11 +14,6 @@ use Skyroom\Util\Viewer;
 class UserSubmenu extends AbstractSubmenu
 {
     /**
-     * @var UserRepository $repository
-     */
-    private $repository;
-
-    /**
      * @var Viewer $viewer
      */
     private $viewer;
@@ -26,13 +21,12 @@ class UserSubmenu extends AbstractSubmenu
     /**
      * Room submenu constructor
      *
-     * @param UserRepository $repository
      * @param Viewer         $viewer
      */
-    public function __construct(UserRepository $repository, Viewer $viewer)
+    public function __construct(Viewer $viewer, WooCommerceAdapter $wooCommerceAdapter)
     {
-        $this->repository = $repository;
         $this->viewer = $viewer;
+        $this->woocommerceAdaptor = $wooCommerceAdapter;
 
         // Set user menu attributes
         parent::__construct(
@@ -49,7 +43,7 @@ class UserSubmenu extends AbstractSubmenu
     function display()
     {
         try {
-            $users = $this->repository->getUsers();
+            $users = $this->woocommerceAdaptor->getSkyroomUsers();
             $table = new UsersTable($users);
             $table->prepare_items();
 
