@@ -448,31 +448,4 @@ class WooCommerceAdapter implements PluginAdapterInterface
         ];
     }
 
-    function getSkyroomUsers($limit = 0, $offset = 0)
-    {
-        global $wpdb;
-
-        $items = $wpdb->prefix . 'woocommerce_order_items';
-        $item_meta = $wpdb->prefix . 'woocommerce_order_itemmeta';
-        $termId = get_term_by('slug', 'skyroom', 'product_type')->term_taxonomy_id;
-
-        $query
-            = "SELECT `user`.`display_name` `nickname`, `user`.`user_login` `username`, `product`.`post_title` `title`,
-                    `product`.`id` `product_id`, `user`.`id` `user_id`
-               FROM `$items` `items`
-               INNER JOIN `$item_meta` `item_meta` ON `item_meta`.`order_item_id` = `items`.`order_item_id`
-                    AND `item_meta`.`meta_key` = '_product_id'
-               INNER JOIN `$wpdb->posts` `product` ON `product`.`ID` = `item_meta`.`meta_value`
-               INNER JOIN `$wpdb->postmeta` `product_skyroom_meta` ON `product_skyroom_meta`.`post_id` = `product`.`ID`
-                    AND `product_skyroom_meta`.`meta_key` = '_skyroom_id'
-               INNER JOIN `$wpdb->term_relationships` `term_rel` ON `term_rel`.`term_taxonomy_id` = '$termId'
-                    AND `term_rel`.`object_id` = `product`.`ID`
-               INNER JOIN `$wpdb->posts` `order` ON `items`.`order_id` = `order`.`ID`
-               INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
-                    AND `order_customer_meta`.`meta_key` = '_customer_user'
-               INNER JOIN `$wpdb->users` `user` ON `user`.`id` = `order_customer_meta`.`meta_value`
-               WHERE `order`.`post_status` IN ('wc-completed', 'wc-processing')";
-
-        return $wpdb->get_results($query, ARRAY_A);
-    }
 }

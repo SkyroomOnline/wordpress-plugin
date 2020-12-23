@@ -2,7 +2,7 @@
 
 namespace Skyroom\Tables;
 
-use Skyroom\Adapter\WooCommerceAdapter;
+use Skyroom\Repository\UserRepository;
 
 /**
  * Rooms table.
@@ -12,16 +12,16 @@ use Skyroom\Adapter\WooCommerceAdapter;
 class UsersTable extends WPListTable
 {
     /**
-     * @var WooCommerceAdapter $wooCommerceAdapter
+     * @var UserRepository $userRepository
      */
-    private $wooCommerceAdapter;
+    private $userRepository;
 
     /**
      * RoomsTable constructor.
      *
-     * @param WooCommerceAdapter $wooCommerceAdapter
+     * @param UserRepository $userRepository
      */
-    public function __construct(WooCommerceAdapter $wooCommerceAdapter)
+    public function __construct(UserRepository $userRepository)
     {
         parent::__construct(array(
             'singular' => __('User', 'skyroom'),
@@ -29,7 +29,7 @@ class UsersTable extends WPListTable
             'ajax' => false,
         ));
 
-        $this->wooCommerceAdapter = $wooCommerceAdapter;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -43,11 +43,10 @@ class UsersTable extends WPListTable
         $this->_column_headers = array($columns, $hidden, $sortable);
 
         $pageNum = $this->get_pagenum();
-//        $perPage = $this->get_items_per_page('skyroom_events_per_page');
-        $perPage = 2;
+        $perPage = 20;
 
-        $data = $this->wooCommerceAdapter->getSkyroomUsers($perPage, ($pageNum - 1) * $perPage);
-        $all = count($this->wooCommerceAdapter->getSkyroomUsers());
+        $data = $this->userRepository->getAllUsers($perPage, ($pageNum - 1) * $perPage);
+        $all = $this->userRepository->countAll();
 
         $this->set_pagination_args(array(
             'total_items' => $all,
@@ -100,6 +99,15 @@ class UsersTable extends WPListTable
     }
 
     /**
+     * @param $item
+     * @return string
+     */
+    public function column_edit($item)
+    {
+        return '<a href="#" class="edit-user" data-id="'.$item['user_id'].'">'.__('Edit user', 'skyroom').'</a>';
+    }
+
+    /**
      * Get table columns
      *
      * @return array
@@ -110,6 +118,7 @@ class UsersTable extends WPListTable
             'nickname' => __('Nickname', 'skyroom'),
             'username' => __('Username', 'skyroom'),
             'product' => __('Product', 'skyroom'),
+            'edit' => __('Edit', 'skyroom'),
         );
     }
 }

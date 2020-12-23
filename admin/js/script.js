@@ -24,6 +24,25 @@ jQuery(function ($) {
         });
     }
 
+    $('.wp-list-table .edit-user').on('click', function (e) {
+        e.preventDefault();
+        var data = $(this).data('id');
+        var $table = $('<table>').addClass('widefat striped');
+        var $tbody = $('<tbody>').appendTo($table);
+            var $tr = $('<tr>');
+            $tr.append('<th>test</th>');
+            $tr.append('<td>' + data + '</td>');
+            $tr.appendTo($tbody);
+
+        alertify.alert()
+            .setting({
+                title: skyroom_data.event_details,
+                label: skyroom_data.ok,
+                message: $table.get(0).outerHTML,
+                transition: 'zoom'
+            }).show();
+    });
+
     // Synchronize actions
     if (pagenow.indexOf('page_skyroom-maintenance') !== -1) {
         var $maintenance = $('.skyroom-maintenance');

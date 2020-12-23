@@ -603,6 +603,12 @@ msgstr ""
 msgid "Join to course room"
 msgstr ""
 
+msgid "Edit user"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on "
