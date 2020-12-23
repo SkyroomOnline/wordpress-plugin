@@ -2,7 +2,6 @@
 
 namespace Skyroom\Menu;
 
-use Skyroom\Adapter\WooCommerceAdapter;
 use Skyroom\Tables\UsersTable;
 use Skyroom\Util\Viewer;
 
@@ -14,6 +13,12 @@ use Skyroom\Util\Viewer;
 class UserSubmenu extends AbstractSubmenu
 {
     /**
+     * @var UsersTable $usersTable
+     */
+    private $usersTable;
+
+
+    /**
      * @var Viewer $viewer
      */
     private $viewer;
@@ -21,12 +26,13 @@ class UserSubmenu extends AbstractSubmenu
     /**
      * Room submenu constructor
      *
-     * @param Viewer         $viewer
+     * @param UsersTable $usersTable
+     * @param Viewer $viewer
      */
-    public function __construct(Viewer $viewer, WooCommerceAdapter $wooCommerceAdapter)
+    public function __construct(UsersTable $usersTable, Viewer $viewer)
     {
         $this->viewer = $viewer;
-        $this->woocommerceAdaptor = $wooCommerceAdapter;
+        $this->usersTable = $usersTable;
 
         // Set user menu attributes
         parent::__construct(
@@ -42,21 +48,12 @@ class UserSubmenu extends AbstractSubmenu
      */
     function display()
     {
-        try {
-            $users = $this->woocommerceAdaptor->getSkyroomUsers();
-            $table = new UsersTable($users);
-            $table->prepare_items();
+        $this->usersTable->prepare_items();
 
-            $context = [
-                'table' => $table,
-            ];
-            $this->viewer->view('users.php', $context);
+        $context = [
+            'table' => $this->usersTable,
+        ];
 
-        } catch (\Exception $e) {
-            $context = [
-                'error' => $e->getMessage(),
-            ];
-            $this->viewer->view('error.php', $context);
-        }
+        $this->viewer->view('users.php', $context);
     }
 }

@@ -448,7 +448,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
         ];
     }
 
-    function getSkyroomUsers()
+    function getSkyroomUsers($limit = 0, $offset = 0)
     {
         global $wpdb;
 

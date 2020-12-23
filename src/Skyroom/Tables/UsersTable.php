@@ -2,7 +2,7 @@
 
 namespace Skyroom\Tables;
 
-use Skyroom\Entity\User;
+use Skyroom\Adapter\WooCommerceAdapter;
 
 /**
  * Rooms table.
@@ -12,16 +12,16 @@ use Skyroom\Entity\User;
 class UsersTable extends WPListTable
 {
     /**
-     * @var     array $users
+     * @var WooCommerceAdapter $wooCommerceAdapter
      */
-    private $users;
+    private $wooCommerceAdapter;
 
     /**
      * RoomsTable constructor.
      *
-     * @param   array $users Table items
+     * @param WooCommerceAdapter $wooCommerceAdapter
      */
-    public function __construct($users)
+    public function __construct(WooCommerceAdapter $wooCommerceAdapter)
     {
         parent::__construct(array(
             'singular' => __('User', 'skyroom'),
@@ -29,7 +29,7 @@ class UsersTable extends WPListTable
             'ajax' => false,
         ));
 
-        $this->users = $users;
+        $this->wooCommerceAdapter = $wooCommerceAdapter;
     }
 
     /**
@@ -41,12 +41,19 @@ class UsersTable extends WPListTable
         $hidden = array();
         $sortable = array();
         $this->_column_headers = array($columns, $hidden, $sortable);
-        $usersCount = count($this->users);
+
+        $pageNum = $this->get_pagenum();
+//        $perPage = $this->get_items_per_page('skyroom_events_per_page');
+        $perPage = 2;
+
+        $data = $this->wooCommerceAdapter->getSkyroomUsers($perPage, ($pageNum - 1) * $perPage);
+        $all = count($this->wooCommerceAdapter->getSkyroomUsers());
+
         $this->set_pagination_args(array(
-            'total_items' => $usersCount,
-            'per_page' => $usersCount,
+            'total_items' => $all,
+            'per_page'    => $perPage,
         ));
-        $this->items = $this->users;
+        $this->items = $data;
     }
 
     /**
