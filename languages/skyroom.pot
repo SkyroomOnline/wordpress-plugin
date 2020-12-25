@@ -149,9 +149,18 @@ msgstr ""
 msgid "Skyroom Users"
 msgstr ""
 
+#: src/Skyroom/Menu/UserSubmenu.php:40
+msgid "Users Registered"
+msgstr ""
+
 #: src/Skyroom/Menu/UserSubmenu.php:41 src/Skyroom/Tables/UsersTable.php:28
 #: views/users.php:2
 msgid "Users"
+msgstr ""
+
+#: src/Skyroom/Menu/UserSubmenu.php:41 src/Skyroom/Tables/UsersTable.php:28
+#: views/users.php:2
+msgid "Registered"
 msgstr ""
 
 #: src/Skyroom/Plugin.php:158
@@ -606,7 +615,7 @@ msgstr ""
 msgid "Room entry link expiration time (scound) :"
 msgstr ""
 
-msgid "ttl or Time To Live is the validity period of the link in seconds, which in the example above is 60 seconds is equivalent to one hour. After this period, the generated link is not valid and if used, the user will encounter an error invalidating the link."
+msgid "ttl or Time To Live is the validity period of the link in seconds, which in the example above is 60 seconds is equivalent to one minute. After this period, the generated link is not valid and if used, the user will encounter an error invalidating the link."
 msgstr ""
 
 msgid "Edit user"
