@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
 "POT-Creation-Date: 2020-06-19 21:05+0430\n"
-"PO-Revision-Date: 2020-12-25 13:41+0330\n"
+"PO-Revision-Date: 2020-12-25 13:46+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -161,7 +161,7 @@ msgstr "کاربران"
 #: src/Skyroom/Menu/UserSubmenu.php:41 src/Skyroom/Tables/UsersTable.php:28
 #: views/users.php:2
 msgid "Registered"
-msgstr "ثبت نام شده ها"
+msgstr "ثبت نام ها"
 
 #: src/Skyroom/Plugin.php:158
 #, php-format
