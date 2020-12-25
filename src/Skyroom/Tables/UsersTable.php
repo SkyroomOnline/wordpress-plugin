@@ -2,7 +2,7 @@
 
 namespace Skyroom\Tables;
 
-use Skyroom\Entity\User;
+use Skyroom\Repository\UserRepository;
 
 /**
  * Rooms table.
@@ -12,16 +12,16 @@ use Skyroom\Entity\User;
 class UsersTable extends WPListTable
 {
     /**
-     * @var     array $users
+     * @var UserRepository $userRepository
      */
-    private $users;
+    private $userRepository;
 
     /**
      * RoomsTable constructor.
      *
-     * @param   array $users Table items
+     * @param UserRepository $userRepository
      */
-    public function __construct($users)
+    public function __construct(UserRepository $userRepository)
     {
         parent::__construct(array(
             'singular' => __('User', 'skyroom'),
@@ -29,7 +29,7 @@ class UsersTable extends WPListTable
             'ajax' => false,
         ));
 
-        $this->users = $users;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -41,12 +41,18 @@ class UsersTable extends WPListTable
         $hidden = array();
         $sortable = array();
         $this->_column_headers = array($columns, $hidden, $sortable);
-        $usersCount = count($this->users);
+
+        $pageNum = $this->get_pagenum();
+        $perPage = 20;
+
+        $data = $this->userRepository->getAllUsers($perPage, ($pageNum - 1) * $perPage);
+        $all = $this->userRepository->countAll();
+
         $this->set_pagination_args(array(
-            'total_items' => $usersCount,
-            'per_page' => $usersCount,
+            'total_items' => $all,
+            'per_page'    => $perPage,
         ));
-        $this->items = $this->users;
+        $this->items = $data;
     }
 
     /**
@@ -61,13 +67,8 @@ class UsersTable extends WPListTable
     {
         switch ($column_name) {
             case 'username':
-                return $item->getUsername();
+                return $item['username'];
                 break;
-
-            case 'status':
-                return $item->getStatusAsString();
-                break;
-
             default:
                 // What?
                 break;
@@ -83,28 +84,18 @@ class UsersTable extends WPListTable
      */
     public function column_nickname($item)
     {
-        if (empty($wpUser = $item->getWpUser())) {
-            return '<strong>'.$item->getNickname().'</strong>';
-        } else {
-            return '<strong><a href="'.get_edit_user_link($item->getWpUser()->ID).'">'.$item->getNickname().'</a>';
-        }
+        return '<strong><a href="'.get_edit_user_link($item['user_id']).'">'.$item['nickname'].'</a>';
     }
 
     /**
-     * Render wp user_login column
+     * Render product column
      *
-     * @param   User $item Row data
-     *
-     * @return  string Rendered item
+     * @param $item
+     * @return string
      */
-    function column_wp_user_login($item)
+    public function column_product($item)
     {
-        $wpUser = $item->getWpUser();
-        if (empty($wpUser)) {
-            return '&mdash;';
-        }
-
-        return $wpUser->user_login;
+        return '<a href="'.get_edit_post_link($item['product_id']).'">'.$item['title'].'</a>';
     }
 
     /**
@@ -117,8 +108,7 @@ class UsersTable extends WPListTable
         return array(
             'nickname' => __('Nickname', 'skyroom'),
             'username' => __('Username', 'skyroom'),
-            'wp_user_login' => __('Wordpress username', 'skyroom'),
-            'status' => __('Status', 'skyroom'),
+            'product' => __('Product', 'skyroom'),
         );
     }
 }

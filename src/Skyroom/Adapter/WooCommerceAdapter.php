@@ -9,7 +9,6 @@ use Skyroom\Entity\ProductWrapperInterface;
 use Skyroom\Entity\WooCommerceProductWrapper;
 use Skyroom\Factory\DICallableFactory;
 use Skyroom\Repository\EventRepository;
-use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Viewer;
 use Skyroom\WooCommerce\SkyroomProduct;
 use Skyroom\WooCommerce\SkyroomProductRegistrar;
@@ -316,55 +315,17 @@ class WooCommerceAdapter implements PluginAdapterInterface
     /**
      * @param int $orderId
      * @param \WC_Order $order
-     * @param UserRepository $userRepository
      * @param EventRepository $eventRepository
      */
-    function processOrder($orderId, $order, UserRepository $userRepository, EventRepository $eventRepository)
+    function processOrder($orderId, $order, EventRepository $eventRepository)
     {
         $items = $order->get_items();
         $user = $order->get_user();
         foreach ($items as $item) {
             $product = $item->get_product();
             if ($product->get_type() === 'skyroom') {
-                // First time user takes a product
-                if (!$userRepository->hasSkyroomUser($user->ID)) {
-                    try {
-                        $userRepository->addUser($user);
-
-                        // Insert event
-                        $info = [
-                            'user_id' => $user->ID,
-                        ];
-                        $event = new Event(
-                            sprintf(__('"%s" registered in skyroom service', 'skyroom'), $user->user_login),
-                            Event::SUCCESSFUL,
-                            $info
-                        );
-                        $eventRepository->save($event);
-                    } catch (\Exception $exception) {
-                        $info = [
-                            'error_code' => $exception->getCode(),
-                            'error_message' => $exception->getMessage(),
-                            'user_id' => $user->ID,
-                        ];
-                        $event = new Event(
-                            sprintf(__('Failed to register "%s" to skyroom service', 'skyroom'), $user->user_login),
-                            Event::FAILED,
-                            $info
-                        );
-                        $eventRepository->save($event);
-                    }
-                }
-
                 // Add user to skyroom side room
                 try {
-                    // Creating skyroom user was not successful
-                    if (!$userRepository->hasSkyroomUser($user->ID)) {
-                        continue;
-                    }
-
-                    $userRepository->addUserToRoom($user, $product->get_skyroom_id(), $orderId);
-
                     // Store event
                     $info = [
                         'order_id' => $orderId,
@@ -416,7 +377,6 @@ class WooCommerceAdapter implements PluginAdapterInterface
     /**
      * Show add to cart button for user
      *
-     * @param UserRepository $repository
      * @param Viewer $viewer
      */
     function addToCart(Viewer $viewer)
@@ -431,7 +391,7 @@ class WooCommerceAdapter implements PluginAdapterInterface
         $viewer->view('woocommerce-add-to-cart.php', $context);
     }
 
-    function validateAddToCart($prev, $productId, UserRepository $repository)
+    function validateAddToCart($prev, $productId)
     {
         if (empty($prev)) {
             return $prev;
@@ -475,11 +435,9 @@ class WooCommerceAdapter implements PluginAdapterInterface
 
         $postMeta = $wpdb->prefix . 'postmeta';
         $itemMeta = $wpdb->prefix . 'woocommerce_order_itemmeta';
-        $userMeta = $wpdb->prefix . 'usermeta';
 
         $wpdb->delete($postMeta, ['meta_key' => PluginAdapterInterface::SKYROOM_ID_META_KEY]);
         $wpdb->delete($itemMeta, ['meta_key' => PluginAdapterInterface::SKYROOM_ENROLLMENT_SYNCED_META_KEY]);
-        $wpdb->delete($userMeta, ['meta_key' => UserRepository::SKYROOM_ID_META_KEY]);
     }
 
     public function getOrderColumns()
@@ -489,4 +447,5 @@ class WooCommerceAdapter implements PluginAdapterInterface
             'enter' => __('Enter room', 'skyroom'),
         ];
     }
+
 }

@@ -3,7 +3,6 @@
 namespace Skyroom\Shortcoes;
 
 use Skyroom\Adapter\PluginAdapterInterface;
-use Skyroom\Repository\UserRepository;
 use Skyroom\Util\Viewer;
 
 /**

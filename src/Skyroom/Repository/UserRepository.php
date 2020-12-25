@@ -20,218 +20,87 @@ class UserRepository
     const SKYROOM_ID_META_KEY = '_skyroom_id';
 
     /**
-     * @var Client API client
+     * @var \wpdb $db
      */
-    private $client;
-
-    /**
-     * @var PluginAdapterInterface
-     */
-    private $pluginAdapter;
+    private $db;
 
     /**
      * User Repository constructor.
      *
-     * @param Client $client
-     * @param EventRepository $eventRepository
-     * @param PluginAdapterInterface $pluginAdapter
+     * @param \wpdb $db
      */
-    public function __construct(Client $client, EventRepository $eventRepository, PluginAdapterInterface $pluginAdapter)
+    public function __construct(\wpdb $db)
     {
-        $this->client = $client;
-        $this->pluginAdapter = $pluginAdapter;
+        $this->db = $db;
     }
 
     /**
-     * Get users
-     *
-     * @return User[]
-     * @throws InvalidResponseStatusException
-     * @throws \Skyroom\Exception\RequestFailedException
-     *
-     * @throws ConnectionNotEstablishedException
+     * @param int $limit
+     * @param int $offset
      */
-    public function getUsers()
+    public function getAllUsers($limit = 0, $offset = 0)
     {
-        $usersArray = $this->client->request('getUsers');
-        $ids = array_map(function ($user) {
-            return $user->id;
-        }, $usersArray);
+        global $wpdb;
 
-        $wpUsersArray = get_users([
-            'meta_name' => self::SKYROOM_ID_META_KEY,
-            'meta_value' => $ids,
-            'meta_compare' => 'IN',
-        ]);
+        $items = $wpdb->prefix . 'woocommerce_order_items';
+        $item_meta = $wpdb->prefix . 'woocommerce_order_itemmeta';
+        $termId = get_term_by('slug', 'skyroom', 'product_type')->term_taxonomy_id;
 
-        $wpUsers = [];
-        foreach ($wpUsersArray as $wpUser) {
-            $wpUsers[$this->getSkyroomId($wpUser->ID)] = $wpUser;
+        $query = "SELECT `user`.`display_name` `nickname`, `user`.`user_login` `username`, `product`.`post_title` `title`,
+                    `product`.`id` `product_id`, `user`.`id` `user_id`
+               FROM `$items` `items`
+               INNER JOIN `$item_meta` `item_meta` ON `item_meta`.`order_item_id` = `items`.`order_item_id`
+                    AND `item_meta`.`meta_key` = '_product_id'
+               INNER JOIN `$wpdb->posts` `product` ON `product`.`ID` = `item_meta`.`meta_value`
+               INNER JOIN `$wpdb->postmeta` `product_skyroom_meta` ON `product_skyroom_meta`.`post_id` = `product`.`ID`
+                    AND `product_skyroom_meta`.`meta_key` = '_skyroom_id'
+               INNER JOIN `$wpdb->term_relationships` `term_rel` ON `term_rel`.`term_taxonomy_id` = '$termId'
+                    AND `term_rel`.`object_id` = `product`.`ID`
+               INNER JOIN `$wpdb->posts` `order` ON `items`.`order_id` = `order`.`ID`
+               INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
+                    AND `order_customer_meta`.`meta_key` = '_customer_user'
+               INNER JOIN `$wpdb->users` `user` ON `user`.`id` = `order_customer_meta`.`meta_value`
+               WHERE `order`.`post_status` IN ('wc-completed', 'wc-processing')";
+
+        if (!empty($limit) && !empty($offset)) {
+            $query = $this->db->prepare($query."LIMIT %d,%d", $limit, $offset);
+        } elseif (!empty($limit)) {
+            $query = $this->db->prepare($query."LIMIT %d", $limit);
+        } else {
+            $query = $query;
         }
 
-        $users = [];
-        foreach ($usersArray as $user) {
-            $users[] = new User($user, isset($wpUsers[$user->id]) ? $wpUsers[$user->id] : null);
-        }
+        $users = $this->db->get_results($query, ARRAY_A);
 
         return $users;
     }
 
     /**
-     * Add registered user to skyroom
-     *
-     * @param \WP_User $user User data
-     *
-     * @throws InvalidResponseStatusException
-     * @throws \Skyroom\Exception\RequestFailedException
-     * @throws ConnectionNotEstablishedException
+     * @return string|null
      */
-    public function addUser($user)
-    {
-        $params = [
-            'username' => $this->generateUsername($user->ID),
-            'password' => uniqid('', true),
-            'nickname' => $user->display_name,
-        ];
-
-        $id = $this->client->request('createUser', $params);
-
-        // Link skyroom user to wordpress
-        $this->updateSkyroomId($user->ID, $id);
-    }
-
-    /**
-     * Adds multiple users to skyroom
-     *
-     * @param $users \WP_User[]
-     *
-     * @throws ConnectionNotEstablishedException
-     * @throws InvalidResponseStatusException
-     * @throws \Skyroom\Exception\RequestFailedException
-     * @throws BatchOperationFailedException
-     */
-    public function addUsers($users)
-    {
-        $params = [
-            'users' => array_map(function (\WP_User $user) {
-                return [
-                    'username' => $this->generateUsername($user->ID),
-                    'password' => uniqid('', true),
-                    'nickname' => $user->display_name,
-                ];
-            }, $users),
-        ];
-
-        // Send request and get response
-        $response = $this->client->request('createUsers', $params);
-
-        $errors = false;
-        for ($i = 0, $count = count($users); $i < $count; $i++) {
-            if (is_int($response[$i])) {
-                $this->updateSkyroomId($users[$i]->ID, $response[$i]);
-            } else {
-                $errors[] = sprintf(__('Error in saving \'%s\' to server: %s', 'skyroom'), $users[$i]->user_login, $response[$i]);
-            }
-        }
-
-        if (!empty($errors)) {
-            throw new BatchOperationFailedException($errors);
-        }
-    }
-
-    /**
-     * Check user reflected on skyroom (check by skyroom id)
-     *
-     * @param int $userId
-     * @return bool User reflected or not
-     */
-    public function hasSkyroomUser($userId)
-    {
-        return !empty($this->getSkyroomId($userId));
-    }
-
-    /**
-     * Ensure that sykroom user added for given wp_user, if it's not added, add it
-     *
-     * @param \WP_User $user
-     *
-     * @throws ConnectionNotEstablishedException
-     * @throws InvalidResponseStatusException
-     * @throws RequestFailedException
-     */
-    public function ensureSkyroomUserAdded($user)
-    {
-        if (!$this->hasSkyroomUser($user->ID)) {
-            $this->addUser($user);
-        }
-    }
-
-    /**
-     * Add user to skyroom
-     *
-     * @param \WP_User $user
-     * @param integer $roomId Room ID
-     * @param integer $postId Related wp post id
-     * @throws ConnectionNotEstablishedException
-     * @throws InvalidResponseStatusException
-     * @throws \Skyroom\Exception\RequestFailedException
-     *
-     */
-    public function addUserToRoom($user, $roomId, $postId)
+    public function countAll()
     {
         global $wpdb;
 
-        $skyroomUserId = $this->getSkyroomId($user->ID);
-        if (empty($skyroomUserId)) {
-            throw new \InvalidArgumentException(__('User is not registered to skyroom', 'skyroom'));
-        }
+        $items = $wpdb->prefix . 'woocommerce_order_items';
+        $item_meta = $wpdb->prefix . 'woocommerce_order_itemmeta';
+        $termId = get_term_by('slug', 'skyroom', 'product_type')->term_taxonomy_id;
 
-        $this->client->request(
-            'addRoomUsers',
-            [
-                'room_id' => $roomId,
-                'users' => [
-                    ['user_id' => $skyroomUserId],
-                ],
-            ]
-        );
+        $query = "SELECT COUNT(*) FROM `$items` `items`
+               INNER JOIN `$item_meta` `item_meta` ON `item_meta`.`order_item_id` = `items`.`order_item_id`
+                    AND `item_meta`.`meta_key` = '_product_id'
+               INNER JOIN `$wpdb->posts` `product` ON `product`.`ID` = `item_meta`.`meta_value`
+               INNER JOIN `$wpdb->postmeta` `product_skyroom_meta` ON `product_skyroom_meta`.`post_id` = `product`.`ID`
+                    AND `product_skyroom_meta`.`meta_key` = '_skyroom_id'
+               INNER JOIN `$wpdb->term_relationships` `term_rel` ON `term_rel`.`term_taxonomy_id` = '$termId'
+                    AND `term_rel`.`object_id` = `product`.`ID`
+               INNER JOIN `$wpdb->posts` `order` ON `items`.`order_id` = `order`.`ID`
+               INNER JOIN `$wpdb->postmeta` `order_customer_meta` ON `order_customer_meta`.`post_id` = `order`.`ID`
+                    AND `order_customer_meta`.`meta_key` = '_customer_user'
+               INNER JOIN `$wpdb->users` `user` ON `user`.`id` = `order_customer_meta`.`meta_value`
+               WHERE `order`.`post_status` IN ('wc-completed', 'wc-processing')";
 
-        $this->pluginAdapter->setEnrollmentSynced($user->ID, $postId);
+        return $this->db->get_var($query);
     }
 
-    /**
-     * Get user skyroom id meta value
-     *
-     * @param $userId
-     *
-     * @return int
-     */
-    public function getSkyroomId($userId)
-    {
-        return get_user_meta($userId, self::SKYROOM_ID_META_KEY, true);
-    }
-
-    /**
-     * Update skyroom id meta of user
-     *
-     * @param $userId
-     * @param $skyroomUserId
-     *
-     * @return bool
-     */
-    public function updateSkyroomId($userId, $skyroomUserId)
-    {
-        return update_user_meta($userId, self::SKYROOM_ID_META_KEY, $skyroomUserId);
-    }
-
-    /**
-     * Generates random username for users to save on skyroom (for avoiding conflicts)
-     *
-     * @param $userId integer
-     * @return string
-     */
-    public function generateUsername($userId)
-    {
-        return 'wp-user-' . $userId . '-' . rand(100000, 999999);
-    }
 }
