@@ -48,13 +48,14 @@ class UserSubmenu extends AbstractSubmenu
      */
     function display()
     {
-        if (isset($_GET['user_id'])){
+        if (isset($_GET['test'])){
+            return 23123;
             $context = [
                 'table' => 123,
             ];
             $this->viewer->view('user.php', $context);
-        }elseif(isset($_POST['save'])) {
-            echo $_POST['name'];
+        }elseif(isset($_POST['test'])) {
+            return 'helllo';
         }else{
             $this->usersTable->prepare_items();
             $context = [

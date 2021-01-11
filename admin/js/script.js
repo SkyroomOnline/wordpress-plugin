@@ -24,6 +24,59 @@ jQuery(function ($) {
         });
     }
 
+    if (pagenow.indexOf('page_skyroom-users') !== -1) {
+        $('.wp-list-table .show-details').on('click', function (e) {
+            e.preventDefault();
+            var data = $(this).data('details');
+            console.log(data);
+            var $table = $('<table>').addClass('widefat striped');
+            var $tbody = $('<tbody>').appendTo($table);
+            // $.each(data, function (key, value) {
+                var $tr = $('<tr>');
+                // $tr.append('<th>' + skyroom_data[key] + '</th>');
+                $tr.append('<td style="width: 50%">' + data + '</td>');
+                $tr.append('<td style="width: 50%">' +
+                    '<select>' +
+                    '<option value="1">1</option> ' +
+                    '<option value="2">2</option> ' +
+                    '</select>' +
+                    '</td>');
+                $tr.appendTo($tbody);
+            // });
+
+            // alertify.prompt( 'Prompt Title', 'Prompt Message', 'Prompt Value'
+            //     , function(evt, value) {
+            //         alertify.success('You entered: ' + value)
+            //     }
+            //     , function() {
+            //         alertify.error('Cancel')
+            //     }
+            // );
+
+            alertify.alert()
+                .setting({
+                    'title':skyroom_data.user_access,
+                    'label':'Agree',
+                    'message': $table.get(0).outerHTML ,
+                    'onok': function(){
+                        $.get(
+                            ajaxurl,
+                            {
+                                action: 'skyroom-users'
+                            },
+                            function(response) {
+                                console.log(response);
+                                alertify.success('Great');
+
+                            }
+                        );
+
+                    }
+                }).show();
+
+        });
+    }
+
     // Synchronize actions
     if (pagenow.indexOf('page_skyroom-maintenance') !== -1) {
         var $maintenance = $('.skyroom-maintenance');

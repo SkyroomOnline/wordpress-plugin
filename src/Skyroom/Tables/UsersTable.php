@@ -106,8 +106,8 @@ class UsersTable extends WPListTable
      */
     public function column_edit($item)
     {
-        $url = menu_page_url('skyroom-users').'&user_id='.$item['user_id'];
-        return '<a href="'.$url.'">'. __('Edit', 'skyroom') .'</a>';
+        $url = menu_page_url('skyroom-users', $echo = false).'&user_id='.$item['user_id'];
+        return '<a href="#" data-details="'.$item['user_id'].'" class="show-details">'. __('Access edit', 'skyroom') .'</a>';
     }
 
     /**

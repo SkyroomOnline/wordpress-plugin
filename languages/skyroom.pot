@@ -624,6 +624,9 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+msgid "Access edit"
+msgstr ""
+
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on "
