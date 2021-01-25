@@ -54,6 +54,7 @@ class SkyroomController
     function parseRequest($do, $wp)
     {
         $matches = $this->matchRequestPath();
+        $product_id = $matches['id'];
         if ($matches) {
             $product = wc_get_product($matches['id']);
             if($product->get_type() === "skyroom") {
@@ -70,7 +71,7 @@ class SkyroomController
                 try {
                     $userData = wp_get_current_user();
 
-                    $username = $userData->data->user_login;
+                    $userId = $userData->data->ID;
                     $nickname = $userData->data->display_name;
 
                     $ttl = get_option('skyroom_link_ttl');
@@ -78,11 +79,23 @@ class SkyroomController
                         $ttl = 60;
                     }
 
+                    $user_data = get_user_meta($userId, '_skyroom_access', true);
+                    $access_level = 1;
+
+                    if ($user_data) {
+                        $accesses = unserialize($user_data);
+                        foreach ($accesses as $access) {
+                            if ($access['product_id'] == $product_id) {
+                                $access_level = $access['access_level'];
+                            }
+                        }
+                    }
+
                     $url = $this->client->request('createLoginUrl', [
                         'room_id' => $skyroomRoomId,
-                        'user_id' => $username,
+                        'user_id' => $userId,
                         'nickname' => $nickname,
-                        'access' => 1,
+                        'access' => $access_level,
                         'concurrent' => 1,
                         'ttl' => $ttl,
                     ]);

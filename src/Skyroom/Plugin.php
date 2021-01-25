@@ -10,6 +10,7 @@ use DownShift\WordPress\EventEmitterInterface;
 use Skyroom\Adapter\PluginAdapterInterface;
 use Skyroom\Controller\MaintenanceController;
 use Skyroom\Controller\SkyroomController;
+use Skyroom\Controller\UserController;
 use Skyroom\Entity\SkyroomWidget;
 use Skyroom\Menu\EventSubmenu;
 use Skyroom\Menu\MainMenu;
@@ -138,9 +139,12 @@ class Plugin
     public function registerAjaxActions()
     {
         $syncTaskController = $this->container->get(MaintenanceController::class);
+        $userController = $this->container->get(UserController::class);
         add_action('wp_ajax_' . MaintenanceController::startActionIdentifier, [$syncTaskController, 'startSyncTask']);
         add_action('wp_ajax_' . MaintenanceController::statusActionIdentifier, [$syncTaskController, 'getSyncStatus']);
         add_action('wp_ajax_' . MaintenanceController::purgeActionIdentifier, [$syncTaskController, 'purgeData']);
+        add_action('wp_ajax_' . UserController::setUserData, [$userController, 'setData']);
+        add_action('wp_ajax_' . UserController::getUserData, [$userController, 'getData']);
     }
 
     /**

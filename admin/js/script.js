@@ -27,53 +27,63 @@ jQuery(function ($) {
     if (pagenow.indexOf('page_skyroom-users') !== -1) {
         $('.wp-list-table .show-details').on('click', function (e) {
             e.preventDefault();
-            var data = $(this).data('details');
-            console.log(data);
+            var data = $(this).data('user');
+            var product_id = $(this).data('product');
+
             var $table = $('<table>').addClass('widefat striped');
             var $tbody = $('<tbody>').appendTo($table);
-            // $.each(data, function (key, value) {
-                var $tr = $('<tr>');
-                // $tr.append('<th>' + skyroom_data[key] + '</th>');
-                $tr.append('<td style="width: 50%">' + data + '</td>');
-                $tr.append('<td style="width: 50%">' +
-                    '<select>' +
-                    '<option value="1">1</option> ' +
-                    '<option value="2">2</option> ' +
-                    '</select>' +
-                    '</td>');
-                $tr.appendTo($tbody);
-            // });
+            var $tr = $('<tr>');
+            $tr.append('<td style="width: 50%">دسترسی</td>');
+            $tr.append('<td style="width: 50%"><select id="access-level"></select></td>');
+            $tr.appendTo($tbody);
 
-            // alertify.prompt( 'Prompt Title', 'Prompt Message', 'Prompt Value'
-            //     , function(evt, value) {
-            //         alertify.success('You entered: ' + value)
-            //     }
-            //     , function() {
-            //         alertify.error('Cancel')
-            //     }
-            // );
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'skyroom_get_user_data',
+                    nonce: skyroom_user_data.get_data,
+                    user_id: data,
+                    product_id: product_id
+                },
+                success: function(result){
+                    $("#access-level").html(result.data);
+                }
+            });
 
-            alertify.alert()
-                .setting({
-                    'title':skyroom_data.user_access,
-                    'label':'Agree',
-                    'message': $table.get(0).outerHTML ,
-                    'onok': function(){
-                        $.get(
-                            ajaxurl,
-                            {
-                                action: 'skyroom-users'
-                            },
-                            function(response) {
-                                console.log(response);
-                                alertify.success('Great');
-
-                            }
-                        );
-
+            alertify.confirm($table.get(0).outerHTML, function (){
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'skyroom_set_user_data',
+                        nonce: skyroom_user_data.set_data,
+                        user_id: data,
+                        product_id: product_id,
+                        access_level: $('#access-level').val(),
+                        access: data,
+                    },
+                    success: function(result){
+                        if (result.success) {
+                            alertify.success(result.data.message);
+                        }else {
+                            alertify.error(result.data.message);
+                        }
+                    },
+                    error: function (e){
+                        alertify.error('خطایی در سایت شما رخ داده، لطفا مجددا امتحان کنید.');
                     }
-                }).show();
-
+                });
+            }).set({
+                title: skyroom_data.user_access,
+                labels: {
+                    ok: skyroom_data.save,
+                    cancel: skyroom_data.cancel
+                },
+                padding: false
+            }).show();
         });
     }
 

@@ -627,6 +627,21 @@ msgstr ""
 msgid "Access edit"
 msgstr ""
 
+msgid "Normal role"
+msgstr ""
+
+msgid "Presenter role"
+msgstr ""
+
+msgid "Operator role"
+msgstr ""
+
+msgid "Your changes save failed"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on "

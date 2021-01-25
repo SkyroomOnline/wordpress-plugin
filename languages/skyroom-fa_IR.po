@@ -5,19 +5,19 @@ msgstr ""
 "Project-Id-Version: Skyroom 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/skyroom\n"
 "POT-Creation-Date: 2020-06-19 21:05+0430\n"
-"PO-Revision-Date: 2020-12-25 14:54+0330\n"
+"PO-Revision-Date: 2021-01-25 15:33+0330\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.4.2\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,"
-"_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;esc_attr__;esc_attr_e;"
-"esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: src/Skyroom\n"
 "X-Poedit-SearchPath-1: views\n"
 
@@ -53,7 +53,8 @@ msgstr "اعطای دسترسی \"%s\" به \"%s\" با خطا مواجه شد"
 msgid "Room title"
 msgstr "عنوان اتاق"
 
-#: src/Skyroom/Adapter/WooCommerceAdapter.php:444 views/woocommerce-add-to-cart.php:31
+#: src/Skyroom/Adapter/WooCommerceAdapter.php:444
+#: views/woocommerce-add-to-cart.php:31
 msgid "Enter room"
 msgstr "ورود به اتاق"
 
@@ -75,8 +76,10 @@ msgid "Error entering class"
 msgstr "خطا در هنگام ورود به کلاس"
 
 #: src/Skyroom/Controller/SkyroomController.php:103
-msgid "Seems there is a problem on our side. Please contact support to resolve issue."
-msgstr "به نظر می‌رسد مشکلی سمت ما وجود دارد. برای حل مشکل با پشتیبانی سایت تماس بگیرید."
+msgid ""
+"Seems there is a problem on our side. Please contact support to resolve issue."
+msgstr ""
+"به نظر می‌رسد مشکلی سمت ما وجود دارد. برای حل مشکل با پشتیبانی سایت تماس بگیرید."
 
 #: src/Skyroom/Entity/Room.php:88 src/Skyroom/Entity/User.php:91
 msgid "Active"
@@ -111,7 +114,8 @@ msgstr "رخدادها"
 msgid "Skyroom Integration"
 msgstr "یکپارچه‌سازی اسکای‌روم"
 
-#: src/Skyroom/Menu/MainMenu.php:26 src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:72
+#: src/Skyroom/Menu/MainMenu.php:26
+#: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:72
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:100
 msgid "Skyroom"
 msgstr "اسکای‌روم"
@@ -162,12 +166,13 @@ msgstr "ثبت نام ها"
 #: src/Skyroom/Plugin.php:158
 #, php-format
 msgid ""
-"<strong>Skyroom</strong> plugin activated successfully but it's not configured yet. "
-"Please go to <a href=\"%s\">skyroom settings</a> page and configure it to start working."
+"<strong>Skyroom</strong> plugin activated successfully but it's not configured "
+"yet. Please go to <a href=\"%s\">skyroom settings</a> page and configure it to "
+"start working."
 msgstr ""
-"پلاگین <strong>اسکای‌روم</strong> با موفقیت فعال شد اما هنوز پیکربندی نشده‌است. لطفا به "
-"صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی را انجام دهید تا شروع به کار "
-"کند."
+"پلاگین <strong>اسکای‌روم</strong> با موفقیت فعال شد اما هنوز پیکربندی نشده‌است. "
+"لطفا به صفحه <a href=\"%s\">تنظیمات اسکای‌روم</a> بروید و پیکربندی را انجام دهید "
+"تا شروع به کار کند."
 
 #: src/Skyroom/Repository/UserRepository.php:133
 #, php-format
@@ -451,11 +456,11 @@ msgstr "شناسه کاربر اسکای‌روم"
 
 #: src/Skyroom/Util/AssetManager.php:74
 msgid ""
-"This will delete all data related to skyroom from your wordpress. Are you sure what you "
-"are doing?"
+"This will delete all data related to skyroom from your wordpress. Are you sure "
+"what you are doing?"
 msgstr ""
-"این عملیات همه‌ی اطلاعات مربوط به اسکای‌روم را از وردپرس شما پاک می‌کند. آیا مطمئن هستید چه "
-"کاری انجام می‌دهید؟"
+"این عملیات همه‌ی اطلاعات مربوط به اسکای‌روم را از وردپرس شما پاک می‌کند. آیا مطمئن "
+"هستید چه کاری انجام می‌دهید؟"
 
 #: src/Skyroom/WooCommerce/SkyroomProductRegistrar.php:205
 msgid "Error"
@@ -487,12 +492,12 @@ msgstr "همگام‌سازی"
 
 #: views/maintenance.php:22
 msgid ""
-"If you have had some data before installing skyroom plugin or something bad happened for "
-"plugin while contacting with skyroom server, It's the place to synchronize your data "
-"with server."
+"If you have had some data before installing skyroom plugin or something bad "
+"happened for plugin while contacting with skyroom server, It's the place to "
+"synchronize your data with server."
 msgstr ""
-"اگر قبل از نصب پلاگین اسکای‌روم داده‌ای داشته‌اید یا در هنگام ارتباط با سرور برای پلاگین "
-"خطایی رخ داده‌است، اینجا جایی برای همگام‌سازی داده‌های شما با سرور است."
+"اگر قبل از نصب پلاگین اسکای‌روم داده‌ای داشته‌اید یا در هنگام ارتباط با سرور برای "
+"پلاگین خطایی رخ داده‌است، اینجا جایی برای همگام‌سازی داده‌های شما با سرور است."
 
 #: views/maintenance.php:27
 #, php-format
@@ -513,9 +518,11 @@ msgstr "پاکسازی داده‌های پلاگین"
 
 #: views/maintenance.php:46
 msgid ""
-"Clear all skyroom data (user ids, room ids and enrollments) from your wordpress database."
+"Clear all skyroom data (user ids, room ids and enrollments) from your wordpress "
+"database."
 msgstr ""
-"پاکسازی همه اطلاعات اسکای‌روم (شناسه کاربران، شناسه اتاق‌ها و ثبت‌نام‌ها) از دیتابیس وردپرس."
+"پاکسازی همه اطلاعات اسکای‌روم (شناسه کاربران، شناسه اتاق‌ها و ثبت‌نام‌ها) از "
+"دیتابیس وردپرس."
 
 #: views/maintenance.php:52
 msgid "Purge Data"
@@ -603,10 +610,12 @@ msgid "Skyroom wplms widget"
 msgstr "ابزارک اسکای روم برای WPLMS"
 
 #: src/Skyroom/Entity/SkyroomWidget.php:15
-msgid "This widget skyroom for wplms courses and and it does not work in any other plugins"
+msgid ""
+"This widget skyroom for wplms courses and and it does not work in any other "
+"plugins"
 msgstr ""
-"این ابزارک اسکای روم برای WPLMS است و برای افزونه های دیگر کاربردی ندارد و فقط برای دوره "
-"های WPLMS قابل استفاده است"
+"این ابزارک اسکای روم برای WPLMS است و برای افزونه های دیگر کاربردی ندارد و فقط "
+"برای دوره های WPLMS قابل استفاده است"
 
 #: src/Skyroom/Entity/SkyroomWidget.php:53
 msgid "Join to course room"
@@ -616,13 +625,14 @@ msgid "Room entry link expiration time (scound) :"
 msgstr "مدت زمان انقضای لینک ورود به اتاق (ثانیه) :"
 
 msgid ""
-"ttl or Time To Live is the validity period of the link in seconds, which in the example "
-"above is 60 seconds is equivalent to one minute. After this period, the generated link "
-"is not valid and if used, the user will encounter an error invalidating the link."
+"ttl or Time To Live is the validity period of the link in seconds, which in the "
+"example above is 60 seconds is equivalent to one minute. After this period, the "
+"generated link is not valid and if used, the user will encounter an error "
+"invalidating the link."
 msgstr ""
-"ttl یا Time To Live مدت زمان اعتبار لینک به ثانیه است که در مثال بالا این مدت 60 ثانیه "
-"معادل یک دقیقه می‌باشد. پس از این مدت، لینک تولید شده معتبر نیست و در صورت استفاده، کاربر "
-"با خطای عدم اعتبار لینک روبرو می‌شود."
+"ttl یا Time To Live مدت زمان اعتبار لینک به ثانیه است که در مثال بالا این مدت "
+"60 ثانیه معادل یک دقیقه می‌باشد. پس از این مدت، لینک تولید شده معتبر نیست و در "
+"صورت استفاده، کاربر با خطای عدم اعتبار لینک روبرو می‌شود."
 
 msgid "Edit user"
 msgstr "ویرایش کاربر"
@@ -630,15 +640,33 @@ msgstr "ویرایش کاربر"
 msgid "Edit"
 msgstr "ویرایش"
 
+msgid "Access edit"
+msgstr "ویرایش دسترسی کاربر"
+
+msgid "Normal role"
+msgstr "کاربر عادی"
+
+msgid "Presenter role"
+msgstr "ارایه کننده"
+
+msgid "Operator role"
+msgstr "اپراتور"
+
+msgid "Your changes save failed"
+msgstr "ذخیره تغییرات با خطا مواجه شد"
+
+msgid "Cancel"
+msgstr "لغو"
+
 #: views/woocommerce-skyroom-order.php:3
 msgid ""
 "You successfully enrolled in purchased courses. To attend classes, on announced "
-"schedules navigate to course page and click on 'Enter room' button. (Remember you should "
-"be logged in to site)"
+"schedules navigate to course page and click on 'Enter room' button. (Remember "
+"you should be logged in to site)"
 msgstr ""
-"ثبت‌نام شما در دوره‌های خریداری شده با موفقیت انجام شد. برای شرکت در کلاس‌ها در زمان‌های "
-"اعلام شده وارد صفحه دوره شده و روی دکمه 'ورود به کلاس' کلیک نمایید. (لطفا توجه کنید که "
-"باید وارد سایت شده باشید)"
+"ثبت‌نام شما در دوره‌های خریداری شده با موفقیت انجام شد. برای شرکت در کلاس‌ها در "
+"زمان‌های اعلام شده وارد صفحه دوره شده و روی دکمه 'ورود به کلاس' کلیک نمایید. "
+"(لطفا توجه کنید که باید وارد سایت شده باشید)"
 
 #~ msgid "Skyroom Synchronization"
 #~ msgstr "همگام‌سازی اسکای‌روم"

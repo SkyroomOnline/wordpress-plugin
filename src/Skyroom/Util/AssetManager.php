@@ -63,6 +63,8 @@ class AssetManager
             'skyroom_data',
             [
                 'ok' => __('OK', 'skyroom'),
+                'save' => __('Save Changes', 'skyroom'),
+                'cancel' => __('Cancel', 'skyroom'),
                 'event_details' => __('Event details', 'skyroom'),
                 'error_code' => __('Error code', 'skyroom'),
                 'error_message' => __('Error message', 'skyroom'),
