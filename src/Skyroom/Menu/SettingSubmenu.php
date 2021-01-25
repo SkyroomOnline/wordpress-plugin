@@ -57,6 +57,7 @@ class SettingSubmenu extends AbstractSubmenu
             $skyroomSiteUrl = $_POST['skyroom_site_url'];
             $skyroomApiKey = $_POST['skyroom_api_key'];
             $skyroomLinkTtl = $_POST['skyroom_link_ttl'];
+            $skyroomLinkTtlUnit = $_POST['skyroom_link_ttl_unit'];
             $skyroomIntegratedPlugin = $_POST['skyroom_integrated_plugin'];
 
             // Change Client url object
@@ -70,6 +71,7 @@ class SettingSubmenu extends AbstractSubmenu
                 update_option('skyroom_site_url', $skyroomSiteUrl);
                 update_option('skyroom_api_key', $skyroomApiKey);
                 update_option('skyroom_link_ttl', $skyroomLinkTtl);
+                update_option('skyroom_link_ttl_unit', $skyroomLinkTtlUnit);
                 update_option('skyroom_integrated_plugin', $skyroomIntegratedPlugin);
             } catch (\Exception $exception) {
                 $error = $exception->getMessage();
@@ -79,7 +81,12 @@ class SettingSubmenu extends AbstractSubmenu
             $skyroomSiteUrl = get_option('skyroom_site_url');
             $skyroomApiKey = get_option('skyroom_api_key');
             $skyroomLinkTtl = get_option('skyroom_link_ttl');
+            $skyroomLinkTtlUnit = get_option('skyroom_link_ttl_unit');
             $skyroomIntegratedPlugin = get_option('skyroom_integrated_plugin');
+        }
+
+        if(!$skyroomLinkTtlUnit){
+            $skyroomLinkTtlUnit = 'sec';
         }
 
         $context = [
@@ -88,6 +95,7 @@ class SettingSubmenu extends AbstractSubmenu
             'skyroomSiteUrl' => $skyroomSiteUrl,
             'skyroomApiKey' => $skyroomApiKey,
             'skyroomLinkTtl' => $skyroomLinkTtl,
+            'skyroomLinkTtlUnit' => $skyroomLinkTtlUnit,
             'skyroomIntegratedPlugin' => $skyroomIntegratedPlugin,
         ];
         $this->viewer->view('settings.php', $context);

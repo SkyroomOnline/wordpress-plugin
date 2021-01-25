@@ -75,9 +75,18 @@ class SkyroomController
                     $nickname = $userData->data->display_name;
 
                     $ttl = get_option('skyroom_link_ttl');
+                    $ttlUnit = get_option('skyroom_link_ttl_unit');
+                    if(!$ttlUnit){
+                        $ttlUnit = 1;
+                    }elseif($ttlUnit == 'sec'){
+                        $ttlUnit = 1;
+                    }elseif($ttlUnit == 'min'){
+                        $ttlUnit = 60;
+                    }
                     if(!$ttl){
                         $ttl = 60;
                     }
+                    $ttl = $ttl * $ttlUnit;
 
                     $user_data = get_user_meta($userId, '_skyroom_access', true);
                     $access_level = 1;

@@ -39,14 +39,22 @@
             </tr>
             <tr>
                 <th scope="row">
-                    <label for="skyroom_site_url"><?php _e('Room entry link expiration time (scound) :', 'skyroom') ?></label>
+                    <label for="skyroom_site_url"><?php _e('Room entry link expiration time :', 'skyroom') ?></label>
                 </th>
                 <td>
                     <input type="text" name="skyroom_link_ttl" id="skyroom_link_ttl" class="regular-text ltr"
                            value="<?php echo ($skyroomLinkTtl ? esc_attr($skyroomLinkTtl) : '60') ?>"
                            placeholder="<?php echo esc_attr(sprintf(__('e.g: %s', 'skyroom'), '60')) ?>">
+                    <select name="skyroom_link_ttl_unit" id="skyroom_link_ttl_unit">
+                        <option value="sec"<?php echo $skyroomLinkTtlUnit === 'sec' ? ' selected' : '' ?>>
+                            <?php _e('Second', 'skyroom') ?>
+                        </option>
+                        <option value="min"<?php echo $skyroomLinkTtlUnit === 'min' ? ' selected' : '' ?>>
+                            <?php _e('Minute', 'skyroom') ?>
+                        </option>
+                    </select>
                     <p id="skyroom_link_ttl_desc">
-                        <?php _e('ttl or Time To Live is the validity period of the link in seconds, which in the example above is 60 seconds is equivalent to one minute. After this period, the generated link is not valid and if used, the user will encounter an error invalidating the link.', 'skyroom') ?>
+                        <?php _e('ttl or Time To Live is the validity period of the link. After this period, the generated link is not valid and if used, the user will encounter an error invalidating the link.', 'skyroom') ?>
                     </p>
                 </td>
             </tr>
