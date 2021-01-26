@@ -2,11 +2,6 @@
 
 namespace Skyroom\Controller;
 
-use Skyroom\Adapter\PluginAdapterInterface;
-use Skyroom\Api\Client;
-use Skyroom\Entity\Event;
-use Skyroom\Repository\EventRepository;
-
 /**
  * Class Skyroom
  *
@@ -16,21 +11,6 @@ class UserController
 {
     const setUserData = 'skyroom_set_user_data';
     const getUserData = 'skyroom_get_user_data';
-
-    /**
-     * @var PluginAdapterInterface
-     */
-    private $pluginAdapter;
-
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var EventRepository
-     */
-    private $eventRepository;
 
     public function __construct()
     {
