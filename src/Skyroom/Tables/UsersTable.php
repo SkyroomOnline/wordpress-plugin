@@ -99,6 +99,18 @@ class UsersTable extends WPListTable
     }
 
     /**
+     * Render user access edit column
+     *
+     * @param $item
+     * @return string
+     */
+    public function column_edit($item)
+    {
+        $url = menu_page_url('skyroom-users', $echo = false).'&user_id='.$item['user_id'];
+        return '<a href="#" data-user="'.$item['user_id'].'"  data-product="'.$item['product_id'].'" class="show-details btn">'. __('Access edit', 'skyroom') .'</a>';
+    }
+
+    /**
      * Get table columns
      *
      * @return array
@@ -109,6 +121,7 @@ class UsersTable extends WPListTable
             'nickname' => __('Nickname', 'skyroom'),
             'username' => __('Username', 'skyroom'),
             'product' => __('Product', 'skyroom'),
+            'edit' => __('Edit', 'skyroom'),
         );
     }
 }

@@ -49,11 +49,9 @@ class UserSubmenu extends AbstractSubmenu
     function display()
     {
         $this->usersTable->prepare_items();
-
         $context = [
             'table' => $this->usersTable,
         ];
-
         $this->viewer->view('users.php', $context);
     }
 }

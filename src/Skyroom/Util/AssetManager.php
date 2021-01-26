@@ -63,6 +63,8 @@ class AssetManager
             'skyroom_data',
             [
                 'ok' => __('OK', 'skyroom'),
+                'save' => __('Save Changes', 'skyroom'),
+                'cancel' => __('Cancel', 'skyroom'),
                 'event_details' => __('Event details', 'skyroom'),
                 'error_code' => __('Error code', 'skyroom'),
                 'error_message' => __('Error message', 'skyroom'),
@@ -70,6 +72,7 @@ class AssetManager
                 'item_id' => __('Item ID', 'skyroom'),
                 'user_id' => __('User ID', 'skyroom'),
                 'room_id' => __('Room ID', 'skyroom'),
+                'user_access' => __('Access edit', 'skyroom'),
                 'skyroom_user_id' => __('Skyroom User ID', 'skyroom'),
                 'purge_data_confirm' => __('This will delete all data related to skyroom from your wordpress. Are you sure'
                     . ' what you are doing?')

@@ -612,16 +612,40 @@ msgstr ""
 msgid "Join to course room"
 msgstr ""
 
-msgid "Room entry link expiration time (scound) :"
+msgid "Room entry link expiration time :"
 msgstr ""
 
-msgid "ttl or Time To Live is the validity period of the link in seconds, which in the example above is 60 seconds is equivalent to one minute. After this period, the generated link is not valid and if used, the user will encounter an error invalidating the link."
+msgid "ttl or Time To Live is the validity period of the link. After this period, the generated link is not valid and if used, the user will encounter an error invalidating the link."
 msgstr ""
 
 msgid "Edit user"
 msgstr ""
 
 msgid "Edit"
+msgstr ""
+
+msgid "Access edit"
+msgstr ""
+
+msgid "Normal role"
+msgstr ""
+
+msgid "Presenter role"
+msgstr ""
+
+msgid "Operator role"
+msgstr ""
+
+msgid "Your changes save failed"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Second"
+msgstr ""
+
+msgid "Minute"
 msgstr ""
 
 #: views/woocommerce-skyroom-order.php:3

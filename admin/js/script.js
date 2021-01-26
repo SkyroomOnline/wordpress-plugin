@@ -24,6 +24,69 @@ jQuery(function ($) {
         });
     }
 
+    if (pagenow.indexOf('page_skyroom-users') !== -1) {
+        $('.wp-list-table .show-details').on('click', function (e) {
+            e.preventDefault();
+            var data = $(this).data('user');
+            var product_id = $(this).data('product');
+
+            var $table = $('<table>').addClass('widefat striped');
+            var $tbody = $('<tbody>').appendTo($table);
+            var $tr = $('<tr>');
+            $tr.append('<td style="width: 50%">دسترسی</td>');
+            $tr.append('<td style="width: 50%"><select id="access-level"></select></td>');
+            $tr.appendTo($tbody);
+
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'skyroom_get_user_data',
+                    nonce: skyroom_user_data.get_data,
+                    user_id: data,
+                    product_id: product_id
+                },
+                success: function (result) {
+                    $("#access-level").html(result.data);
+                }
+            });
+
+            alertify.confirm($table.get(0).outerHTML, function () {
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        action: 'skyroom_set_user_data',
+                        nonce: skyroom_user_data.set_data,
+                        user_id: data,
+                        product_id: product_id,
+                        access_level: $('#access-level').val(),
+                        access: data,
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            alertify.success(result.data.message);
+                        } else {
+                            alertify.error(result.data.message);
+                        }
+                    },
+                    error: function (e) {
+                        alertify.error('خطایی در سایت شما رخ داده، لطفا مجددا امتحان کنید.');
+                    }
+                });
+            }).set({
+                title: skyroom_data.user_access,
+                labels: {
+                    ok: skyroom_data.save,
+                    cancel: skyroom_data.cancel
+                },
+                padding: false
+            }).show();
+        });
+    }
+
     // Synchronize actions
     if (pagenow.indexOf('page_skyroom-maintenance') !== -1) {
         var $maintenance = $('.skyroom-maintenance');
