@@ -87,9 +87,6 @@ class EventsTable extends WPListTable
                 break;
         }
     }
-    function get(){
-        return "test";
-    }
 
     /**
      * Get table columns

@@ -47,12 +47,12 @@ jQuery(function ($) {
                     user_id: data,
                     product_id: product_id
                 },
-                success: function(result){
+                success: function (result) {
                     $("#access-level").html(result.data);
                 }
             });
 
-            alertify.confirm($table.get(0).outerHTML, function (){
+            alertify.confirm($table.get(0).outerHTML, function () {
                 $.ajax({
                     url: ajaxurl,
                     type: 'POST',
@@ -65,14 +65,14 @@ jQuery(function ($) {
                         access_level: $('#access-level').val(),
                         access: data,
                     },
-                    success: function(result){
+                    success: function (result) {
                         if (result.success) {
                             alertify.success(result.data.message);
-                        }else {
+                        } else {
                             alertify.error(result.data.message);
                         }
                     },
-                    error: function (e){
+                    error: function (e) {
                         alertify.error('خطایی در سایت شما رخ داده، لطفا مجددا امتحان کنید.');
                     }
                 });

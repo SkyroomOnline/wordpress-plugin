@@ -57,7 +57,7 @@ class SkyroomController
         $product_id = $matches['id'];
         if ($matches) {
             $product = wc_get_product($matches['id']);
-            if($product->get_type() === "skyroom") {
+            if ($product->get_type() === "skyroom") {
                 $product = $this->pluginAdapter->wrapProduct($product);
 
                 $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $product);
@@ -76,14 +76,14 @@ class SkyroomController
 
                     $ttl = get_option('skyroom_link_ttl');
                     $ttlUnit = get_option('skyroom_link_ttl_unit');
-                    if(!$ttlUnit){
+                    if (!$ttlUnit) {
                         $ttlUnit = 1;
-                    }elseif($ttlUnit == 'sec'){
+                    } elseif ($ttlUnit == 'sec') {
                         $ttlUnit = 1;
-                    }elseif($ttlUnit == 'min'){
+                    } elseif ($ttlUnit == 'min') {
                         $ttlUnit = 60;
                     }
-                    if(!$ttl){
+                    if (!$ttl) {
                         $ttl = 60;
                     }
                     $ttl = $ttl * $ttlUnit;
@@ -132,7 +132,7 @@ class SkyroomController
                     $message = __('Seems there is a problem on our side. Please contact support to resolve issue.', 'skyroom');
                     wp_die('<h1>' . $title . '</h1>' . '<p>' . $message . '</p>', $title);
                 }
-            }else{
+            } else {
                 $title = __('Error product type', 'skyroom');
                 $message = __('This product is not skyroom type.', 'skyroom');
                 wp_die('<h1>' . $title . '</h1>' . '<p>' . $message . '</p>', $title);
