@@ -287,10 +287,8 @@ class WooCommerceAdapter implements PluginAdapterInterface
                ORDER BY `order_date_meta`.`meta_value` DESC";
 
         $enrolls = $wpdb->get_results($query);
-        $rawProducts = wc_get_products(['include' => array_map(function ($value) {
-            return $value->product_id;
-        }, $enrolls)]);
-        $products = array_reduce($rawProducts, function ($array, $product) {
+        $products = array_reduce($enrolls, function ($array, $enroll) {
+            $product = wc_get_product($enroll->product_id);
             $array[$product->get_id()] = $this->wrapProduct($product);
             return $array;
         }, []);
