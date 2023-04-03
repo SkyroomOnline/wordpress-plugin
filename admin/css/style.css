@@ -5,7 +5,7 @@
     background: url(../images/icon.png) center center no-repeat;
     -webkit-background-size: 20px 20px;
     background-size: 20px 20px;
-    opacity: .6;
+    opacity: 1;
 }
 
 #toplevel_page_skyroom-rooms.wp-menu-open .wp-menu-image:before,
@@ -15,7 +15,9 @@
 
 #toplevel_page_skyroom-rooms:not(.wp-menu-open):hover .wp-menu-image:before,
 #toplevel_page_skyroom-settings:not(.wp-menu-open):hover .wp-menu-image:before {
-    background-image: url(../images/icon-hover.png);
+    background: url(../images/icon-hover.png) center center no-repeat;
+    -webkit-background-size: 20px 20px;
+    background-size: 20px 20px;
     opacity: 1;
 }
 
@@ -33,8 +35,14 @@
 
 .skyroom-logo-card {
     padding-top: 20px;
+    min-height: fit-content !important;
+    min-width: fit-content !important;
+    max-width: unset;
 }
 
+.skyroom-logo-card form {
+    margin-top: 50px;
+}
 .submit-p *, .test_api-note * {
     vertical-align: middle !important;
 }
