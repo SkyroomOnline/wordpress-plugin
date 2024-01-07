@@ -156,14 +156,14 @@ class SkyroomProductRegistrar
                 $client->request(
                     'updateRoom',
                     [
-                        'room_id' => $skyroomId,
+                        'room_id' => (int)$skyroomId,
                         'name' => $name,
                         'title' => $title,
                     ]
                 );
             }
 
-            $room = $client->request('getRoom', ['room_id' => $skyroomId]);
+            $room = $client->request('getRoom', ['room_id' => (int)$skyroomId]);
             $totalSales = get_post_meta($postId, 'total_sales', true);
 
             update_post_meta($postId, '_skyroom_name', $room->name);
