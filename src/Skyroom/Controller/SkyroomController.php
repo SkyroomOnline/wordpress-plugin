@@ -101,12 +101,12 @@ class SkyroomController
                     }
 
                     $url = $this->client->request('createLoginUrl', [
-                        'room_id' => $skyroomRoomId,
+                        'room_id' => (int)$skyroomRoomId,
                         'user_id' => $userId,
                         'nickname' => $nickname,
-                        'access' => $access_level,
+                        'access' => (int)$access_level,
                         'concurrent' => 1,
-                        'ttl' => $ttl,
+                        'ttl' => (int)$ttl,
                     ]);
 
                     wp_redirect($url);
