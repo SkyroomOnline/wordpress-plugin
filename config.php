@@ -16,14 +16,14 @@ use Skyroom\Util\Viewer;
 
 $services = [
     wpdb::class => $GLOBALS['wpdb'],
-    EventEmitterInterface::class => DI\object(EventEmitter::class),
-    Internationalization::class => DI\object()
+    EventEmitterInterface::class => DI\create(EventEmitter::class),
+    Internationalization::class => DI\create()
         ->constructor(DI\get('name'), DI\get('plugin.path.languages')),
-    URL::class => DI\object()
+    URL::class => DI\create()
         ->constructor(DI\get('setting.site'), DI\get('setting.key')),
-    AssetManager::class => DI\object()
+    AssetManager::class => DI\create()
         ->constructor(DI\get('plugin.url'), DI\get('version')),
-    Viewer::class => DI\object()
+    Viewer::class => DI\create()
         ->constructor(DI\get('plugin.path'), DI\get('plugin.url')),
     PluginAdapterInterface::class => function (DI\Container $container) {
         switch ($container->get('setting.plugin')) {

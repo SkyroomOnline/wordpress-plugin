@@ -35,7 +35,7 @@
     "require": {
         "php": ">=7.2",
         "downshiftorg/wp-event-emitter": "^6.0",
-        "php-di/php-di": "^5.4.6",
+        "php-di/php-di": "^6.0.0",
         "php-ds/php-ds": "^1.2"
     }
 }
