@@ -18,6 +18,10 @@
         {
             "name": "Mostafa Sardari",
             "email": "sardary.mostafa@gmail.com"
+        },
+        {
+            "name": "Arman Hosseini",
+            "email": "namra.1377@gmail.com"
         }
     ],
     "autoload": {
