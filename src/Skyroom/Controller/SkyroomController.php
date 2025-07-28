@@ -54,10 +54,10 @@ class SkyroomController
     function parseRequest($do, $wp)
     {
         $matches = $this->matchRequestPath();
-        $product_id = $matches['id'];
-        if ($matches) {
-            $product = wc_get_product($matches['id']);
-            if ($product->get_type() === "skyroom") {
+        if ($matches && is_array($matches) && isset($matches['id'])) {
+            $product_id = $matches['id'];
+            $product = wc_get_product($product_id);
+            if ($product && $product->get_type() === "skyroom") {
                 $product = $this->pluginAdapter->wrapProduct($product);
 
                 $bought = $this->pluginAdapter->userBoughtProduct(get_current_user_id(), $product);

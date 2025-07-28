@@ -16,14 +16,14 @@ use Skyroom\Util\Viewer;
 
 $services = [
     wpdb::class => $GLOBALS['wpdb'],
-    EventEmitterInterface::class => DI\object(EventEmitter::class),
-    Internationalization::class => DI\object()
+    EventEmitterInterface::class => DI\create(EventEmitter::class),
+    Internationalization::class => DI\create()
         ->constructor(DI\get('name'), DI\get('plugin.path.languages')),
-    URL::class => DI\object()
+    URL::class => DI\create()
         ->constructor(DI\get('setting.site'), DI\get('setting.key')),
-    AssetManager::class => DI\object()
+    AssetManager::class => DI\create()
         ->constructor(DI\get('plugin.url'), DI\get('version')),
-    Viewer::class => DI\object()
+    Viewer::class => DI\create()
         ->constructor(DI\get('plugin.path'), DI\get('plugin.url')),
     PluginAdapterInterface::class => function (DI\Container $container) {
         switch ($container->get('setting.plugin')) {
@@ -38,7 +38,7 @@ $services = [
 
 $parameters = [
     'name' => 'skyroom',
-    'version' => '1.6.3',
+    'version' => '1.6.4',
     'plugin.path' => plugin_dir_path(__FILE__),
     'plugin.url' => plugin_dir_url(__FILE__),
     'plugin.path.languages' => 'skyroom/languages',
